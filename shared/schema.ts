@@ -169,9 +169,23 @@ export const validationStatusSchema = z.object({
 
 export type ValidationStatus = z.infer<typeof validationStatusSchema>;
 
+// Package generation configuration schema (relaxed validation for sensitive fields)
+export const packageConfigurationSchema = configurationSchema.omit({
+  jwtSecret: true,
+  jwtRefreshSecret: true,
+  credsKey: true,
+  credsIV: true,
+}).extend({
+  // Make these fields optional for package generation since they're environment variables
+  jwtSecret: z.string().optional(),
+  jwtRefreshSecret: z.string().optional(),
+  credsKey: z.string().optional(),
+  credsIV: z.string().optional(),
+});
+
 // Package generation request
 export const packageGenerationSchema = z.object({
-  configuration: configurationSchema,
+  configuration: packageConfigurationSchema,
   includeFiles: z.array(z.enum([
     "env",
     "yaml", 

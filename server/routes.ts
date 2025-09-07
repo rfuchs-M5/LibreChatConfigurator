@@ -175,11 +175,12 @@ function generateEnvFile(config: any): string {
 
 # =============================================================================
 # REQUIRED: Security Configuration
+# Generate secure random values for production use
 # =============================================================================
-JWT_SECRET=${config.jwtSecret}
-JWT_REFRESH_SECRET=${config.jwtRefreshSecret}
-CREDS_KEY=${config.credsKey}
-CREDS_IV=${config.credsIV}
+JWT_SECRET=${config.jwtSecret || 'REPLACE_WITH_32_CHAR_RANDOM_STRING'}
+JWT_REFRESH_SECRET=${config.jwtRefreshSecret || 'REPLACE_WITH_32_CHAR_RANDOM_STRING'}
+CREDS_KEY=${config.credsKey || 'REPLACE_WITH_32_CHAR_RANDOM_KEY'}
+CREDS_IV=${config.credsIV || 'REPLACE_16_CHARS'}
 
 # =============================================================================
 # Application Configuration
