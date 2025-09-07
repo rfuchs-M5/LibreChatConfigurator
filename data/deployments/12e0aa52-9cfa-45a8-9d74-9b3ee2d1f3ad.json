@@ -110,13 +110,24 @@
     "credsIV": ""
   },
   "id": "12e0aa52-9cfa-45a8-9d74-9b3ee2d1f3ad",
-  "status": "building",
+  "status": "running",
   "deploymentLogs": [
     "Starting deployment process...",
     "Building Docker image...",
-    "Configuring environment variables..."
+    "Configuring environment variables...",
+    "Deploying to Railway...",
+    "Allocating resources...",
+    "✅ Deployment successful!",
+    "🌐 Public URL: https://librechat-librechat-1757264074423-1757264082527.railway.app",
+    "🔑 Admin access: https://librechat-librechat-1757264074423-1757264082527.railway.app/admin"
   ],
   "uptime": 0,
   "createdAt": "2025-09-07T16:54:34.516Z",
-  "updatedAt": "2025-09-07T16:54:34.518Z"
+  "updatedAt": "2025-09-07T16:54:42.527Z",
+  "platformProjectId": "librechat-librechat-1757264074423-1757264082527",
+  "platformServiceId": "service-librechat-librechat-1757264074423-1757264082527",
+  "platformDeploymentId": "deploy-librechat-librechat-1757264074423-1757264082527",
+  "publicUrl": "https://librechat-librechat-1757264074423-1757264082527.railway.app",
+  "adminUrl": "https://librechat-librechat-1757264074423-1757264082527.railway.app/admin",
+  "deployedAt": "2025-09-07T16:54:42.527Z"
 }

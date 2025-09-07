@@ -5,7 +5,8 @@ import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, Cloud, ExternalLink } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, Cloud, ExternalLink, BarChart3 } from "lucide-react";
+import { Link } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
@@ -242,6 +243,13 @@ export default function Home() {
                   Visit Live Site
                 </Button>
               )}
+              
+              <Link href="/deployments">
+                <Button variant="outline" data-testid="button-dashboard">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
