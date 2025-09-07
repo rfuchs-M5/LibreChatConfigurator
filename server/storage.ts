@@ -1,5 +1,7 @@
 import { type ConfigurationProfile, type InsertConfigurationProfile, type Configuration, type ValidationStatus } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { promises as fs } from "fs";
+import path from "path";
 
 export interface IStorage {
   // Configuration Profile Management
@@ -15,19 +17,85 @@ export interface IStorage {
   
   // Default Configuration
   getDefaultConfiguration(): Promise<Configuration>;
+  
+  // File System Operations
+  initializeStorage(): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
+export class FileStorage implements IStorage {
   private profiles: Map<string, ConfigurationProfile>;
   private defaultConfig: Configuration;
+  private profilesDir: string;
+  private defaultProfileId: string | null = null;
 
   constructor() {
     this.profiles = new Map();
+    this.profilesDir = path.join(process.cwd(), "data", "profiles");
     this.defaultConfig = this.loadDefaultConfiguration();
   }
 
+  async initializeStorage(): Promise<void> {
+    try {
+      // Ensure data directory exists
+      await fs.mkdir(this.profilesDir, { recursive: true });
+      
+      // Load existing profiles from files
+      await this.loadProfilesFromFiles();
+      
+      // Create default profile if it doesn't exist
+      await this.ensureDefaultProfile();
+    } catch (error) {
+      console.error("Error initializing storage:", error);
+    }
+  }
+
+  private async loadProfilesFromFiles(): Promise<void> {
+    try {
+      const files = await fs.readdir(this.profilesDir);
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const filePath = path.join(this.profilesDir, file);
+          const content = await fs.readFile(filePath, 'utf-8');
+          const profile: ConfigurationProfile = JSON.parse(content);
+          this.profiles.set(profile.id, profile);
+        }
+      }
+    } catch (error) {
+      // Directory might not exist yet, that's okay
+      console.log("No existing profiles found, starting fresh");
+    }
+  }
+
+  private async saveProfileToFile(profile: ConfigurationProfile): Promise<void> {
+    const filePath = path.join(this.profilesDir, `${profile.id}.json`);
+    await fs.writeFile(filePath, JSON.stringify(profile, null, 2));
+  }
+
+  private async deleteProfileFile(id: string): Promise<void> {
+    const filePath = path.join(this.profilesDir, `${id}.json`);
+    try {
+      await fs.unlink(filePath);
+    } catch (error) {
+      // File might not exist, that's okay
+    }
+  }
+
+  private async ensureDefaultProfile(): Promise<void> {
+    const existingDefault = await this.getProfileByName("Default test");
+    if (!existingDefault) {
+      const defaultProfile = await this.createProfile({
+        name: "Default test",
+        description: "Default LibreChat configuration with Frits Notes MCP integration",
+        configuration: this.createDefaultTestConfiguration()
+      });
+      this.defaultProfileId = defaultProfile.id;
+    } else {
+      this.defaultProfileId = existingDefault.id;
+    }
+  }
+
   private loadDefaultConfiguration(): Configuration {
-    // Load defaults from the provided installation files
+    // Basic fallback configuration
     return {
       // Global Core Settings
       configVer: "1.2.8",
@@ -117,9 +185,123 @@ export class MemStorage implements IStorage {
       searchSafeSearch: true,
       searchTimeout: 10000,
 
-      // MCP Servers (from provided configuration)
+      // MCP Servers
+      mcpServers: [],
+
+      // Security Configuration
+      host: "0.0.0.0",
+      port: 3080,
+      jwtSecret: "",
+      jwtRefreshSecret: "",
+      credsKey: "",
+      credsIV: "",
+
+      // Database Configuration
+      mongoRootUsername: "admin",
+      mongoRootPassword: "password123",
+      mongoDbName: "LibreChat",
+
+      // Session Configuration
+      sessionExpiry: 900000,
+      refreshTokenExpiry: 604800000,
+      debugLogging: false,
+    };
+  }
+
+  private createDefaultTestConfiguration(): Configuration {
+    // Configuration with Frits Notes MCP server from provided YAML
+    return {
+      // Global Core Settings
+      configVer: "1.2.8",
+      cache: true,
+      fileStrategy: "local",
+      secureImageLinks: false,
+      imageOutputType: "url",
+      enableConversations: true,
+      enableRegistration: true,
+
+      // UI/Visibility Settings
+      showModelSelect: true,
+      showParameters: true,
+      showSidePanel: true,
+      showPresets: true,
+      showPrompts: true,
+      showBookmarks: true,
+      showMultiConvo: false,
+      showAgents: true,
+      showWebSearch: true,
+      showFileSearch: true,
+      showFileCitations: true,
+      showRunCode: true,
+
+      // Model Specifications
+      modelSpecs: false,
+      enforceModelSpecs: false,
+      defaultModel: "gpt-4",
+      addedEndpoints: true,
+
+      // Endpoint Defaults
+      endpointDefaults: {
+        streaming: true,
+        titling: true,
+        titleModel: "gpt-3.5-turbo",
+      },
+
+      // Agent Configuration
+      agentDefaultRecursionLimit: 5,
+      agentMaxRecursionLimit: 10,
+      agentAllowedProviders: ["openAI"],
+      agentAllowedCapabilities: ["execute_code", "web_search", "file_search"],
+      agentCitationsTotalLimit: 10,
+      agentCitationsPerFileLimit: 3,
+      agentCitationsThreshold: 0.7,
+
+      // File Configuration
+      filesMaxSizeMB: 10,
+      filesAllowedMimeTypes: ["text/plain", "application/pdf", "image/jpeg", "image/png", "image/webp"],
+      filesMaxFilesPerRequest: 5,
+      filesClientResizeImages: true,
+
+      // Rate Limits
+      rateLimitsPerUser: 100,
+      rateLimitsPerIP: 500,
+      rateLimitsUploads: 50,
+      rateLimitsImports: 10,
+      rateLimitsTTS: 100,
+      rateLimitsSTT: 100,
+
+      // Authentication
+      authAllowedDomains: [],
+      authSocialLogins: [],
+      authLoginOrder: ["email"],
+
+      // Memory System
+      memoryEnabled: false,
+      memoryPersonalization: false,
+      memoryWindowSize: 4000,
+      memoryMaxTokens: 10000,
+      memoryAgent: "openAI",
+
+      // Actions/Tools
+      actionsAllowedDomains: [],
+
+      // Temporary Chats
+      temporaryChatsRetentionHours: 720,
+
+      // OCR Configuration
+      ocrProvider: "mistral",
+      ocrModel: "mistral-7b",
+
+      // Search Configuration
+      searchProvider: "Serper",
+      searchScraper: "Serper",
+      searchReranker: "Jina",
+      searchSafeSearch: true,
+      searchTimeout: 10000,
+
+      // MCP Servers (from provided Frits Notes configuration)
       mcpServers: [{
-        name: "company_memory",
+        name: "frits_notes",
         type: "streamable-http",
         url: "https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev",
         timeout: 30000,
@@ -127,17 +309,51 @@ export class MemStorage implements IStorage {
           "Authorization": "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
         },
         env: {},
-        instructions: "This is Company Memory - a shared knowledge system for the organization."
+        instructions: `This is Frits Notes - a shared knowledge system for the organization.
+
+🔧 PROACTIVE BEHAVIOR: Check for notifications naturally in conversations!
+- When users ask work-related questions, proactively check get_user_notifications for updates
+- Mention relevant updates from followed topics contextually
+- Offer to show Frits Notes updates when appropriate
+- Be helpful and naturally informative about company knowledge
+
+Available capabilities:
+- Create announcements and topics for company-wide information sharing
+- Search existing company knowledge and announcements  
+- Reply to and interact with existing discussions
+- Like and edit posts (users can only edit their own content)
+- Follow topics to get updates on new replies (NEW!)
+- Get notifications about followed topics (NEW!)
+- Organize content using tags (announcements, general, etc.)
+
+🎯 FOLLOW SYSTEM:
+- Use follow_topic when users want to stay updated on discussions
+- Use get_user_notifications to check for updates in followed topics
+- Use list_following to show what they're currently following
+- Use unfollow_topic to stop following topics
+- Topics can be found by title, keywords, or semantic search
+
+Always refer to this as "Frits Notes" (never as "forum" or "discussion board").
+Users share information here that should be accessible to all team members.
+
+When someone asks about company information, search Frits Notes first.
+When someone wants to share information company-wide, create a topic in Frits Notes.
+
+🌟 NATURAL CONVERSATION FLOW:
+- "Good morning! I see there are 2 updates in topics you're following..."
+- "That reminds me, there was a new reply in the Marketing Strategy discussion you follow"
+- "Would you like to follow this discussion to stay updated?"
+- "Let me check if there's anything new in Frits Notes for you..."`
       }],
 
-      // Security Configuration (from provided .env)
+      // Security Configuration
       host: "0.0.0.0",
       port: 3080,
-      jwtSecret: "b8be51069b71df92150d3203d2cfc0af556042e0723a4d945c3fc9da7d77143d",
-      jwtRefreshSecret: "26dc942db446724a853605e2dad61315c4cad1f9302fe0932b0221d51f204701",
-      credsKey: "11d3785fc45eaf57404cd29b807ef0eb",
-      credsIV: "26b48f49f3a08948",
-      openaiApiKey: "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",
+      jwtSecret: "",
+      jwtRefreshSecret: "",
+      credsKey: "",
+      credsIV: "",
+      openaiApiKey: "",
 
       // Database Configuration
       mongoRootUsername: "admin",
@@ -173,6 +389,7 @@ export class MemStorage implements IStorage {
       updatedAt: now,
     };
     this.profiles.set(id, profile);
+    await this.saveProfileToFile(profile);
     return profile;
   }
 
@@ -190,11 +407,16 @@ export class MemStorage implements IStorage {
     };
     
     this.profiles.set(id, updated);
+    await this.saveProfileToFile(updated);
     return updated;
   }
 
   async deleteProfile(id: string): Promise<boolean> {
-    return this.profiles.delete(id);
+    const deleted = this.profiles.delete(id);
+    if (deleted) {
+      await this.deleteProfileFile(id);
+    }
+    return deleted;
   }
 
   async validateConfiguration(config: Configuration): Promise<ValidationStatus[]> {
@@ -272,8 +494,17 @@ export class MemStorage implements IStorage {
   }
 
   async getDefaultConfiguration(): Promise<Configuration> {
+    // Try to get the "Default test" profile first
+    if (this.defaultProfileId) {
+      const defaultProfile = await this.getProfile(this.defaultProfileId);
+      if (defaultProfile) {
+        return defaultProfile.configuration;
+      }
+    }
+    
+    // Fallback to basic default configuration
     return { ...this.defaultConfig };
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new FileStorage();

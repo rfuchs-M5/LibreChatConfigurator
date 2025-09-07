@@ -1,0 +1,130 @@
+# =============================================================================
+# LibreChat Configuration for Frits Notes MCP Integration
+# =============================================================================
+# 
+# This configuration file integrates LibreChat with a Frits Notes system
+# that provides shared knowledge storage and retrieval for AI agents.
+#
+# SETUP INSTRUCTIONS FOR USERS:
+# 1. Set your OPENAI_API_KEY in your .env file or environment variables
+# 2. DO NOT modify the mcpServers section - it's configured for the MCP server
+# 3. The Frits Notes system is available at the URL below
+# 4. Restart LibreChat after copying this file to your LibreChat directory
+#
+# =============================================================================
+
+# LibreChat configuration version (required)
+version: 1.2.8
+
+# Enable caching for better performance
+cache: true
+
+# MCP Servers Configuration
+# DO NOT MODIFY THIS SECTION - Pre-configured for Frits Notes integration
+mcpServers:
+  frits_notes:
+    # Frits Notes MCP Server - provides shared knowledge storage
+    type: streamable-http
+    url: "https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev"
+    timeout: 30000
+    headers:
+      Authorization: "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
+    serverInstructions: |
+      This is Frits Notes - a shared knowledge system for the organization.
+      
+      🔧 PROACTIVE BEHAVIOR: Check for notifications naturally in conversations!
+      - When users ask work-related questions, proactively check get_user_notifications for updates
+      - Mention relevant updates from followed topics contextually
+      - Offer to show Frits Notes updates when appropriate
+      - Be helpful and naturally informative about company knowledge
+      
+      Available capabilities:
+      - Create announcements and topics for company-wide information sharing
+      - Search existing company knowledge and announcements  
+      - Reply to and interact with existing discussions
+      - Like and edit posts (users can only edit their own content)
+      - Follow topics to get updates on new replies (NEW!)
+      - Get notifications about followed topics (NEW!)
+      - Organize content using tags (announcements, general, etc.)
+      
+      🎯 FOLLOW SYSTEM:
+      - Use follow_topic when users want to stay updated on discussions
+      - Use get_user_notifications to check for updates in followed topics
+      - Use list_following to show what they're currently following
+      - Use unfollow_topic to stop following topics
+      - Topics can be found by title, keywords, or semantic search
+      
+      Always refer to this as "Frits Notes" (never as "forum" or "discussion board").
+      Users share information here that should be accessible to all team members.
+      
+      When someone asks about company information, search Frits Notes first.
+      When someone wants to share information company-wide, create a topic in Frits Notes.
+      
+      🌟 NATURAL CONVERSATION FLOW:
+      - "Good morning! I see there are 2 updates in topics you're following..."
+      - "That reminds me, there was a new reply in the Marketing Strategy discussion you follow"
+      - "Would you like to follow this discussion to stay updated?"
+      - "Let me check if there's anything new in Frits Notes for you..."
+
+# Endpoints Configuration
+# USERS: Add your API keys to the .env file or environment variables
+endpoints:
+  # OpenAI Configuration
+  openAI:
+    title: "OpenAI"
+    apiKey: "${OPENAI_API_KEY}"
+    models:
+      default: 
+        - "gpt-4"
+        - "gpt-4-turbo"
+        - "gpt-3.5-turbo"
+      fetch: true
+    titleConvo: true
+    titleModel: "gpt-3.5-turbo"
+    dropParams: ["stop"]
+
+# Interface Configuration
+interface:
+  # Privacy and terms (customize as needed)
+  privacyPolicy:
+    externalUrl: 'https://librechat.ai/privacy-policy'
+    openNewTab: true
+  termsOfService:
+    externalUrl: 'https://librechat.ai/tos' 
+    openNewTab: true
+
+# File Configuration
+fileConfig:
+  endpoints:
+    openAI:
+      disabled: false
+      fileLimit: 5
+      fileSizeLimit: 10  # MB
+      totalSizeLimit: 50  # MB
+      supportedMimeTypes:
+        - "text/plain"
+        - "application/pdf"
+        - "image/jpeg"
+        - "image/png"
+        - "image/webp"
+
+# =============================================================================
+# FRITS NOTES SYSTEM INFORMATION:
+# 
+# External URL: https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev
+# Health Check: /healthz
+# API Documentation: /api
+# 
+# Features:
+# - Real PostgreSQL database with persistent storage
+# - User authentication with ownership controls  
+# - Full-text search across all company content
+# - Tag-based organization (announcements, general, etc.)
+# - Like/unlike functionality for posts
+# - Complete audit logging of all operations
+# 
+# This system enables AI agents to:
+# - Create company announcements ("Tell everyone we're out of juice")
+# - Search company knowledge ("Is there more juice?")
+# - Maintain shared organizational memory
+# =============================================================================
