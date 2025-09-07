@@ -5,6 +5,7 @@ import { SettingInput } from "./setting-input";
 import { StatusIndicator } from "./status-indicator";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { type Configuration } from "@shared/schema";
 import { 
   Server, 
@@ -23,7 +24,10 @@ import {
   Camera, 
   Wrench, 
   Clock, 
-  Download 
+  Download,
+  Plus,
+  Trash2,
+  X
 } from "lucide-react";
 
 interface ConfigurationTabsProps {
@@ -1105,71 +1109,218 @@ export function ConfigurationTabs({
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <p className="text-sm text-muted-foreground">
                       Model Context Protocol (MCP) servers provide AI agents with access to external tools and data sources. 
                       Configure your MCP servers below to extend LibreChat's capabilities.
                     </p>
-                    <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg">
-                      <h4 className="font-medium mb-4">Configured MCP Servers:</h4>
-                      {configuration.mcpServers.length > 0 ? (
-                        <div className="space-y-4">
-                          {configuration.mcpServers.map((server, index) => (
-                            <div key={index} className="bg-white dark:bg-gray-800 rounded-lg border p-4 space-y-3">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                  <div className="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
-                                    <Network className="h-4 w-4 text-rose-600" />
-                                  </div>
-                                  <div>
-                                    <span className="font-medium text-lg">{server.name}</span>
-                                    <div className="flex items-center space-x-2 mt-1">
-                                      <Badge variant="outline">{server.type}</Badge>
-                                      <Badge variant="secondary">{server.timeout}ms timeout</Badge>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              {server.url && (
-                                <div className="space-y-1">
-                                  <span className="text-sm font-medium text-muted-foreground">Endpoint:</span>
-                                  <p className="text-sm font-mono bg-gray-100 dark:bg-gray-700 p-2 rounded break-all">{server.url}</p>
-                                </div>
-                              )}
-                              
-                              {server.headers && Object.keys(server.headers).length > 0 && (
-                                <div className="space-y-1">
-                                  <span className="text-sm font-medium text-muted-foreground">Headers:</span>
-                                  <div className="text-sm font-mono bg-gray-100 dark:bg-gray-700 p-2 rounded">
-                                    {Object.entries(server.headers).map(([key, value]) => (
-                                      <div key={key} className="break-all">
-                                        <span className="text-blue-600 dark:text-blue-400">{key}:</span> {value}
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                              
-                              {server.instructions && (
-                                <div className="space-y-1">
-                                  <span className="text-sm font-medium text-muted-foreground">Server Instructions:</span>
-                                  <div className="text-sm bg-gray-100 dark:bg-gray-700 p-3 rounded max-h-48 overflow-y-auto">
-                                    <pre className="whitespace-pre-wrap text-wrap">{server.instructions}</pre>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-8">
-                          <Network className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                          <p className="text-sm text-muted-foreground">No MCP servers configured</p>
-                          <p className="text-xs text-muted-foreground mt-1">MCP servers will appear here when configured</p>
-                        </div>
-                      )}
+                    
+                    {/* Add New Server Button */}
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">MCP Servers</h4>
+                      <Button
+                        onClick={() => {
+                          const newServer = {
+                            name: "",
+                            type: "streamable-http" as const,
+                            url: "",
+                            timeout: 30000,
+                            headers: {},
+                            env: {},
+                            instructions: ""
+                          };
+                          onConfigurationChange({
+                            mcpServers: [...configuration.mcpServers, newServer]
+                          });
+                        }}
+                        size="sm"
+                        className="gap-2"
+                        data-testid="button-add-mcp-server"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add Server
+                      </Button>
                     </div>
+
+                    {configuration.mcpServers.length > 0 ? (
+                      <div className="space-y-6">
+                        {configuration.mcpServers.map((server, index) => (
+                          <div key={index} className="bg-gray-50 dark:bg-gray-900 rounded-lg border p-6 space-y-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
+                                  <Network className="h-4 w-4 text-rose-600" />
+                                </div>
+                                <h5 className="font-medium">Server {index + 1}</h5>
+                              </div>
+                              <Button
+                                onClick={() => {
+                                  const updatedServers = configuration.mcpServers.filter((_, i) => i !== index);
+                                  onConfigurationChange({ mcpServers: updatedServers });
+                                }}
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700"
+                                data-testid={`button-remove-mcp-server-${index}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                              <SettingInput
+                                label="Server Name"
+                                description="Unique name for this MCP server"
+                                type="text"
+                                value={server.name}
+                                onChange={(value) => {
+                                  const updatedServers = [...configuration.mcpServers];
+                                  updatedServers[index] = { ...server, name: value as string };
+                                  onConfigurationChange({ mcpServers: updatedServers });
+                                }}
+                                placeholder="e.g., frits_notes"
+                                data-testid={`input-mcp-server-name-${index}`}
+                              />
+                              
+                              <SettingInput
+                                label="Server Type"
+                                description="MCP server connection type"
+                                type="select"
+                                value={server.type}
+                                onChange={(value) => {
+                                  const updatedServers = [...configuration.mcpServers];
+                                  updatedServers[index] = { ...server, type: value as any };
+                                  onConfigurationChange({ mcpServers: updatedServers });
+                                }}
+                                options={["stdio", "websocket", "SSE", "streamable-http"]}
+                                data-testid={`input-mcp-server-type-${index}`}
+                              />
+                              
+                              <SettingInput
+                                label="Server URL"
+                                description="HTTP endpoint for the MCP server"
+                                type="text"
+                                value={server.url || ""}
+                                onChange={(value) => {
+                                  const updatedServers = [...configuration.mcpServers];
+                                  updatedServers[index] = { ...server, url: value as string };
+                                  onConfigurationChange({ mcpServers: updatedServers });
+                                }}
+                                placeholder="https://api.example.com"
+                                data-testid={`input-mcp-server-url-${index}`}
+                              />
+                              
+                              <SettingInput
+                                label="Timeout (ms)"
+                                description="Request timeout in milliseconds"
+                                type="number"
+                                value={server.timeout}
+                                onChange={(value) => {
+                                  const updatedServers = [...configuration.mcpServers];
+                                  updatedServers[index] = { ...server, timeout: value as number };
+                                  onConfigurationChange({ mcpServers: updatedServers });
+                                }}
+                                min={1000}
+                                max={300000}
+                                data-testid={`input-mcp-server-timeout-${index}`}
+                              />
+                            </div>
+                            
+                            {/* Headers Configuration */}
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <h6 className="text-sm font-medium">HTTP Headers</h6>
+                                <Button
+                                  onClick={() => {
+                                    const updatedServers = [...configuration.mcpServers];
+                                    const newHeaders = { ...server.headers, "": "" };
+                                    updatedServers[index] = { ...server, headers: newHeaders };
+                                    onConfigurationChange({ mcpServers: updatedServers });
+                                  }}
+                                  variant="outline"
+                                  size="sm"
+                                  data-testid={`button-add-header-${index}`}
+                                >
+                                  <Plus className="h-3 w-3 mr-1" />
+                                  Add Header
+                                </Button>
+                              </div>
+                              {Object.entries(server.headers || {}).map(([key, value], headerIndex) => (
+                                <div key={headerIndex} className="flex gap-2 items-center">
+                                  <input
+                                    type="text"
+                                    placeholder="Header name"
+                                    value={key}
+                                    onChange={(e) => {
+                                      const updatedServers = [...configuration.mcpServers];
+                                      const newHeaders = { ...server.headers };
+                                      delete newHeaders[key];
+                                      newHeaders[e.target.value] = value;
+                                      updatedServers[index] = { ...server, headers: newHeaders };
+                                      onConfigurationChange({ mcpServers: updatedServers });
+                                    }}
+                                    className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-sm"
+                                    data-testid={`input-header-key-${index}-${headerIndex}`}
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Header value"
+                                    value={value}
+                                    onChange={(e) => {
+                                      const updatedServers = [...configuration.mcpServers];
+                                      const newHeaders = { ...server.headers };
+                                      newHeaders[key] = e.target.value;
+                                      updatedServers[index] = { ...server, headers: newHeaders };
+                                      onConfigurationChange({ mcpServers: updatedServers });
+                                    }}
+                                    className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-sm"
+                                    data-testid={`input-header-value-${index}-${headerIndex}`}
+                                  />
+                                  <Button
+                                    onClick={() => {
+                                      const updatedServers = [...configuration.mcpServers];
+                                      const newHeaders = { ...server.headers };
+                                      delete newHeaders[key];
+                                      updatedServers[index] = { ...server, headers: newHeaders };
+                                      onConfigurationChange({ mcpServers: updatedServers });
+                                    }}
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-600"
+                                    data-testid={`button-remove-header-${index}-${headerIndex}`}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            {/* Server Instructions */}
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Server Instructions</label>
+                              <p className="text-xs text-muted-foreground">Detailed instructions for how the AI should use this MCP server</p>
+                              <textarea
+                                value={server.instructions || ""}
+                                onChange={(e) => {
+                                  const updatedServers = [...configuration.mcpServers];
+                                  updatedServers[index] = { ...server, instructions: e.target.value };
+                                  onConfigurationChange({ mcpServers: updatedServers });
+                                }}
+                                placeholder="Enter detailed instructions for how the AI should interact with this MCP server..."
+                                className="w-full h-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md text-sm resize-vertical"
+                                data-testid={`input-mcp-server-instructions-${index}`}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 bg-gray-50 dark:bg-gray-900 rounded-lg border-2 border-dashed">
+                        <Network className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                        <p className="text-sm text-muted-foreground">No MCP servers configured</p>
+                        <p className="text-xs text-muted-foreground mt-1">Click "Add Server" to configure your first MCP server</p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
