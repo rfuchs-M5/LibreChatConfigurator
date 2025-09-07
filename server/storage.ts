@@ -498,7 +498,14 @@ When someone wants to share information company-wide, create a topic in Frits No
     if (this.defaultProfileId) {
       const defaultProfile = await this.getProfile(this.defaultProfileId);
       if (defaultProfile) {
-        return defaultProfile.configuration;
+        // Ensure security fields have fallback values for API compatibility
+        return {
+          ...defaultProfile.configuration,
+          jwtSecret: defaultProfile.configuration.jwtSecret || "",
+          jwtRefreshSecret: defaultProfile.configuration.jwtRefreshSecret || "",
+          credsKey: defaultProfile.configuration.credsKey || "",
+          credsIV: defaultProfile.configuration.credsIV || "",
+        } as Configuration;
       }
     }
     

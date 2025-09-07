@@ -139,21 +139,35 @@ export const configurationSchema = z.object({
 
 export type Configuration = z.infer<typeof configurationSchema>;
 
+// Profile configuration schema (relaxed validation for sensitive fields)
+export const profileConfigurationSchema = configurationSchema.omit({
+  jwtSecret: true,
+  jwtRefreshSecret: true,
+  credsKey: true,
+  credsIV: true,
+}).extend({
+  // Make these fields optional for profile storage since they're environment variables
+  jwtSecret: z.string().optional(),
+  jwtRefreshSecret: z.string().optional(),
+  credsKey: z.string().optional(),
+  credsIV: z.string().optional(),
+});
+
 export const configurationProfileSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
-  configuration: configurationSchema,
+  configuration: profileConfigurationSchema,
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date().default(() => new Date()),
 });
 
 export type ConfigurationProfile = z.infer<typeof configurationProfileSchema>;
 
-export const insertConfigurationProfileSchema = configurationProfileSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertConfigurationProfileSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  configuration: profileConfigurationSchema,
 });
 
 export type InsertConfigurationProfile = z.infer<typeof insertConfigurationProfileSchema>;
