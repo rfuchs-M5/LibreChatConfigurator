@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Configuration, type InsertConfigurationProfile, type PackageGenerationRequest } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { defaultConfiguration as fallbackConfiguration } from "@/lib/configuration-defaults";
 
 export function useConfiguration() {
   const queryClient = useQueryClient();
@@ -11,13 +12,11 @@ export function useConfiguration() {
     queryKey: ["/api/configuration/default"],
   });
 
-  const [configuration, setConfiguration] = useState<Configuration>(
-    defaultConfiguration || {} as Configuration
-  );
+  const [configuration, setConfiguration] = useState<Configuration>(fallbackConfiguration);
 
   useEffect(() => {
     if (defaultConfiguration) {
-      setConfiguration(defaultConfiguration);
+      setConfiguration(defaultConfiguration as Configuration);
     }
   }, [defaultConfiguration]);
 

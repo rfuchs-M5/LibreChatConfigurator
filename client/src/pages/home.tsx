@@ -19,7 +19,6 @@ export default function Home() {
       await saveProfile({
         name: `Configuration ${new Date().toISOString().split('T')[0]}`,
         description: "Auto-saved configuration profile",
-        configuration,
       });
       toast({
         title: "Configuration Saved",
@@ -37,7 +36,6 @@ export default function Home() {
   const handleGeneratePackage = async () => {
     try {
       const result = await generatePackage({
-        configuration,
         includeFiles: ["env", "yaml", "docker-compose", "install-script", "readme"],
       });
       
