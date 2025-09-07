@@ -5,11 +5,14 @@ import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, Cloud, ExternalLink } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [deploymentUrl, setDeploymentUrl] = useState<string | null>(null);
   const { configuration, updateConfiguration, saveProfile, generatePackage } = useConfiguration();
   const { toast } = useToast();
 
@@ -59,6 +62,82 @@ export default function Home() {
       toast({
         title: "Generation Failed",
         description: "Failed to generate installation package.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeploy = async () => {
+    if (isDeploying) return;
+
+    try {
+      setIsDeploying(true);
+      
+      // First, save the current configuration as a profile
+      const savedProfile = await saveProfile({
+        name: `Deploy Configuration ${new Date().toISOString().split('T')[0]}`,
+        description: "Configuration profile created for deployment",
+      });
+
+      toast({
+        title: "Starting Deployment",
+        description: "Your LibreChat instance is being deployed to the cloud...",
+      });
+
+      // Create deployment
+      const deployment = await apiRequest("/api/deployments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `LibreChat-${Date.now()}`,
+          description: "Deployed from LibreChat Configuration Interface",
+          configurationProfileId: savedProfile.id,
+          platform: "railway",
+          region: "us-west-1",
+          resourcePlan: "starter"
+        })
+      });
+
+      // Poll for deployment status
+      const pollDeployment = async (): Promise<void> => {
+        try {
+          const updated = await apiRequest(`/api/deployments/${deployment.id}`);
+          
+          if (updated.status === "running" && updated.publicUrl) {
+            setDeploymentUrl(updated.publicUrl);
+            setIsDeploying(false);
+            toast({
+              title: "Deployment Successful! 🎉",
+              description: `Your LibreChat instance is now live at ${updated.publicUrl}`,
+              duration: 10000,
+            });
+          } else if (updated.status === "failed") {
+            setIsDeploying(false);
+            toast({
+              title: "Deployment Failed",
+              description: "Failed to deploy LibreChat instance. Please try again.",
+              variant: "destructive",
+            });
+          } else {
+            // Still deploying, check again in 3 seconds
+            setTimeout(pollDeployment, 3000);
+          }
+        } catch (error) {
+          console.error("Error polling deployment:", error);
+          setTimeout(pollDeployment, 5000); // Retry with longer delay
+        }
+      };
+
+      // Start polling
+      setTimeout(pollDeployment, 2000);
+
+    } catch (error) {
+      setIsDeploying(false);
+      toast({
+        title: "Deployment Failed",
+        description: "Failed to initiate deployment. Please try again.",
         variant: "destructive",
       });
     }
@@ -121,6 +200,37 @@ export default function Home() {
                 <Rocket className="h-4 w-4 mr-2" />
                 Generate Package
               </Button>
+              
+              <Button 
+                onClick={handleDeploy} 
+                disabled={isDeploying}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white" 
+                data-testid="button-deploy"
+              >
+                {isDeploying ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Deploying...
+                  </>
+                ) : (
+                  <>
+                    <Cloud className="h-4 w-4 mr-2" />
+                    Deploy Live
+                  </>
+                )}
+              </Button>
+              
+              {deploymentUrl && (
+                <Button 
+                  variant="outline"
+                  onClick={() => window.open(deploymentUrl, '_blank')}
+                  className="border-green-200 text-green-700 hover:bg-green-50"
+                  data-testid="button-visit-deployment"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Visit Live Site
+                </Button>
+              )}
             </div>
           </div>
         </div>

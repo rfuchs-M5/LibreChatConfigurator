@@ -1061,10 +1061,15 @@ async function cleanupCloudDeployment(deployment: any): Promise<void> {
 // Perform health check on deployed instance
 async function performHealthCheck(url: string): Promise<HealthCheckResult> {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
     const response = await fetch(url, { 
       method: 'GET',
-      timeout: 10000 // 10 second timeout
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
     
     if (response.ok) {
       return {
