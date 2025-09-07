@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { ConfigurationTabs } from "@/components/configuration-tabs";
-import { ValidationPanel } from "@/components/validation-panel";
 import { PreviewModal } from "@/components/preview-modal";
 import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Save, Upload } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket } from "lucide-react";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -97,6 +96,17 @@ export default function Home() {
                 <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               </div>
               
+              {/* Validation Status Indicator */}
+              <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <span className="text-sm font-medium text-green-800 dark:text-green-200">Configuration Valid</span>
+              </div>
+              
+              <Button variant="outline" onClick={() => setShowPreview(true)} data-testid="button-preview">
+                <Eye className="h-4 w-4 mr-2" />
+                Preview
+              </Button>
+              
               <Button variant="secondary" data-testid="button-import">
                 <Upload className="h-4 w-4 mr-2" />
                 Import Config
@@ -105,6 +115,11 @@ export default function Home() {
               <Button onClick={handleSaveProfile} data-testid="button-save">
                 <Save className="h-4 w-4 mr-2" />
                 Save Profile
+              </Button>
+              
+              <Button onClick={handleGeneratePackage} className="bg-primary hover:bg-primary/90" data-testid="button-generate">
+                <Rocket className="h-4 w-4 mr-2" />
+                Generate Package
               </Button>
             </div>
           </div>
@@ -122,11 +137,6 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Validation Panel */}
-      <ValidationPanel 
-        onPreview={() => setShowPreview(true)}
-        onGenerate={handleGeneratePackage}
-      />
 
       {/* Preview Modal */}
       {showPreview && (
