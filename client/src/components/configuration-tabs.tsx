@@ -1107,25 +1107,67 @@ export function ConfigurationTabs({
                 <CardContent>
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                      MCP servers are currently configured from the provided librechat.yaml. 
-                      Advanced MCP configuration will be available in future versions.
+                      Model Context Protocol (MCP) servers provide AI agents with access to external tools and data sources. 
+                      Configure your MCP servers below to extend LibreChat's capabilities.
                     </p>
                     <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg">
-                      <h4 className="font-medium mb-2">Current MCP Servers:</h4>
+                      <h4 className="font-medium mb-4">Configured MCP Servers:</h4>
                       {configuration.mcpServers.length > 0 ? (
-                        <div className="space-y-2">
+                        <div className="space-y-4">
                           {configuration.mcpServers.map((server, index) => (
-                            <div key={index} className="flex items-center justify-between p-2 bg-white dark:bg-gray-800 rounded border">
-                              <div>
-                                <span className="font-medium">{server.name}</span>
-                                <span className="text-sm text-muted-foreground ml-2">({server.type})</span>
+                            <div key={index} className="bg-white dark:bg-gray-800 rounded-lg border p-4 space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
+                                    <Network className="h-4 w-4 text-rose-600" />
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-lg">{server.name}</span>
+                                    <div className="flex items-center space-x-2 mt-1">
+                                      <Badge variant="outline">{server.type}</Badge>
+                                      <Badge variant="secondary">{server.timeout}ms timeout</Badge>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                              <Badge variant="secondary">{server.timeout}ms timeout</Badge>
+                              
+                              {server.url && (
+                                <div className="space-y-1">
+                                  <span className="text-sm font-medium text-muted-foreground">Endpoint:</span>
+                                  <p className="text-sm font-mono bg-gray-100 dark:bg-gray-700 p-2 rounded break-all">{server.url}</p>
+                                </div>
+                              )}
+                              
+                              {server.headers && Object.keys(server.headers).length > 0 && (
+                                <div className="space-y-1">
+                                  <span className="text-sm font-medium text-muted-foreground">Headers:</span>
+                                  <div className="text-sm font-mono bg-gray-100 dark:bg-gray-700 p-2 rounded">
+                                    {Object.entries(server.headers).map(([key, value]) => (
+                                      <div key={key} className="break-all">
+                                        <span className="text-blue-600 dark:text-blue-400">{key}:</span> {value}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {server.instructions && (
+                                <div className="space-y-1">
+                                  <span className="text-sm font-medium text-muted-foreground">Server Instructions:</span>
+                                  <div className="text-sm bg-gray-100 dark:bg-gray-700 p-3 rounded max-h-48 overflow-y-auto">
+                                    <pre className="whitespace-pre-wrap text-wrap">{server.instructions}</pre>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground">No MCP servers configured</p>
+                        <div className="text-center py-8">
+                          <Network className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                          <p className="text-sm text-muted-foreground">No MCP servers configured</p>
+                          <p className="text-xs text-muted-foreground mt-1">MCP servers will appear here when configured</p>
+                        </div>
                       )}
                     </div>
                   </div>
