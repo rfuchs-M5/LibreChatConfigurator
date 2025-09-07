@@ -1,0 +1,184 @@
+import { z } from "zod";
+import { createInsertSchema } from "drizzle-zod";
+
+// Configuration categories and their settings
+export const configurationSchema = z.object({
+  // Global Core Settings
+  configVer: z.string().default("1.2.8"),
+  cache: z.boolean().default(true),
+  fileStrategy: z.enum(["local", "S3", "Azure Blob", "Firebase"]).default("local"),
+  secureImageLinks: z.boolean().default(false),
+  imageOutputType: z.enum(["url", "base64"]).default("url"),
+  enableConversations: z.boolean().default(true),
+  enableRegistration: z.boolean().default(true),
+
+  // UI/Visibility Settings
+  showModelSelect: z.boolean().default(true),
+  showParameters: z.boolean().default(true),
+  showSidePanel: z.boolean().default(true),
+  showPresets: z.boolean().default(true),
+  showPrompts: z.boolean().default(true),
+  showBookmarks: z.boolean().default(true),
+  showMultiConvo: z.boolean().default(false),
+  showAgents: z.boolean().default(true),
+  showWebSearch: z.boolean().default(true),
+  showFileSearch: z.boolean().default(true),
+  showFileCitations: z.boolean().default(true),
+  showRunCode: z.boolean().default(true),
+  customWelcome: z.string().optional(),
+
+  // Model Specifications
+  modelSpecs: z.boolean().default(false),
+  enforceModelSpecs: z.boolean().default(false),
+  defaultModel: z.string().default("gpt-4"),
+  addedEndpoints: z.boolean().default(true),
+
+  // Endpoint Defaults
+  endpointDefaults: z.object({
+    streaming: z.boolean().default(true),
+    titling: z.boolean().default(true),
+    titleModel: z.string().default("gpt-3.5-turbo"),
+  }).default({}),
+
+  // Agent Configuration
+  agentDefaultRecursionLimit: z.number().min(1).max(50).default(5),
+  agentMaxRecursionLimit: z.number().min(1).max(100).default(10),
+  agentAllowedProviders: z.array(z.string()).default(["openAI"]),
+  agentAllowedCapabilities: z.array(z.string()).default([
+    "execute_code", 
+    "web_search", 
+    "file_search"
+  ]),
+  agentCitationsTotalLimit: z.number().min(1).max(100).default(10),
+  agentCitationsPerFileLimit: z.number().min(1).max(20).default(3),
+  agentCitationsThreshold: z.number().min(0).max(1).default(0.7),
+
+  // File Configuration
+  filesMaxSizeMB: z.number().min(1).max(1000).default(10),
+  filesAllowedMimeTypes: z.array(z.string()).default([
+    "text/plain",
+    "application/pdf", 
+    "image/jpeg",
+    "image/png"
+  ]),
+  filesMaxFilesPerRequest: z.number().min(1).max(20).default(5),
+  filesClientResizeImages: z.boolean().default(true),
+
+  // Rate Limits
+  rateLimitsPerUser: z.number().min(1).max(10000).default(100),
+  rateLimitsPerIP: z.number().min(1).max(10000).default(500),
+  rateLimitsUploads: z.number().min(1).max(1000).default(50),
+  rateLimitsImports: z.number().min(1).max(1000).default(10),
+  rateLimitsTTS: z.number().min(1).max(1000).default(100),
+  rateLimitsSTT: z.number().min(1).max(1000).default(100),
+
+  // Authentication
+  authAllowedDomains: z.array(z.string()).default([]),
+  authSocialLogins: z.array(z.string()).default([]),
+  authLoginOrder: z.array(z.string()).default(["email"]),
+
+  // Memory System
+  memoryEnabled: z.boolean().default(false),
+  memoryPersonalization: z.boolean().default(false),
+  memoryWindowSize: z.number().min(1000).max(100000).default(4000),
+  memoryMaxTokens: z.number().min(1000).max(50000).default(10000),
+  memoryAgent: z.string().default("openAI"),
+
+  // Actions/Tools
+  actionsAllowedDomains: z.array(z.string()).default([]),
+
+  // Temporary Chats
+  temporaryChatsRetentionHours: z.number().min(1).max(8760).default(720),
+
+  // OCR Configuration
+  ocrProvider: z.enum(["mistral", "custom"]).default("mistral"),
+  ocrModel: z.string().default("mistral-7b"),
+  ocrApiBase: z.string().optional(),
+  ocrApiKey: z.string().optional(),
+
+  // Search Configuration
+  searchProvider: z.enum(["Serper", "SearXNG"]).default("Serper"),
+  searchScraper: z.enum(["Firecrawl", "Serper"]).default("Serper"),
+  searchReranker: z.enum(["Jina", "Cohere"]).default("Jina"),
+  searchSafeSearch: z.boolean().default(true),
+  searchTimeout: z.number().min(1000).max(60000).default(10000),
+
+  // MCP Servers
+  mcpServers: z.array(z.object({
+    name: z.string(),
+    type: z.enum(["stdio", "websocket", "SSE", "streamable-http"]),
+    url: z.string().optional(),
+    timeout: z.number().default(30000),
+    headers: z.record(z.string()).default({}),
+    env: z.record(z.string()).default({}),
+    instructions: z.string().optional(),
+  })).default([]),
+
+  // Security Configuration (Environment Variables)
+  host: z.string().default("0.0.0.0"),
+  port: z.number().min(1).max(65535).default(3080),
+  jwtSecret: z.string().min(32),
+  jwtRefreshSecret: z.string().min(32),
+  credsKey: z.string().length(32),
+  credsIV: z.string().length(16),
+  openaiApiKey: z.string().optional(),
+
+  // Database Configuration
+  mongoUri: z.string().optional(),
+  redisUri: z.string().optional(),
+  mongoRootUsername: z.string().default("admin"),
+  mongoRootPassword: z.string().default("password123"),
+  mongoDbName: z.string().default("LibreChat"),
+
+  // Session Configuration
+  sessionExpiry: z.number().default(900000), // 15 minutes in ms
+  refreshTokenExpiry: z.number().default(604800000), // 7 days in ms
+  debugLogging: z.boolean().default(false),
+  cdnProvider: z.string().optional(),
+});
+
+export type Configuration = z.infer<typeof configurationSchema>;
+
+export const configurationProfileSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().optional(),
+  configuration: configurationSchema,
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
+});
+
+export type ConfigurationProfile = z.infer<typeof configurationProfileSchema>;
+
+export const insertConfigurationProfileSchema = configurationProfileSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertConfigurationProfile = z.infer<typeof insertConfigurationProfileSchema>;
+
+// Validation status for each category
+export const validationStatusSchema = z.object({
+  category: z.string(),
+  status: z.enum(["valid", "invalid", "pending"]),
+  settingsValid: z.number(),
+  settingsTotal: z.number(),
+  errors: z.array(z.string()).default([]),
+});
+
+export type ValidationStatus = z.infer<typeof validationStatusSchema>;
+
+// Package generation request
+export const packageGenerationSchema = z.object({
+  configuration: configurationSchema,
+  includeFiles: z.array(z.enum([
+    "env",
+    "yaml", 
+    "docker-compose",
+    "install-script",
+    "readme"
+  ])).default(["env", "yaml", "docker-compose", "install-script", "readme"]),
+});
+
+export type PackageGenerationRequest = z.infer<typeof packageGenerationSchema>;
