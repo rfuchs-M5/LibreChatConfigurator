@@ -1,0 +1,61 @@
+# =============================================================================
+# LibreChat Environment Configuration
+# =============================================================================
+# 
+# IMPORTANT: Copy this file to .env and fill in your actual values
+# Command: cp .env.template .env
+#
+# =============================================================================
+
+# =============================================================================
+# REQUIRED: OpenAI API Configuration
+# =============================================================================
+# Get your API key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=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
+
+# =============================================================================
+# REQUIRED: Security Configuration
+# =============================================================================
+# Generate secure random strings for these values
+# You can use: openssl rand -hex 32
+
+# JWT Secret for token signing (32+ characters recommended)
+JWT_SECRET=b8be51069b71df92150d3203d2cfc0af556042e0723a4d945c3fc9da7d77143d
+
+# JWT Refresh Secret (32+ characters recommended)  
+JWT_REFRESH_SECRET=26dc942db446724a853605e2dad61315c4cad1f9302fe0932b0221d51f204701
+
+# Credentials encryption key (32 characters exactly)
+CREDS_KEY=11d3785fc45eaf57404cd29b807ef0eb
+
+# Credentials encryption IV (16 characters exactly)
+CREDS_IV=26b48f49f3a08948
+
+# =============================================================================
+# Database Configuration (Optional - defaults provided)
+# =============================================================================
+MONGO_ROOT_USERNAME=admin
+MONGO_ROOT_PASSWORD=password123
+MONGO_DB_NAME=LibreChat
+
+# =============================================================================
+# Application Configuration (Optional - defaults provided)
+# =============================================================================
+# Port for LibreChat web interface
+LIBRECHAT_PORT=3080
+
+# Allow new user registration (true/false)
+ALLOW_REGISTRATION=true
+
+# Session expiry time in milliseconds (default: 15 minutes)
+SESSION_EXPIRY=900000
+
+# Refresh token expiry time in milliseconds (default: 7 days)
+REFRESH_TOKEN_EXPIRY=604800000
+
+# Enable debug logging (true/false)
+DEBUG_LOGGING=false
+
+# CDN Provider (leave empty for local storage)
+CDN_PROVIDER=
+
