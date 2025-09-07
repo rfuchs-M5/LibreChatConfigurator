@@ -85,7 +85,7 @@ export default function Home() {
       });
 
       // Create deployment
-      const deployment = await apiRequest("/api/deployments", {
+      const deploymentResponse = await fetch("/api/deployments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,10 +100,21 @@ export default function Home() {
         })
       });
 
+      if (!deploymentResponse.ok) {
+        throw new Error("Failed to create deployment");
+      }
+
+      const deployment = await deploymentResponse.json();
+
       // Poll for deployment status
       const pollDeployment = async (): Promise<void> => {
         try {
-          const updated = await apiRequest(`/api/deployments/${deployment.id}`);
+          const response = await fetch(`/api/deployments/${deployment.id}`);
+          if (!response.ok) {
+            throw new Error("Failed to get deployment status");
+          }
+          
+          const updated = await response.json();
           
           if (updated.status === "running" && updated.publicUrl) {
             setDeploymentUrl(updated.publicUrl);
