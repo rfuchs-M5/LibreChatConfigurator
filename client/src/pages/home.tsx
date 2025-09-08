@@ -5,8 +5,7 @@ import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, Cloud, ExternalLink, BarChart3 } from "lucide-react";
-import { Link } from "wouter";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, Cloud, ExternalLink } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
@@ -174,6 +173,19 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Search functionality */}
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search settings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-80 pl-10"
+                  data-testid="search-settings"
+                />
+                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              </div>
+              
               {/* Validation Status Indicator */}
               <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
                 <CheckCircle className="h-4 w-4 text-green-600" />
@@ -230,81 +242,12 @@ export default function Home() {
                   Visit Live Site
                 </Button>
               )}
-              
-              <Link href="/deployments">
-                <Button variant="outline" data-testid="button-dashboard">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Dashboard
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
       </header>
 
       <div className="flex">
-        {/* Left Sidebar */}
-        <aside className="w-80 bg-white border-r border-border h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto">
-          <div className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Search & Navigation</h2>
-            
-            {/* Search functionality */}
-            <div className="relative mb-6">
-              <Input
-                type="text"
-                placeholder="Search settings..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10"
-                data-testid="search-settings"
-              />
-              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            </div>
-            
-            {/* Quick Actions */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Quick Actions</h3>
-              
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={() => setShowPreview(true)}
-                data-testid="sidebar-preview"
-              >
-                <Eye className="h-4 w-4 mr-3" />
-                Preview Configuration
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={handleSaveProfile}
-                data-testid="sidebar-save"
-              >
-                <Save className="h-4 w-4 mr-3" />
-                Save Profile
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={handleGeneratePackage}
-                data-testid="sidebar-generate"
-              >
-                <Download className="h-4 w-4 mr-3" />
-                Download Package
-              </Button>
-              
-              <Link href="/deployments" className="block">
-                <Button variant="ghost" className="w-full justify-start" data-testid="sidebar-dashboard">
-                  <BarChart3 className="h-4 w-4 mr-3" />
-                  View Deployments
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </aside>
-        
         {/* Main Content */}
         <main className="flex-1">
           <ConfigurationTabs 
