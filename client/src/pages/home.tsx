@@ -83,19 +83,6 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Search functionality */}
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Search settings..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-80 pl-10"
-                  data-testid="search-settings"
-                />
-                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              </div>
-              
               {/* Validation Status Indicator */}
               <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
                 <CheckCircle className="h-4 w-4 text-green-600" />
@@ -127,6 +114,70 @@ export default function Home() {
       </header>
 
       <div className="flex">
+        {/* Left Sidebar */}
+        <aside className="w-80 bg-white border-r border-border shadow-sm">
+          <div className="p-6 space-y-6">
+            {/* Search Section */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-foreground">Search & Filter</h3>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search settings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                  data-testid="search-settings"
+                />
+                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              </div>
+              {searchQuery && (
+                <p className="text-xs text-muted-foreground">
+                  Searching for: "{searchQuery}"
+                </p>
+              )}
+            </div>
+
+            {/* Quick Navigation */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-foreground">Quick Access</h3>
+              <div className="space-y-2">
+                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  Server Configuration
+                </button>
+                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  Security Settings
+                </button>
+                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  MCP Servers
+                </button>
+                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  API Endpoints
+                </button>
+              </div>
+            </div>
+
+            {/* Configuration Stats */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-foreground">Configuration Status</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Total Settings</span>
+                  <span className="font-medium">73</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Categories</span>
+                  <span className="font-medium">17</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">MCP Servers</span>
+                  <span className="font-medium">{configuration.mcpServers.length}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
         {/* Main Content */}
         <main className="flex-1">
           <ConfigurationTabs 
