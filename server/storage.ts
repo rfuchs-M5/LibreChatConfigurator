@@ -1,4 +1,4 @@
-import { type ConfigurationProfile, type InsertConfigurationProfile, type Configuration, type ValidationStatus, type Deployment, type InsertDeployment, type UpdateDeployment } from "@shared/schema";
+import { type ConfigurationProfile, type InsertConfigurationProfile, type Configuration, type ValidationStatus } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
@@ -18,44 +18,29 @@ export interface IStorage {
   // Default Configuration
   getDefaultConfiguration(): Promise<Configuration>;
   
-  // Deployment Management
-  getDeployment(id: string): Promise<Deployment | undefined>;
-  getDeploymentByName(name: string): Promise<Deployment | undefined>;
-  getAllDeployments(): Promise<Deployment[]>;
-  getDeploymentsByProfile(profileId: string): Promise<Deployment[]>;
-  createDeployment(deployment: InsertDeployment): Promise<Deployment>;
-  updateDeployment(id: string, deployment: UpdateDeployment): Promise<Deployment>;
-  deleteDeployment(id: string): Promise<boolean>;
-  
   // File System Operations
   initializeStorage(): Promise<void>;
 }
 
 export class FileStorage implements IStorage {
   private profiles: Map<string, ConfigurationProfile>;
-  private deployments: Map<string, Deployment>;
   private defaultConfig: Configuration;
   private profilesDir: string;
-  private deploymentsDir: string;
   private defaultProfileId: string | null = null;
 
   constructor() {
     this.profiles = new Map();
-    this.deployments = new Map();
     this.profilesDir = path.join(process.cwd(), "data", "profiles");
-    this.deploymentsDir = path.join(process.cwd(), "data", "deployments");
     this.defaultConfig = this.loadDefaultConfiguration();
   }
 
   async initializeStorage(): Promise<void> {
     try {
-      // Ensure data directories exist
+      // Ensure data directory exists
       await fs.mkdir(this.profilesDir, { recursive: true });
-      await fs.mkdir(this.deploymentsDir, { recursive: true });
       
-      // Load existing profiles and deployments from files
+      // Load existing profiles from files
       await this.loadProfilesFromFiles();
-      await this.loadDeploymentsFromFiles();
       
       // Create default profile if it doesn't exist
       await this.ensureDefaultProfile();
@@ -88,46 +73,6 @@ export class FileStorage implements IStorage {
 
   private async deleteProfileFile(id: string): Promise<void> {
     const filePath = path.join(this.profilesDir, `${id}.json`);
-    try {
-      await fs.unlink(filePath);
-    } catch (error) {
-      // File might not exist, that's okay
-    }
-  }
-
-  private async loadDeploymentsFromFiles(): Promise<void> {
-    try {
-      const files = await fs.readdir(this.deploymentsDir);
-      for (const file of files) {
-        if (file.endsWith('.json')) {
-          const filePath = path.join(this.deploymentsDir, file);
-          const content = await fs.readFile(filePath, 'utf-8');
-          const deployment: Deployment = JSON.parse(content);
-          // Convert date strings back to Date objects
-          deployment.createdAt = new Date(deployment.createdAt);
-          deployment.updatedAt = new Date(deployment.updatedAt);
-          if (deployment.deployedAt) {
-            deployment.deployedAt = new Date(deployment.deployedAt);
-          }
-          if (deployment.lastHealthCheck) {
-            deployment.lastHealthCheck = new Date(deployment.lastHealthCheck);
-          }
-          this.deployments.set(deployment.id, deployment);
-        }
-      }
-    } catch (error) {
-      // Directory might not exist yet, that's okay
-      console.log("No existing deployments found, starting fresh");
-    }
-  }
-
-  private async saveDeploymentToFile(deployment: Deployment): Promise<void> {
-    const filePath = path.join(this.deploymentsDir, `${deployment.id}.json`);
-    await fs.writeFile(filePath, JSON.stringify(deployment, null, 2));
-  }
-
-  private async deleteDeploymentFile(id: string): Promise<void> {
-    const filePath = path.join(this.deploymentsDir, `${id}.json`);
     try {
       await fs.unlink(filePath);
     } catch (error) {
@@ -566,66 +511,6 @@ When someone wants to share information company-wide, create a topic in Frits No
     
     // Fallback to basic default configuration
     return { ...this.defaultConfig };
-  }
-
-  // Deployment CRUD operations
-  async getDeployment(id: string): Promise<Deployment | undefined> {
-    return this.deployments.get(id);
-  }
-
-  async getDeploymentByName(name: string): Promise<Deployment | undefined> {
-    return Array.from(this.deployments.values()).find(deployment => deployment.name === name);
-  }
-
-  async getAllDeployments(): Promise<Deployment[]> {
-    return Array.from(this.deployments.values());
-  }
-
-  async getDeploymentsByProfile(profileId: string): Promise<Deployment[]> {
-    return Array.from(this.deployments.values()).filter(deployment => deployment.configurationProfileId === profileId);
-  }
-
-  async createDeployment(insertDeployment: InsertDeployment): Promise<Deployment> {
-    const id = randomUUID();
-    const now = new Date();
-    const deployment: Deployment = {
-      ...insertDeployment,
-      id,
-      status: "pending",
-      deploymentLogs: [],
-      uptime: 0,
-      createdAt: now,
-      updatedAt: now,
-    };
-    this.deployments.set(id, deployment);
-    await this.saveDeploymentToFile(deployment);
-    return deployment;
-  }
-
-  async updateDeployment(id: string, updates: UpdateDeployment): Promise<Deployment> {
-    const existing = this.deployments.get(id);
-    if (!existing) {
-      throw new Error(`Deployment with id ${id} not found`);
-    }
-    
-    const updated: Deployment = {
-      ...existing,
-      ...updates,
-      id, // Ensure ID cannot be changed
-      updatedAt: new Date(),
-    };
-    
-    this.deployments.set(id, updated);
-    await this.saveDeploymentToFile(updated);
-    return updated;
-  }
-
-  async deleteDeployment(id: string): Promise<boolean> {
-    const deleted = this.deployments.delete(id);
-    if (deleted) {
-      await this.deleteDeploymentFile(id);
-    }
-    return deleted;
   }
 }
 
