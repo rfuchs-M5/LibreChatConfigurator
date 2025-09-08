@@ -173,19 +173,6 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Search functionality */}
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Search settings..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-80 pl-10"
-                  data-testid="search-settings"
-                />
-                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              </div>
-              
               {/* Validation Status Indicator */}
               <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
                 <CheckCircle className="h-4 w-4 text-green-600" />
@@ -254,6 +241,7 @@ export default function Home() {
             configuration={configuration}
             onConfigurationChange={updateConfiguration}
             searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
           />
         </main>
       </div>

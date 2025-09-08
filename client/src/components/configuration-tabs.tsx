@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { SettingInput } from "./setting-input";
 import { StatusIndicator } from "./status-indicator";
 import { Progress } from "@/components/ui/progress";
@@ -34,12 +35,14 @@ interface ConfigurationTabsProps {
   configuration: Configuration;
   onConfigurationChange: (updates: Partial<Configuration>) => void;
   searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
 }
 
 export function ConfigurationTabs({ 
   configuration, 
   onConfigurationChange, 
-  searchQuery 
+  searchQuery,
+  onSearchQueryChange
 }: ConfigurationTabsProps) {
   const [activeTab, setActiveTab] = useState("server");
 
@@ -214,6 +217,19 @@ export function ConfigurationTabs({
       {/* Sidebar Navigation */}
       <aside className="w-80 bg-white shadow-lg border-r border-border h-screen sticky top-16 overflow-y-auto">
         <div className="p-6">
+          {/* Search functionality */}
+          <div className="relative mb-4">
+            <Input
+              type="text"
+              placeholder="Search settings..."
+              value={searchQuery}
+              onChange={(e) => onSearchQueryChange(e.target.value)}
+              className="w-full pl-10"
+              data-testid="search-settings"
+            />
+            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          </div>
+          
           <h2 className="text-lg font-semibold text-foreground mb-4">Configuration Categories</h2>
           
           <nav className="space-y-2">
