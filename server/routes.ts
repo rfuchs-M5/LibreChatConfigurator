@@ -421,6 +421,10 @@ endpoints:
     models:
       default: 
         - "${config.defaultModel}"
+        - "gpt-5"
+        - "gpt-5-mini"
+        - "gpt-5-nano"
+        - "gpt-5-thinking"
         - "gpt-4-turbo"
         - "gpt-3.5-turbo"
       fetch: true

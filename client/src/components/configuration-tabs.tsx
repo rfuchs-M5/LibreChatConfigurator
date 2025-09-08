@@ -586,7 +586,7 @@ export function ConfigurationTabs({
                     type="select"
                     value={configuration.defaultModel}
                     onChange={(value) => onConfigurationChange({ defaultModel: value as string })}
-                    options={["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo", "claude-3", "gemini-pro"]}
+                    options={["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5-thinking", "gpt-4", "gpt-4-turbo", "gpt-3.5-turbo", "claude-3", "gemini-pro"]}
                     data-testid="input-default-model"
                   />
                   <SettingInput
