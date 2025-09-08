@@ -5,11 +5,15 @@ import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, Cloud, ExternalLink, BarChart3 } from "lucide-react";
+import { Link } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [deploymentUrl, setDeploymentUrl] = useState<string | null>(null);
   const { configuration, updateConfiguration, saveProfile, generatePackage } = useConfiguration();
   const { toast } = useToast();
 
@@ -64,6 +68,93 @@ export default function Home() {
     }
   };
 
+  const handleDeploy = async () => {
+    if (isDeploying) return;
+
+    try {
+      setIsDeploying(true);
+      
+      // First, save the current configuration as a profile
+      const savedProfile = await saveProfile({
+        name: `Deploy Configuration ${new Date().toISOString().split('T')[0]}`,
+        description: "Configuration profile created for deployment",
+      });
+
+      toast({
+        title: "Starting Deployment",
+        description: "Your LibreChat instance is being deployed to the cloud...",
+      });
+
+      // Create deployment
+      const deploymentResponse = await fetch("/api/deployments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `LibreChat-${Date.now()}`,
+          description: "Deployed from LibreChat Configuration Interface",
+          configurationProfileId: savedProfile.id,
+          platform: "railway",
+          region: "us-west-1",
+          resourcePlan: "starter"
+        })
+      });
+
+      if (!deploymentResponse.ok) {
+        throw new Error("Failed to create deployment");
+      }
+
+      const deployment = await deploymentResponse.json();
+
+      // Poll for deployment status
+      const pollDeployment = async (): Promise<void> => {
+        try {
+          const response = await fetch(`/api/deployments/${deployment.id}`);
+          if (!response.ok) {
+            throw new Error("Failed to get deployment status");
+          }
+          
+          const updated = await response.json();
+          
+          if (updated.status === "running" && updated.publicUrl) {
+            setDeploymentUrl(updated.publicUrl);
+            setIsDeploying(false);
+            toast({
+              title: "Deployment Successful! 🎉",
+              description: `Your LibreChat instance is now live at ${updated.publicUrl}`,
+              duration: 10000,
+            });
+          } else if (updated.status === "failed") {
+            setIsDeploying(false);
+            toast({
+              title: "Deployment Failed",
+              description: "Failed to deploy LibreChat instance. Please try again.",
+              variant: "destructive",
+            });
+          } else {
+            // Still deploying, check again in 3 seconds
+            setTimeout(pollDeployment, 3000);
+          }
+        } catch (error) {
+          console.error("Error polling deployment:", error);
+          setTimeout(pollDeployment, 5000); // Retry with longer delay
+        }
+      };
+
+      // Start polling
+      setTimeout(pollDeployment, 2000);
+
+    } catch (error) {
+      setIsDeploying(false);
+      toast({
+        title: "Deployment Failed",
+        description: "Failed to initiate deployment. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
@@ -108,6 +199,44 @@ export default function Home() {
                 <Rocket className="h-4 w-4 mr-2" />
                 Generate Package
               </Button>
+              
+              <Button 
+                onClick={handleDeploy} 
+                disabled={isDeploying}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white" 
+                data-testid="button-deploy"
+              >
+                {isDeploying ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Deploying...
+                  </>
+                ) : (
+                  <>
+                    <Cloud className="h-4 w-4 mr-2" />
+                    Deploy Live
+                  </>
+                )}
+              </Button>
+              
+              {deploymentUrl && (
+                <Button 
+                  variant="outline"
+                  onClick={() => window.open(deploymentUrl, '_blank')}
+                  className="border-green-200 text-green-700 hover:bg-green-50"
+                  data-testid="button-visit-deployment"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Visit Live Site
+                </Button>
+              )}
+              
+              <Link href="/deployments">
+                <Button variant="outline" data-testid="button-dashboard">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -115,69 +244,67 @@ export default function Home() {
 
       <div className="flex">
         {/* Left Sidebar */}
-        <aside className="w-80 bg-white border-r border-border shadow-sm">
-          <div className="p-6 space-y-6">
-            {/* Search Section */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">Search & Filter</h3>
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Search settings..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                  data-testid="search-settings"
-                />
-                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              </div>
-              {searchQuery && (
-                <p className="text-xs text-muted-foreground">
-                  Searching for: "{searchQuery}"
-                </p>
-              )}
+        <aside className="w-80 bg-white border-r border-border h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto">
+          <div className="p-6">
+            <h2 className="text-lg font-semibold mb-4">Search & Navigation</h2>
+            
+            {/* Search functionality */}
+            <div className="relative mb-6">
+              <Input
+                type="text"
+                placeholder="Search settings..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10"
+                data-testid="search-settings"
+              />
+              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             </div>
-
-            {/* Quick Navigation */}
+            
+            {/* Quick Actions */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">Quick Access</h3>
-              <div className="space-y-2">
-                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  Server Configuration
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  Security Settings
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  MCP Servers
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  API Endpoints
-                </button>
-              </div>
-            </div>
-
-            {/* Configuration Stats */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">Configuration Status</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Total Settings</span>
-                  <span className="font-medium">73</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Categories</span>
-                  <span className="font-medium">17</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">MCP Servers</span>
-                  <span className="font-medium">{configuration.mcpServers.length}</span>
-                </div>
-              </div>
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Quick Actions</h3>
+              
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={() => setShowPreview(true)}
+                data-testid="sidebar-preview"
+              >
+                <Eye className="h-4 w-4 mr-3" />
+                Preview Configuration
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={handleSaveProfile}
+                data-testid="sidebar-save"
+              >
+                <Save className="h-4 w-4 mr-3" />
+                Save Profile
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={handleGeneratePackage}
+                data-testid="sidebar-generate"
+              >
+                <Download className="h-4 w-4 mr-3" />
+                Download Package
+              </Button>
+              
+              <Link href="/deployments" className="block">
+                <Button variant="ghost" className="w-full justify-start" data-testid="sidebar-dashboard">
+                  <BarChart3 className="h-4 w-4 mr-3" />
+                  View Deployments
+                </Button>
+              </Link>
             </div>
           </div>
         </aside>
-
+        
         {/* Main Content */}
         <main className="flex-1">
           <ConfigurationTabs 

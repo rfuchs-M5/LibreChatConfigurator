@@ -210,3 +210,99 @@ export const packageGenerationSchema = z.object({
 });
 
 export type PackageGenerationRequest = z.infer<typeof packageGenerationSchema>;
+
+// Deployment schemas
+export const deploymentStatusSchema = z.enum([
+  "pending",     // Deployment initiated but not started
+  "building",    // Building Docker image and preparing deployment
+  "deploying",   // Actively deploying to cloud platform
+  "running",     // Successfully deployed and running
+  "failed",      // Deployment failed
+  "stopped",     // Manually stopped or crashed
+  "updating"     // Updating existing deployment
+]);
+
+export type DeploymentStatus = z.infer<typeof deploymentStatusSchema>;
+
+export const deploymentSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().optional(),
+  
+  // Configuration and profile references
+  configurationProfileId: z.string(),
+  configuration: packageConfigurationSchema,
+  
+  // Deployment details
+  status: deploymentStatusSchema,
+  platform: z.enum(["railway", "vercel", "digitalocean"]).default("railway"),
+  
+  // Cloud platform specific IDs
+  platformProjectId: z.string().optional(),
+  platformServiceId: z.string().optional(),
+  platformDeploymentId: z.string().optional(),
+  
+  // URLs and access
+  publicUrl: z.string().optional(),
+  adminUrl: z.string().optional(),
+  
+  // Deployment metadata
+  region: z.string().default("us-west-1"),
+  resourcePlan: z.enum(["starter", "developer", "pro"]).default("starter"),
+  
+  // Status tracking
+  deploymentLogs: z.array(z.string()).default([]),
+  lastHealthCheck: z.date().optional(),
+  uptime: z.number().default(0), // in seconds
+  
+  // Timestamps
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
+  deployedAt: z.date().optional(),
+});
+
+export type Deployment = z.infer<typeof deploymentSchema>;
+
+export const insertDeploymentSchema = z.object({
+  name: z.string().min(1).max(50),
+  description: z.string().optional(),
+  configurationProfileId: z.string(),
+  configuration: packageConfigurationSchema,
+  platform: z.enum(["railway", "vercel", "digitalocean"]).default("railway"),
+  region: z.string().default("us-west-1"),
+  resourcePlan: z.enum(["starter", "developer", "pro"]).default("starter"),
+});
+
+export type InsertDeployment = z.infer<typeof insertDeploymentSchema>;
+
+export const updateDeploymentSchema = z.object({
+  name: z.string().min(1).max(50).optional(),
+  description: z.string().optional(),
+  status: deploymentStatusSchema.optional(),
+  platformProjectId: z.string().optional(),
+  platformServiceId: z.string().optional(),
+  platformDeploymentId: z.string().optional(),
+  publicUrl: z.string().optional(),
+  adminUrl: z.string().optional(),
+  deploymentLogs: z.array(z.string()).optional(),
+  lastHealthCheck: z.date().optional(),
+  uptime: z.number().optional(),
+  deployedAt: z.date().optional(),
+});
+
+export type UpdateDeployment = z.infer<typeof updateDeploymentSchema>;
+
+// Deployment request for creating new deployments
+export const deploymentRequestSchema = z.object({
+  name: z.string().min(1).max(50),
+  description: z.string().optional(),
+  configurationProfileId: z.string(),
+  platform: z.enum(["railway", "vercel", "digitalocean"]).default("railway"),
+  region: z.string().default("us-west-1"),
+  resourcePlan: z.enum(["starter", "developer", "pro"]).default("starter"),
+  
+  // Environment overrides (optional)
+  environmentOverrides: z.record(z.string()).optional(),
+});
+
+export type DeploymentRequest = z.infer<typeof deploymentRequestSchema>;
