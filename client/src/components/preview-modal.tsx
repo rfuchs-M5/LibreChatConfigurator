@@ -154,7 +154,7 @@ rateLimits:
           
           <TabsContent value="env" className="mt-4">
             <ScrollArea className="h-96 w-full rounded-md border">
-              <pre className="p-4 text-sm bg-slate-900 text-green-400 font-mono overflow-x-auto">
+              <pre className="p-4 text-sm bg-slate-900 text-green-400 font-mono whitespace-pre-wrap break-words overflow-wrap-anywhere">
                 {generateEnvPreview()}
               </pre>
             </ScrollArea>
@@ -162,7 +162,7 @@ rateLimits:
           
           <TabsContent value="yaml" className="mt-4">
             <ScrollArea className="h-96 w-full rounded-md border">
-              <pre className="p-4 text-sm bg-slate-900 text-blue-400 font-mono overflow-x-auto">
+              <pre className="p-4 text-sm bg-slate-900 text-blue-400 font-mono whitespace-pre-wrap break-words overflow-wrap-anywhere">
                 {generateYamlPreview()}
               </pre>
             </ScrollArea>
