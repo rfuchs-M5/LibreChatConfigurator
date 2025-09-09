@@ -147,9 +147,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         packageFiles[".env"] = generateEnvFile(configuration);
       }
 
-      // Generate librechat.yaml file
+      // Generate librechat-config.yaml file
       if (includeFiles.includes("yaml")) {
-        packageFiles["librechat.yaml"] = generateYamlFile(configuration);
+        packageFiles["librechat-config.yaml"] = generateYamlFile(configuration);
       }
 
       // Generate docker-compose.yml file
@@ -617,7 +617,7 @@ services:
       MCP_ENABLED: "true"
       
     volumes:
-      - ./librechat.yaml:/app/librechat.yaml:ro
+      - ./librechat-config.yaml:/app/librechat.yaml:ro
       - librechat_uploads:/app/client/public/images
       - librechat_logs:/app/api/logs
     networks:
@@ -719,7 +719,7 @@ This package contains a complete LibreChat v${config.configVer} installation wit
 ## 📋 Package Contents
 
 - \`.env\` - Environment variables configuration
-- \`librechat.yaml\` - Main LibreChat configuration file
+- \`librechat-config.yaml\` - Main LibreChat configuration file
 - \`docker-compose.yml\` - Docker services orchestration
 - \`install.sh\` - Automated installation script
 - \`README.md\` - This documentation file
@@ -787,7 +787,7 @@ Key security and application settings are stored in the \`.env\` file:
 - API keys
 - Session timeouts
 
-### LibreChat YAML (librechat.yaml)
+### LibreChat YAML (librechat-config.yaml)
 The main configuration file controls:
 - AI model endpoints
 - UI feature visibility
