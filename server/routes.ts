@@ -167,6 +167,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         packageFiles["README.md"] = generateReadmeFile(configuration);
       }
 
+      // Always include a profile file for easy re-import
+      packageFiles["profile.json"] = generateProfileFile(configuration);
+
       console.log("📦 [PACKAGE DEBUG] Generated files:", Object.keys(packageFiles));
       res.json({ files: packageFiles });
     } catch (error) {
@@ -722,6 +725,7 @@ This package contains a complete LibreChat v${config.configVer} installation wit
 - \`librechat-config.yaml\` - Main LibreChat configuration file
 - \`docker-compose.yml\` - Docker services orchestration
 - \`install.sh\` - Automated installation script
+- \`profile.json\` - Configuration profile for easy re-import
 - \`README.md\` - This documentation file
 
 ## 🚀 Quick Start
@@ -794,6 +798,12 @@ The main configuration file controls:
 - Agent capabilities
 - File handling rules
 - Rate limiting policies
+
+### Profile File (profile.json)
+A complete configuration profile that can be re-imported into the LibreChat Configuration Interface:
+- Full configuration backup
+- Easy re-loading for future modifications
+- Compatible with the Profile → Import Profile feature
 
 ## 🐳 Docker Commands
 
@@ -889,6 +899,21 @@ If you encounter issues:
 **Configuration Version**: ${config.configVer}
 **Support**: https://docs.librechat.ai
 `;
+}
+
+function generateProfileFile(config: any): string {
+  const currentDate = new Date().toISOString();
+  const profileName = `LibreChat-v${config.configVer}-${currentDate.split('T')[0]}`;
+  
+  const profile = {
+    name: profileName,
+    version: "1.0.0",
+    createdAt: currentDate,
+    description: `Generated LibreChat configuration profile for v${config.configVer}`,
+    configuration: config
+  };
+  
+  return JSON.stringify(profile, null, 2);
 }
 
 // =============================================================================
