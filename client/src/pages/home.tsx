@@ -166,12 +166,6 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Validation Status Indicator */}
-              <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
-                <CheckCircle className="h-4 w-4 text-green-600" />
-                <span className="text-sm font-medium text-green-800 dark:text-green-200">Configuration Valid</span>
-              </div>
-              
               {/* Profile Management Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
