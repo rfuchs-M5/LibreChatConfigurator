@@ -13,25 +13,15 @@ import { Label } from "@/components/ui/label";
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPreview, setShowPreview] = useState(false);
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [profileName, setProfileName] = useState("");
+  const [configurationName, setConfigurationName] = useState("My LibreChat Configuration");
   const { configuration, updateConfiguration, saveProfile, generatePackage } = useConfiguration();
   const { toast } = useToast();
 
-  const handleSaveAsProfile = async () => {
-    if (!profileName.trim()) {
-      toast({
-        title: "Name Required",
-        description: "Please enter a name for your configuration profile.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleSaveProfile = async () => {
     try {
-      // Create profile data with configuration
+      // Create profile data with configuration and name
       const profileData = {
-        name: profileName.trim(),
+        name: configurationName,
         description: `Configuration profile created on ${new Date().toLocaleDateString()}`,
         configuration: configuration,
         version: "0.8.0-rc3",
@@ -45,7 +35,7 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${profileName.trim().replace(/[^a-zA-Z0-9-_]/g, '-')}-profile.json`;
+      a.download = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}-profile.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -53,11 +43,8 @@ export default function Home() {
 
       toast({
         title: "Profile Saved",
-        description: `Configuration profile "${profileName}" downloaded successfully.`,
+        description: `Configuration "${configurationName}" downloaded successfully.`,
       });
-      
-      setShowSaveDialog(false);
-      setProfileName("");
     } catch (error) {
       toast({
         title: "Save Failed",
@@ -84,8 +71,11 @@ export default function Home() {
               throw new Error("Invalid profile format: missing configuration data");
             }
 
-            // Apply the configuration
+            // Apply the configuration and name
             updateConfiguration(profileData.configuration);
+            if (profileData.name) {
+              setConfigurationName(profileData.name);
+            }
             
             toast({
               title: "Profile Imported",
@@ -158,9 +148,20 @@ export default function Home() {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
                   <i className="fas fa-cog text-white text-lg"></i>
                 </div>
-                <div>
+                <div className="flex-1">
                   <h1 className="text-xl font-bold text-foreground">LibreChat Configuration</h1>
                   <p className="text-sm text-muted-foreground">v0.8.0-rc3 Enterprise Setup</p>
+                </div>
+                
+                {/* Configuration Name Input */}
+                <div className="flex-1 max-w-md">
+                  <Input
+                    value={configurationName}
+                    onChange={(e) => setConfigurationName(e.target.value)}
+                    className="text-lg font-medium bg-transparent border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    placeholder="Configuration name..."
+                    data-testid="input-config-name"
+                  />
                 </div>
               </div>
             </div>
@@ -176,9 +177,9 @@ export default function Home() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => setShowSaveDialog(true)} data-testid="menu-save-as">
+                  <DropdownMenuItem onClick={handleSaveProfile} data-testid="menu-save">
                     <Save className="h-4 w-4 mr-2" />
-                    Save Configuration As...
+                    Save Configuration
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleImportConfig} data-testid="menu-import">
                     <Upload className="h-4 w-4 mr-2" />
@@ -236,39 +237,6 @@ export default function Home() {
         />
       )}
       
-      {/* Save As Dialog */}
-      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Save Configuration Profile</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <Label htmlFor="profile-name">Profile Name</Label>
-              <Input
-                id="profile-name"
-                placeholder="e.g., Production Setup, Development Config"
-                value={profileName}
-                onChange={(e) => setProfileName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSaveAsProfile()}
-                data-testid="input-profile-name"
-              />
-            </div>
-            <div className="text-sm text-muted-foreground">
-              This will download a profile file that you can later import to restore these exact settings.
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowSaveDialog(false)} data-testid="button-cancel-save">
-                Cancel
-              </Button>
-              <Button onClick={handleSaveAsProfile} data-testid="button-confirm-save">
-                <Download className="h-4 w-4 mr-2" />
-                Save & Download
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
