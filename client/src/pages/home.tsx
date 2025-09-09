@@ -306,10 +306,6 @@ export default function Home() {
             // Update configuration with parsed data
             updateConfiguration(configUpdates);
             
-            // Set profile name based on file name
-            const fileName = file.name.replace(/\.(yaml|yml)$/, '');
-            setConfigurationName(`Imported from ${fileName}`);
-            
             toast({
               title: "YAML Imported",
               description: `LibreChat configuration from "${file.name}" imported successfully.`,
@@ -350,10 +346,6 @@ export default function Home() {
             
             // Update configuration with parsed data
             updateConfiguration(configUpdates);
-            
-            // Set profile name based on file name
-            const fileName = file.name.replace(/\.env$/, '');
-            setConfigurationName(`Imported from ${fileName || '.env'}`);
             
             toast({
               title: "Environment File Imported",
