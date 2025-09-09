@@ -4,7 +4,7 @@ import { createInsertSchema } from "drizzle-zod";
 // Configuration categories and their settings
 export const configurationSchema = z.object({
   // Global Core Settings
-  configVer: z.string().default("1.2.8"),
+  configVer: z.string().default("0.8.0-rc3"),
   cache: z.boolean().default(true),
   fileStrategy: z.enum(["local", "S3", "Azure Blob", "Firebase"]).default("local"),
   secureImageLinks: z.boolean().default(false),
