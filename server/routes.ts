@@ -717,7 +717,7 @@ echo "🎉 Installation complete! Enjoy using LibreChat!"
 function generateReadmeFile(config: any): string {
   return `# LibreChat Configuration
 
-This package contains a complete LibreChat v${config.configVer} installation with your custom configuration.
+This package contains a complete LibreChat v0.8.0-rc3 installation with your custom configuration (using configuration schema v${config.configVer}).
 
 ## 📋 Package Contents
 
@@ -748,7 +748,8 @@ This package contains a complete LibreChat v${config.configVer} installation wit
 ## ⚙️ Configuration Summary
 
 ### Core Settings
-- **Version**: ${config.configVer}
+- **LibreChat Version**: v0.8.0-rc3
+- **Configuration Schema**: v${config.configVer}
 - **Host**: ${config.host}:${config.port}
 - **Registration**: ${config.enableRegistration ? 'Enabled' : 'Disabled'}
 - **Debug Logging**: ${config.debugLogging ? 'Enabled' : 'Disabled'}
@@ -896,7 +897,8 @@ If you encounter issues:
 ---
 
 **Generated on**: ${new Date().toISOString().split('T')[0]}
-**Configuration Version**: ${config.configVer}
+**LibreChat Version**: v0.8.0-rc3
+**Configuration Schema**: v${config.configVer}
 **Support**: https://docs.librechat.ai
 `;
 }
