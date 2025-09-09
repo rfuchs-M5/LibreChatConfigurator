@@ -5,10 +5,11 @@ import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"; 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
 import { Label } from "@/components/ui/label";
+import yaml from "js-yaml";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,7 +66,177 @@ export default function Home() {
     }
   };
 
-  const handleImportConfig = () => {
+  const parseEnvFile = (envContent: string) => {
+    const envVars: Record<string, string> = {};
+    const lines = envContent.split('\n');
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      
+      const [key, ...valueParts] = trimmed.split('=');
+      if (key && valueParts.length > 0) {
+        envVars[key.trim()] = valueParts.join('=').trim();
+      }
+    }
+    return envVars;
+  };
+
+  const mapEnvToConfiguration = (envVars: Record<string, string>) => {
+    const config: any = {};
+    
+    // Map environment variables to configuration
+    if (envVars.HOST) config.host = envVars.HOST;
+    if (envVars.PORT) config.port = parseInt(envVars.PORT) || 3080;
+    if (envVars.ALLOW_REGISTRATION) config.enableRegistration = envVars.ALLOW_REGISTRATION === 'true';
+    if (envVars.DEBUG_LOGGING) config.debugLogging = envVars.DEBUG_LOGGING === 'true';
+    if (envVars.SESSION_EXPIRY) config.sessionExpiry = parseInt(envVars.SESSION_EXPIRY) || 900000;
+    if (envVars.REFRESH_TOKEN_EXPIRY) config.refreshTokenExpiry = parseInt(envVars.REFRESH_TOKEN_EXPIRY) || 604800000;
+    
+    // Security settings
+    if (envVars.JWT_SECRET) config.jwtSecret = envVars.JWT_SECRET;
+    if (envVars.JWT_REFRESH_SECRET) config.jwtRefreshSecret = envVars.JWT_REFRESH_SECRET;
+    if (envVars.CREDS_KEY) config.credsKey = envVars.CREDS_KEY;
+    if (envVars.CREDS_IV) config.credsIV = envVars.CREDS_IV;
+    
+    // Database settings
+    if (envVars.MONGO_ROOT_USERNAME) config.mongoRootUsername = envVars.MONGO_ROOT_USERNAME;
+    if (envVars.MONGO_ROOT_PASSWORD) config.mongoRootPassword = envVars.MONGO_ROOT_PASSWORD;
+    if (envVars.MONGO_DB_NAME) config.mongoDbName = envVars.MONGO_DB_NAME;
+    
+    // API Keys
+    if (envVars.OPENAI_API_KEY) config.openaiApiKey = envVars.OPENAI_API_KEY;
+    if (envVars.CDN_PROVIDER) config.cdnProvider = envVars.CDN_PROVIDER;
+    
+    return config;
+  };
+
+  const mapYamlToConfiguration = (yamlData: any) => {
+    const config: any = {};
+    
+    // Basic settings
+    if (yamlData.version) config.configVer = yamlData.version;
+    if (yamlData.cache !== undefined) config.cache = yamlData.cache;
+    
+    // MCP Servers
+    if (yamlData.mcpServers) {
+      config.mcpServers = Object.entries(yamlData.mcpServers).map(([name, server]: [string, any]) => ({
+        name,
+        type: server.type || 'streamable-http',
+        url: server.url || '',
+        timeout: server.timeout || 30000,
+        headers: server.headers || {},
+        env: server.env || {},
+        instructions: server.serverInstructions || server.instructions || ''
+      }));
+    }
+    
+    // UI Settings
+    if (yamlData.ui) {
+      if (yamlData.ui.modelSelect !== undefined) config.showModelSelect = yamlData.ui.modelSelect;
+      if (yamlData.ui.parameters !== undefined) config.showParameters = yamlData.ui.parameters;
+      if (yamlData.ui.sidePanel !== undefined) config.showSidePanel = yamlData.ui.sidePanel;
+      if (yamlData.ui.presets !== undefined) config.showPresets = yamlData.ui.presets;
+      if (yamlData.ui.prompts !== undefined) config.showPrompts = yamlData.ui.prompts;
+      if (yamlData.ui.bookmarks !== undefined) config.showBookmarks = yamlData.ui.bookmarks;
+      if (yamlData.ui.multiConvo !== undefined) config.showMultiConvo = yamlData.ui.multiConvo;
+      if (yamlData.ui.agents !== undefined) config.showAgents = yamlData.ui.agents;
+      if (yamlData.ui.webSearch !== undefined) config.showWebSearch = yamlData.ui.webSearch;
+      if (yamlData.ui.fileSearch !== undefined) config.showFileSearch = yamlData.ui.fileSearch;
+      if (yamlData.ui.fileCitations !== undefined) config.showFileCitations = yamlData.ui.fileCitations;
+      if (yamlData.ui.runCode !== undefined) config.showRunCode = yamlData.ui.runCode;
+    }
+    
+    // Agent Configuration
+    if (yamlData.agents) {
+      if (yamlData.agents.defaultRecursionLimit) config.agentDefaultRecursionLimit = yamlData.agents.defaultRecursionLimit;
+      if (yamlData.agents.maxRecursionLimit) config.agentMaxRecursionLimit = yamlData.agents.maxRecursionLimit;
+      if (yamlData.agents.allowedProviders) config.agentAllowedProviders = yamlData.agents.allowedProviders;
+      if (yamlData.agents.allowedCapabilities) config.agentAllowedCapabilities = yamlData.agents.allowedCapabilities;
+      if (yamlData.agents.citations) {
+        if (yamlData.agents.citations.totalLimit) config.agentCitationsTotalLimit = yamlData.agents.citations.totalLimit;
+        if (yamlData.agents.citations.perFileLimit) config.agentCitationsPerFileLimit = yamlData.agents.citations.perFileLimit;
+        if (yamlData.agents.citations.threshold !== undefined) config.agentCitationsThreshold = yamlData.agents.citations.threshold;
+      }
+    }
+    
+    // Rate Limits
+    if (yamlData.rateLimits) {
+      if (yamlData.rateLimits.perUser) config.rateLimitsPerUser = yamlData.rateLimits.perUser;
+      if (yamlData.rateLimits.perIP) config.rateLimitsPerIP = yamlData.rateLimits.perIP;
+      if (yamlData.rateLimits.uploads) config.rateLimitsUploads = yamlData.rateLimits.uploads;
+      if (yamlData.rateLimits.imports) config.rateLimitsImports = yamlData.rateLimits.imports;
+      if (yamlData.rateLimits.tts) config.rateLimitsTTS = yamlData.rateLimits.tts;
+      if (yamlData.rateLimits.stt) config.rateLimitsSTT = yamlData.rateLimits.stt;
+    }
+    
+    // File Configuration
+    if (yamlData.fileConfig?.endpoints?.openAI) {
+      const fileConfig = yamlData.fileConfig.endpoints.openAI;
+      if (fileConfig.fileLimit) config.filesMaxFilesPerRequest = fileConfig.fileLimit;
+      if (fileConfig.fileSizeLimit) config.filesMaxSizeMB = fileConfig.fileSizeLimit;
+      if (fileConfig.supportedMimeTypes) config.filesAllowedMimeTypes = fileConfig.supportedMimeTypes;
+    }
+    
+    // Search Configuration
+    if (yamlData.search) {
+      if (yamlData.search.provider) config.searchProvider = yamlData.search.provider;
+      if (yamlData.search.scraper) config.searchScraper = yamlData.search.scraper;
+      if (yamlData.search.reranker) config.searchReranker = yamlData.search.reranker;
+      if (yamlData.search.safeSearch !== undefined) config.searchSafeSearch = yamlData.search.safeSearch;
+      if (yamlData.search.timeout) config.searchTimeout = yamlData.search.timeout;
+    }
+    
+    // Memory Configuration
+    if (yamlData.memory) {
+      if (yamlData.memory.enabled !== undefined) config.memoryEnabled = yamlData.memory.enabled;
+      if (yamlData.memory.personalization !== undefined) config.memoryPersonalization = yamlData.memory.personalization;
+      if (yamlData.memory.windowSize) config.memoryWindowSize = yamlData.memory.windowSize;
+      if (yamlData.memory.maxTokens) config.memoryMaxTokens = yamlData.memory.maxTokens;
+      if (yamlData.memory.agent) config.memoryAgent = yamlData.memory.agent;
+    }
+    
+    // OCR Configuration
+    if (yamlData.ocr) {
+      if (yamlData.ocr.provider) config.ocrProvider = yamlData.ocr.provider;
+      if (yamlData.ocr.model) config.ocrModel = yamlData.ocr.model;
+      if (yamlData.ocr.apiBase) config.ocrApiBase = yamlData.ocr.apiBase;
+      if (yamlData.ocr.apiKey) config.ocrApiKey = yamlData.ocr.apiKey;
+    }
+    
+    // Actions Configuration
+    if (yamlData.actions?.allowedDomains) {
+      config.actionsAllowedDomains = yamlData.actions.allowedDomains;
+    }
+    
+    // Temporary Chats
+    if (yamlData.temporaryChats?.retentionHours) {
+      config.temporaryChatsRetentionHours = yamlData.temporaryChats.retentionHours;
+    }
+    
+    // Interface settings
+    if (yamlData.interface?.customWelcome) {
+      config.customWelcome = yamlData.interface.customWelcome;
+    }
+    
+    // Endpoint defaults
+    if (yamlData.endpoints?.openAI) {
+      const openAIConfig = yamlData.endpoints.openAI;
+      if (openAIConfig.titleConvo !== undefined) {
+        config.endpointDefaults = { ...config.endpointDefaults, titling: openAIConfig.titleConvo };
+      }
+      if (openAIConfig.titleModel) {
+        config.endpointDefaults = { ...config.endpointDefaults, titleModel: openAIConfig.titleModel };
+      }
+      if (openAIConfig.models?.default?.[0]) {
+        config.defaultModel = openAIConfig.models.default[0];
+      }
+    }
+    
+    return config;
+  };
+
+  const handleImportProfile = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".json";
@@ -102,6 +273,97 @@ export default function Home() {
             toast({
               title: "Import Failed",
               description: "Failed to import configuration. Please check the file format.",
+              variant: "destructive",
+            });
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleImportYaml = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".yaml,.yml";
+    input.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            console.log("📥 [YAML IMPORT] Parsing YAML file:", file.name);
+            const yamlContent = event.target?.result as string;
+            const yamlData = yaml.load(yamlContent) as any;
+            
+            console.log("   - Parsed YAML data:", yamlData);
+            
+            const configUpdates = mapYamlToConfiguration(yamlData);
+            console.log("   - Mapped configuration:", configUpdates);
+            console.log("   - MCP servers found:", configUpdates.mcpServers?.length || 0);
+            
+            // Update configuration with parsed data
+            updateConfiguration(configUpdates);
+            
+            // Set profile name based on file name
+            const fileName = file.name.replace(/\.(yaml|yml)$/, '');
+            setConfigurationName(`Imported from ${fileName}`);
+            
+            toast({
+              title: "YAML Imported",
+              description: `LibreChat configuration from "${file.name}" imported successfully.`,
+            });
+          } catch (error) {
+            console.error("YAML import error:", error);
+            toast({
+              title: "Import Failed",
+              description: "Failed to parse YAML file. Please check the file format.",
+              variant: "destructive",
+            });
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleImportEnv = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".env";
+    input.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            console.log("📥 [ENV IMPORT] Parsing ENV file:", file.name);
+            const envContent = event.target?.result as string;
+            const envVars = parseEnvFile(envContent);
+            
+            console.log("   - Parsed ENV vars:", Object.keys(envVars));
+            
+            const configUpdates = mapEnvToConfiguration(envVars);
+            console.log("   - Mapped configuration:", configUpdates);
+            
+            // Update configuration with parsed data
+            updateConfiguration(configUpdates);
+            
+            // Set profile name based on file name
+            const fileName = file.name.replace(/\.env$/, '');
+            setConfigurationName(`Imported from ${fileName || '.env'}`);
+            
+            toast({
+              title: "Environment File Imported",
+              description: `Settings from "${file.name}" imported successfully.`,
+            });
+          } catch (error) {
+            console.error("ENV import error:", error);
+            toast({
+              title: "Import Failed",
+              description: "Failed to parse environment file. Please check the file format.",
               variant: "destructive",
             });
           }
@@ -206,14 +468,23 @@ export default function Home() {
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuItem onClick={handleSaveProfile} data-testid="menu-save">
                     <Save className="h-4 w-4 mr-2" />
                     Save Configuration
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleImportConfig} data-testid="menu-import">
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleImportProfile} data-testid="menu-import-profile">
                     <Upload className="h-4 w-4 mr-2" />
-                    Import Configuration...
+                    Import Profile (.json)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleImportYaml} data-testid="menu-import-yaml">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Import LibreChat YAML
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleImportEnv} data-testid="menu-import-env">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Import Environment File (.env)
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
