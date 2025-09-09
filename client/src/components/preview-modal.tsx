@@ -39,6 +39,20 @@ ${configuration.openaiApiKey ? `OPENAI_API_KEY=${configuration.openaiApiKey}` : 
     return `version: ${configuration.configVer}
 cache: ${configuration.cache}
 
+# MCP Servers Configuration
+mcpServers:${configuration.mcpServers && configuration.mcpServers.length > 0 
+  ? configuration.mcpServers.map((server: any) => `
+  ${server.name}:
+    type: ${server.type}${server.url ? `
+    url: "${server.url}"` : ''}
+    timeout: ${server.timeout}${Object.keys(server.headers || {}).length > 0 ? `
+    headers:${Object.entries(server.headers || {}).map(([k, v]) => `
+      ${k}: "${v}"`).join('')}` : ''}${server.instructions ? `
+    serverInstructions: |
+      ${server.instructions.split('\n').join('\n      ')}` : ''}`).join('')
+  : '\n  # No MCP servers configured'}
+
+# Endpoints Configuration
 endpoints:
   openAI:
     title: "OpenAI"
@@ -46,16 +60,73 @@ endpoints:
     models:
       default: 
         - "${configuration.defaultModel}"
+        - "gpt-5"
+        - "gpt-5-mini"
+        - "gpt-5-nano"
+        - "gpt-5-thinking"
         - "gpt-4-turbo"
         - "gpt-3.5-turbo"
       fetch: true
     titleConvo: ${configuration.endpointDefaults.titling}
     titleModel: "${configuration.endpointDefaults.titleModel}"
 
-interface:
+# Interface Configuration
+interface:${configuration.customWelcome ? `
+  customWelcome: "${configuration.customWelcome}"` : ''}
   privacyPolicy:
     externalUrl: 'https://librechat.ai/privacy-policy'
-    openNewTab: true`;
+    openNewTab: true
+  termsOfService:
+    externalUrl: 'https://librechat.ai/tos' 
+    openNewTab: true
+
+# File Configuration
+fileConfig:
+  endpoints:
+    openAI:
+      disabled: false
+      fileLimit: ${configuration.filesMaxFilesPerRequest}
+      fileSizeLimit: ${configuration.filesMaxSizeMB}
+      totalSizeLimit: ${configuration.filesMaxSizeMB * configuration.filesMaxFilesPerRequest}
+      supportedMimeTypes:${configuration.filesAllowedMimeTypes.map((type: string) => `
+        - "${type}"`).join('')}
+
+# UI Configuration
+ui:
+  modelSelect: ${configuration.showModelSelect}
+  parameters: ${configuration.showParameters}
+  sidePanel: ${configuration.showSidePanel}
+  presets: ${configuration.showPresets}
+  prompts: ${configuration.showPrompts}
+  bookmarks: ${configuration.showBookmarks}
+  multiConvo: ${configuration.showMultiConvo}
+  agents: ${configuration.showAgents}
+  webSearch: ${configuration.showWebSearch}
+  fileSearch: ${configuration.showFileSearch}
+  fileCitations: ${configuration.showFileCitations}
+  runCode: ${configuration.showRunCode}
+
+# Agent Configuration
+agents:
+  defaultRecursionLimit: ${configuration.agentDefaultRecursionLimit}
+  maxRecursionLimit: ${configuration.agentMaxRecursionLimit}
+  allowedProviders:${configuration.agentAllowedProviders.map((provider: string) => `
+    - "${provider}"`).join('')}
+  allowedCapabilities:${configuration.agentAllowedCapabilities.map((capability: string) => `
+    - "${capability}"`).join('')}
+  citations:
+    totalLimit: ${configuration.agentCitationsTotalLimit}
+    perFileLimit: ${configuration.agentCitationsPerFileLimit}
+    threshold: ${configuration.agentCitationsThreshold}
+
+# Rate Limits
+rateLimits:
+  perUser: ${configuration.rateLimitsPerUser}
+  perIP: ${configuration.rateLimitsPerIP}
+  uploads: ${configuration.rateLimitsUploads}
+  imports: ${configuration.rateLimitsImports}
+  tts: ${configuration.rateLimitsTTS}
+  stt: ${configuration.rateLimitsSTT}`;
   };
 
   return (
