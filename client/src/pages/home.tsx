@@ -142,7 +142,7 @@ export default function Home() {
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `librechat-config-${new Date().toISOString().split('T')[0]}.zip`;
+      a.download = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
