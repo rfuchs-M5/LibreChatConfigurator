@@ -116,8 +116,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate installation package
   app.post("/api/package/generate", async (req, res) => {
     try {
+      console.log("🔍 [PACKAGE DEBUG] Raw request body keys:", Object.keys(req.body));
+      console.log("🔍 [PACKAGE DEBUG] Configuration keys:", req.body.configuration ? Object.keys(req.body.configuration) : 'NO CONFIG');
+      
       const result = packageGenerationSchema.safeParse(req.body);
       if (!result.success) {
+        console.error("❌ [PACKAGE DEBUG] Validation failed:", result.error.issues);
         const validationError = fromZodError(result.error);
         return res.status(400).json({ 
           error: "Invalid package generation request", 
@@ -126,6 +130,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const { configuration, includeFiles } = result.data;
+      console.log("✅ [PACKAGE DEBUG] Validated configuration received:");
+      console.log("   - configVer:", configuration.configVer);
+      console.log("   - mcpServers count:", configuration.mcpServers?.length || 0);
+      console.log("   - mcpServers data:", JSON.stringify(configuration.mcpServers, null, 2));
+      console.log("   - UI settings:", {
+        showModelSelect: configuration.showModelSelect,
+        showAgents: configuration.showAgents,
+        defaultModel: configuration.defaultModel
+      });
+      
       const packageFiles: { [key: string]: string } = {};
 
       // Generate .env file
@@ -153,9 +167,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         packageFiles["README.md"] = generateReadmeFile(configuration);
       }
 
+      console.log("📦 [PACKAGE DEBUG] Generated files:", Object.keys(packageFiles));
       res.json({ files: packageFiles });
     } catch (error) {
-      console.error("Error generating package:", error);
+      console.error("❌ [PACKAGE DEBUG] Error generating package:", error);
       res.status(500).json({ error: "Failed to generate package" });
     }
   });

@@ -48,7 +48,15 @@ export function useConfiguration() {
   });
 
   const updateConfiguration = (updates: Partial<Configuration>) => {
-    setConfiguration(prev => ({ ...prev, ...updates }));
+    console.log("🔄 [CONFIG DEBUG] Updating configuration:", Object.keys(updates));
+    if (updates.mcpServers) {
+      console.log("   - MCP servers update:", updates.mcpServers);
+    }
+    setConfiguration(prev => {
+      const newConfig = { ...prev, ...updates };
+      console.log("   - New config MCP servers:", newConfig.mcpServers?.length || 0);
+      return newConfig;
+    });
   };
 
   const saveProfile = async (profileData: Omit<InsertConfigurationProfile, "configuration">) => {

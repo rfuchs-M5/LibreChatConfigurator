@@ -19,6 +19,17 @@ export default function Home() {
 
   const handleSaveProfile = async () => {
     try {
+      console.log("💾 [PROFILE DEBUG] Saving profile with configuration:");
+      console.log("   - Name:", configurationName);
+      console.log("   - Config keys:", Object.keys(configuration));
+      console.log("   - MCP servers count:", configuration.mcpServers?.length || 0);
+      console.log("   - MCP servers:", configuration.mcpServers);
+      console.log("   - UI settings:", {
+        showModelSelect: configuration.showModelSelect,
+        showAgents: configuration.showAgents,
+        defaultModel: configuration.defaultModel
+      });
+      
       // Create profile data with configuration and name
       const profileData = {
         name: configurationName,
@@ -71,6 +82,12 @@ export default function Home() {
               throw new Error("Invalid profile format: missing configuration data");
             }
 
+            console.log("📥 [PROFILE DEBUG] Loading profile:");
+            console.log("   - Name:", profileData.name);
+            console.log("   - Config keys:", profileData.configuration ? Object.keys(profileData.configuration) : 'NO CONFIG');
+            console.log("   - MCP servers count:", profileData.configuration?.mcpServers?.length || 0);
+            console.log("   - MCP servers:", profileData.configuration?.mcpServers);
+            
             // Apply the configuration and name
             updateConfiguration(profileData.configuration);
             if (profileData.name) {
@@ -97,9 +114,17 @@ export default function Home() {
 
   const handleGeneratePackage = async () => {
     try {
+      console.log("🚀 [PACKAGE DEBUG] Generating package with configuration:");
+      console.log("   - Config keys:", Object.keys(configuration));
+      console.log("   - MCP servers count:", configuration.mcpServers?.length || 0);
+      console.log("   - MCP servers:", configuration.mcpServers);
+      console.log("   - Full configuration:", configuration);
+      
       const result = await generatePackage({
         includeFiles: ["env", "yaml", "docker-compose", "install-script", "readme"],
       });
+      
+      console.log("📦 [PACKAGE DEBUG] Package generation result:", Object.keys(result.files || {}));
       
       // Import JSZip dynamically
       const JSZip = (await import('jszip')).default;
@@ -123,6 +148,7 @@ export default function Home() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
+      console.log("✅ [PACKAGE DEBUG] Package generated successfully");
       toast({
         title: "Package Generated",
         description: "LibreChat installation package downloaded as ZIP file.",
