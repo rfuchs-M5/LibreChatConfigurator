@@ -384,12 +384,10 @@ export default function Home() {
       const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
       
-      // Add each file to the ZIP
-      zip.file(".env", result.files[".env"]);
-      zip.file("librechat.yaml", result.files["librechat.yaml"]);
-      zip.file("docker-compose.yml", result.files["docker-compose.yml"]);
-      zip.file("install.sh", result.files["install.sh"]);
-      zip.file("README.md", result.files["README.md"]);
+      // Add each file to the ZIP (dynamically include all files from backend)
+      Object.entries(result.files).forEach(([filename, content]) => {
+        zip.file(filename, content as string);
+      });
       
       // Generate ZIP file and download
       const zipBlob = await zip.generateAsync({ type: "blob" });
