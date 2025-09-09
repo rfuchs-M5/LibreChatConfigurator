@@ -172,11 +172,6 @@ export default function Home() {
                 <span className="text-sm font-medium text-green-800 dark:text-green-200">Configuration Valid</span>
               </div>
               
-              <Button variant="outline" onClick={() => setShowPreview(true)} data-testid="button-preview">
-                <Eye className="h-4 w-4 mr-2" />
-                Preview
-              </Button>
-              
               {/* Profile Management Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -200,10 +195,26 @@ export default function Home() {
               
               <div className="h-6 border-l border-border mx-2"></div>
               
-              <Button onClick={handleGeneratePackage} className="bg-primary hover:bg-primary/90" data-testid="button-generate">
-                <Rocket className="h-4 w-4 mr-2" />
-                Generate Package
-              </Button>
+              {/* Package Generation Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-primary hover:bg-primary/90" data-testid="button-package-menu">
+                    <Rocket className="h-4 w-4 mr-2" />
+                    Package Generation
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => setShowPreview(true)} data-testid="menu-preview">
+                    <Eye className="h-4 w-4 mr-2" />
+                    Preview Files...
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleGeneratePackage} data-testid="menu-generate">
+                    <Download className="h-4 w-4 mr-2" />
+                    Generate & Download ZIP
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
