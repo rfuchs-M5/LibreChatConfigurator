@@ -148,18 +148,22 @@ export default function Home() {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
                   <i className="fas fa-cog text-white text-lg"></i>
                 </div>
-                <div className="flex-1">
+                <div>
                   <h1 className="text-xl font-bold text-foreground">LibreChat Configuration</h1>
                   <p className="text-sm text-muted-foreground">v0.8.0-rc3 Enterprise Setup</p>
                 </div>
                 
-                {/* Configuration Name Input */}
-                <div className="flex-1 max-w-md">
+                {/* Profile Name Input */}
+                <div className="flex items-center space-x-3">
+                  <Label htmlFor="profile-name" className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                    Profile name:
+                  </Label>
                   <Input
+                    id="profile-name"
                     value={configurationName}
                     onChange={(e) => setConfigurationName(e.target.value)}
-                    className="text-lg font-medium bg-transparent border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                    placeholder="Configuration name..."
+                    className="text-lg font-medium w-72 border-border"
+                    placeholder="Enter profile name..."
                     data-testid="input-config-name"
                   />
                 </div>
@@ -172,7 +176,7 @@ export default function Home() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="secondary" data-testid="button-profile-menu">
                     <FolderOpen className="h-4 w-4 mr-2" />
-                    Configuration Profiles
+                    Profile
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -195,7 +199,7 @@ export default function Home() {
                 <DropdownMenuTrigger asChild>
                   <Button className="bg-primary hover:bg-primary/90" data-testid="button-package-menu">
                     <Rocket className="h-4 w-4 mr-2" />
-                    Package Generation
+                    Package
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
