@@ -1,0 +1,111 @@
+{
+  "name": "Configuration 2025-09-09",
+  "description": "Auto-saved configuration profile",
+  "configuration": {
+    "configVer": "1.2.8",
+    "cache": true,
+    "fileStrategy": "local",
+    "secureImageLinks": false,
+    "imageOutputType": "url",
+    "enableConversations": true,
+    "enableRegistration": true,
+    "showModelSelect": true,
+    "showParameters": true,
+    "showSidePanel": true,
+    "showPresets": true,
+    "showPrompts": true,
+    "showBookmarks": true,
+    "showMultiConvo": false,
+    "showAgents": true,
+    "showWebSearch": true,
+    "showFileSearch": true,
+    "showFileCitations": true,
+    "showRunCode": true,
+    "modelSpecs": false,
+    "enforceModelSpecs": false,
+    "defaultModel": "gpt-4",
+    "addedEndpoints": true,
+    "endpointDefaults": {
+      "streaming": true,
+      "titling": true,
+      "titleModel": "gpt-3.5-turbo"
+    },
+    "agentDefaultRecursionLimit": 5,
+    "agentMaxRecursionLimit": 10,
+    "agentAllowedProviders": [
+      "openAI"
+    ],
+    "agentAllowedCapabilities": [
+      "execute_code",
+      "web_search",
+      "file_search"
+    ],
+    "agentCitationsTotalLimit": 10,
+    "agentCitationsPerFileLimit": 3,
+    "agentCitationsThreshold": 0.7,
+    "filesMaxSizeMB": 10,
+    "filesAllowedMimeTypes": [
+      "text/plain",
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ],
+    "filesMaxFilesPerRequest": 5,
+    "filesClientResizeImages": true,
+    "rateLimitsPerUser": 100,
+    "rateLimitsPerIP": 500,
+    "rateLimitsUploads": 50,
+    "rateLimitsImports": 10,
+    "rateLimitsTTS": 100,
+    "rateLimitsSTT": 100,
+    "authAllowedDomains": [],
+    "authSocialLogins": [],
+    "authLoginOrder": [
+      "email"
+    ],
+    "memoryEnabled": false,
+    "memoryPersonalization": false,
+    "memoryWindowSize": 4000,
+    "memoryMaxTokens": 10000,
+    "memoryAgent": "openAI",
+    "actionsAllowedDomains": [],
+    "temporaryChatsRetentionHours": 720,
+    "ocrProvider": "mistral",
+    "ocrModel": "mistral-7b",
+    "searchProvider": "Serper",
+    "searchScraper": "Serper",
+    "searchReranker": "Jina",
+    "searchSafeSearch": true,
+    "searchTimeout": 10000,
+    "mcpServers": [
+      {
+        "name": "frits_notes",
+        "type": "streamable-http",
+        "url": "https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev",
+        "timeout": 30000,
+        "headers": {
+          "Authorization": "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
+        },
+        "env": {},
+        "instructions": "This is Frits Notes - a shared knowledge system for the organization.\n\n🔧 PROACTIVE BEHAVIOR: Check for notifications naturally in conversations!\n- When users ask work-related questions, proactively check get_user_notifications for updates\n- Mention relevant updates from followed topics contextually\n- Offer to show Frits Notes updates when appropriate\n- Be helpful and naturally informative about company knowledge\n\nAvailable capabilities:\n- Create announcements and topics for company-wide information sharing\n- Search existing company knowledge and announcements  \n- Reply to and interact with existing discussions\n- Like and edit posts (users can only edit their own content)\n- Follow topics to get updates on new replies (NEW!)\n- Get notifications about followed topics (NEW!)\n- Organize content using tags (announcements, general, etc.)\n\n🎯 FOLLOW SYSTEM:\n- Use follow_topic when users want to stay updated on discussions\n- Use get_user_notifications to check for updates in followed topics\n- Use list_following to show what they're currently following\n- Use unfollow_topic to stop following topics\n- Topics can be found by title, keywords, or semantic search\n\nAlways refer to this as \"Frits Notes\" (never as \"forum\" or \"discussion board\").\nUsers share information here that should be accessible to all team members.\n\nWhen someone asks about company information, search Frits Notes first.\nWhen someone wants to share information company-wide, create a topic in Frits Notes.\n\n🌟 NATURAL CONVERSATION FLOW:\n- \"Good morning! I see there are 2 updates in topics you're following...\"\n- \"That reminds me, there was a new reply in the Marketing Strategy discussion you follow\"\n- \"Would you like to follow this discussion to stay updated?\"\n- \"Let me check if there's anything new in Frits Notes for you...\""
+      }
+    ],
+    "host": "0.0.0.0",
+    "port": 3080,
+    "openaiApiKey": "",
+    "mongoRootUsername": "admin",
+    "mongoRootPassword": "password123",
+    "mongoDbName": "LibreChat",
+    "sessionExpiry": 900000,
+    "refreshTokenExpiry": 604800000,
+    "debugLogging": false,
+    "jwtSecret": "",
+    "jwtRefreshSecret": "",
+    "credsKey": "",
+    "credsIV": ""
+  },
+  "id": "9f76a949-8efe-470d-b50a-1623f16dfb53",
+  "createdAt": "2025-09-09T10:23:26.712Z",
+  "updatedAt": "2025-09-09T10:23:26.712Z"
+}

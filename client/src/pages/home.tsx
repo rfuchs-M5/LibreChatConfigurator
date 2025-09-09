@@ -38,14 +38,23 @@ export default function Home() {
         includeFiles: ["env", "yaml", "docker-compose", "install-script", "readme"],
       });
       
-      // Create and download ZIP file
-      const blob = new Blob([JSON.stringify(result.files, null, 2)], { 
-        type: "application/json" 
-      });
-      const url = URL.createObjectURL(blob);
+      // Import JSZip dynamically
+      const JSZip = (await import('jszip')).default;
+      const zip = new JSZip();
+      
+      // Add each file to the ZIP
+      zip.file(".env", result.files[".env"]);
+      zip.file("librechat.yaml", result.files["librechat.yaml"]);
+      zip.file("docker-compose.yml", result.files["docker-compose.yml"]);
+      zip.file("install.sh", result.files["install.sh"]);
+      zip.file("README.md", result.files["README.md"]);
+      
+      // Generate ZIP file and download
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipBlob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `librechat-config-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `librechat-config-${new Date().toISOString().split('T')[0]}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -53,7 +62,7 @@ export default function Home() {
 
       toast({
         title: "Package Generated",
-        description: "Your LibreChat installation package has been generated and downloaded.",
+        description: "LibreChat installation package downloaded as ZIP file.",
       });
     } catch (error) {
       toast({
