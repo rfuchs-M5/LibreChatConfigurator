@@ -594,7 +594,7 @@ export function ConfigurationTabs({
                     type="select"
                     value={configuration.defaultModel}
                     onChange={(value) => onConfigurationChange({ defaultModel: value as string })}
-                    options={["gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5-thinking", "gpt-4", "gpt-4-turbo", "gpt-3.5-turbo", "claude-3", "gemini-pro"]}
+                    options={["gpt-4o", "gpt-4o-mini", "gpt-4", "gpt-3.5-turbo", "o3", "claude-3", "gemini-pro"]}
                     data-testid="input-default-model"
                   />
                   <SettingInput
@@ -669,7 +669,7 @@ export function ConfigurationTabs({
                         onChange={(value) => onConfigurationChange({ 
                           endpointDefaults: { ...configuration.endpointDefaults, titleModel: value as string }
                         })}
-                        options={["gpt-3.5-turbo", "gpt-4", "claude-3"]}
+                        options={["gpt-4o-mini", "gpt-4o", "gpt-4", "gpt-3.5-turbo"]}
                         data-testid="input-title-model"
                       />
                     </div>

@@ -178,14 +178,14 @@ export class FileStorage implements IStorage {
       // Model Specifications
       modelSpecs: false,
       enforceModelSpecs: false,
-      defaultModel: "gpt-5",
+      defaultModel: "gpt-4o",
       addedEndpoints: true,
 
       // Endpoint Defaults
       endpointDefaults: {
         streaming: true,
         titling: true,
-        titleModel: "gpt-5-mini",
+        titleModel: "gpt-4o-mini",
       },
 
       // Agent Configuration
@@ -292,14 +292,14 @@ export class FileStorage implements IStorage {
       // Model Specifications
       modelSpecs: false,
       enforceModelSpecs: false,
-      defaultModel: "gpt-5",
+      defaultModel: "gpt-4o",
       addedEndpoints: true,
 
       // Endpoint Defaults
       endpointDefaults: {
         streaming: true,
         titling: true,
-        titleModel: "gpt-5-mini",
+        titleModel: "gpt-4o-mini",
       },
 
       // Agent Configuration
