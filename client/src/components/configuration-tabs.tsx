@@ -690,14 +690,34 @@ export function ConfigurationTabs({
                         <Key className="h-5 w-5 text-emerald-600" />
                       </div>
                       <div>
-                        <CardTitle>API Keys & Third-Party Services</CardTitle>
-                        <CardDescription>Quick access to all external service credentials - also available in their respective tabs</CardDescription>
+                        <CardTitle>🔗 API Keys & Third-Party Services</CardTitle>
+                        <CardDescription>⚡ Quick access shortcut to all external service credentials - these same fields are also available in their individual tabs</CardDescription>
                       </div>
                     </div>
                     <StatusIndicator status="pending" count="3/10" />
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-8">
+                  
+                  {/* Important Notice */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Key className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-blue-800 mb-2">⚡ Quick Access Shortcut Tab</h4>
+                        <p className="text-sm text-blue-700 mb-2">
+                          <strong>This tab consolidates all third-party service credentials in one convenient location.</strong> 
+                          Every field here is also available in its respective original tab (Endpoints, OCR, Search, etc.).
+                        </p>
+                        <p className="text-sm text-blue-600">
+                          💡 <strong>Tip:</strong> Use this tab for a quick overview of which external services need API keys, 
+                          then switch to individual tabs for complete configuration of each service.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                   
                   {/* LLM Provider Keys */}
                   <div className="space-y-4">
@@ -762,10 +782,7 @@ export function ConfigurationTabs({
                         type="select"
                         value={configuration.searchProvider}
                         onChange={(value) => onConfigurationChange({ searchProvider: value as "Serper" | "SearXNG" })}
-                        options={[
-                          { value: "Serper", label: "Serper (Requires API Key)" },
-                          { value: "SearXNG", label: "SearXNG (Self-hosted)" }
-                        ]}
+                        options={["Serper", "SearXNG"]}
                         data-testid="input-api-search-provider"
                       />
                       <SettingInput
@@ -774,10 +791,7 @@ export function ConfigurationTabs({
                         type="select"
                         value={configuration.searchScraper}
                         onChange={(value) => onConfigurationChange({ searchScraper: value as "Firecrawl" | "Serper" })}
-                        options={[
-                          { value: "Firecrawl", label: "Firecrawl (Requires API Key)" },
-                          { value: "Serper", label: "Serper (Requires API Key)" }
-                        ]}
+                        options={["Firecrawl", "Serper"]}
                         data-testid="input-api-search-scraper"
                       />
                       <SettingInput
@@ -786,10 +800,7 @@ export function ConfigurationTabs({
                         type="select"
                         value={configuration.searchReranker}
                         onChange={(value) => onConfigurationChange({ searchReranker: value as "Jina" | "Cohere" })}
-                        options={[
-                          { value: "Jina", label: "Jina (Requires API Key)" },
-                          { value: "Cohere", label: "Cohere (Requires API Key)" }
-                        ]}
+                        options={["Jina", "Cohere"]}
                         data-testid="input-api-search-reranker"
                       />
                     </div>
@@ -864,21 +875,25 @@ export function ConfigurationTabs({
                     </div>
                   </div>
 
-                  {/* Information Notice */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+                  {/* Service Cost Information */}
+                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Key className="h-4 w-4 text-blue-600" />
+                      <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-lg">💰</span>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-blue-800 mb-2">Quick Access Information</h4>
-                        <p className="text-sm text-blue-700 mb-2">
-                          This tab provides convenient access to all third-party service credentials in one place. 
-                          All fields here are also available in their respective configuration tabs.
+                        <h4 className="font-semibold text-amber-800 mb-2">Third-Party Service Costs</h4>
+                        <p className="text-sm text-amber-700 mb-2">
+                          Most external services listed here require account creation and have associated usage costs:
                         </p>
-                        <p className="text-sm text-blue-600">
-                          <strong>Note:</strong> Most external services require account creation and may have associated costs. 
-                          Check each provider's pricing before implementation.
+                        <ul className="text-sm text-amber-600 space-y-1">
+                          <li>• <strong>OpenAI:</strong> Pay-per-token pricing for GPT models</li>
+                          <li>• <strong>Serper/Firecrawl:</strong> API usage fees for search & scraping</li>
+                          <li>• <strong>MongoDB/Redis:</strong> Cloud database hosting costs</li>
+                          <li>• <strong>OCR Services:</strong> Per-document processing fees</li>
+                        </ul>
+                        <p className="text-sm text-amber-600 mt-2">
+                          Check each provider's pricing before production use.
                         </p>
                       </div>
                     </div>
