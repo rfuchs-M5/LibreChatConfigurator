@@ -485,14 +485,6 @@ ui:
   fileCitations: ${config.showFileCitations}
   runCode: ${config.showRunCode}
 
-# Agent Configuration (Open System - MCP Tools Enabled)
-agents:
-  defaultRecursionLimit: ${config.agentDefaultRecursionLimit}
-  maxRecursionLimit: ${config.agentMaxRecursionLimit}
-  citations:
-    totalLimit: ${config.agentCitationsTotalLimit}
-    perFileLimit: ${config.agentCitationsPerFileLimit}
-    threshold: ${config.agentCitationsThreshold}
 
 # Rate Limits
 rateLimits:
