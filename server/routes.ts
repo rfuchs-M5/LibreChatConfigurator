@@ -433,6 +433,20 @@ ${config.mcpServers.map((server: any) => `  ${server.name}:
 
 # Endpoints Configuration
 endpoints:
+  agents:
+    disableBuilder: false
+    recursionLimit: 50
+    maxRecursionLimit: 100
+    capabilities:
+      - execute_code
+      - file_search
+      - actions
+      - tools
+      - artifacts
+      - web_search
+    maxCitations: 30
+    maxCitationsPerFile: 7
+    minRelevanceScore: 0.45
   openAI:
     title: "OpenAI"
     apiKey: "\${OPENAI_API_KEY}"
@@ -499,7 +513,6 @@ agents:
     - "execute_code"
     - "web_search" 
     - "file_search"
-    - "mcp"
   citations:
     totalLimit: ${config.agentCitationsTotalLimit}
     perFileLimit: ${config.agentCitationsPerFileLimit}
