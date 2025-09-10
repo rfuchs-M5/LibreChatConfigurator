@@ -5,6 +5,7 @@ import { useConfiguration } from "@/hooks/use-configuration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { defaultConfiguration } from "@/lib/configuration-defaults";
 import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
@@ -366,6 +367,21 @@ export default function Home() {
     input.click();
   };
 
+  const handleResetToDefaults = () => {
+    console.log("🔄 [RESET DEBUG] Resetting to LibreChat defaults");
+    
+    // Reset configuration to LibreChat defaults
+    updateConfiguration(defaultConfiguration);
+    
+    // Reset profile name to default
+    setConfigurationName("LibreChat Default Configuration");
+    
+    toast({
+      title: "Reset Complete",
+      description: "Configuration reset to LibreChat v0.8.0-rc3 defaults.",
+    });
+  };
+
   const handleGeneratePackage = async () => {
     try {
       console.log("🚀 [PACKAGE DEBUG] Generating package with configuration:");
@@ -462,6 +478,11 @@ export default function Home() {
                   <DropdownMenuItem onClick={handleSaveProfile} data-testid="menu-save">
                     <Save className="h-4 w-4 mr-2" />
                     Save Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleResetToDefaults} data-testid="menu-reset">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Reset to LibreChat Defaults
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleImportProfile} data-testid="menu-import-profile">
