@@ -101,6 +101,14 @@ export function ConfigurationTabs({
       settings: ["openaiApiKey", "endpointDefaults"],
     },
     {
+      id: "api-keys",
+      label: "API Keys & Services",
+      icon: Key,
+      description: "Third-Party Services",
+      color: "from-emerald-500 to-emerald-600",
+      settings: ["openaiApiKey", "ocrApiKey", "ocrApiBase", "searchProvider", "searchScraper", "searchReranker", "mongoUri", "redisUri", "cdnProvider", "authSocialLogins"],
+    },
+    {
       id: "agents",
       label: "Agents",
       icon: Bot,
@@ -134,7 +142,7 @@ export function ConfigurationTabs({
     {
       id: "auth",
       label: "Authentication",
-      icon: Key,
+      icon: Shield,
       description: "Login & Registration",
       color: "from-yellow-500 to-yellow-600",
       settings: ["enableRegistration", "authAllowedDomains", "authSocialLogins", "authLoginOrder"],
@@ -666,6 +674,216 @@ export function ConfigurationTabs({
                       />
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* API Keys & Services Configuration */}
+          <TabsContent value="api-keys">
+            <div className="space-y-8">
+              <Card className="card-hover">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg flex items-center justify-center">
+                        <Key className="h-5 w-5 text-emerald-600" />
+                      </div>
+                      <div>
+                        <CardTitle>API Keys & Third-Party Services</CardTitle>
+                        <CardDescription>Quick access to all external service credentials - also available in their respective tabs</CardDescription>
+                      </div>
+                    </div>
+                    <StatusIndicator status="pending" count="3/10" />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  
+                  {/* LLM Provider Keys */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Brain className="h-5 w-5 text-blue-600" />
+                      <h4 className="font-semibold text-blue-800">AI/LLM Provider Keys</h4>
+                      <Badge variant="outline" className="text-xs">Requires Purchase</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 pl-6 border-l-2 border-blue-100">
+                      <SettingInput
+                        label="OpenAI API Key"
+                        description="Required for GPT models (starts with sk-) - also in Endpoints tab"
+                        type="password"
+                        value={configuration.openaiApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ openaiApiKey: value as string })}
+                        placeholder="sk-..."
+                        data-testid="input-api-openai-key"
+                      />
+                    </div>
+                  </div>
+
+                  {/* OCR & Document Processing */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Camera className="h-5 w-5 text-amber-600" />
+                      <h4 className="font-semibold text-amber-800">OCR & Document Processing</h4>
+                      <Badge variant="outline" className="text-xs">Optional Service</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 pl-6 border-l-2 border-amber-100">
+                      <SettingInput
+                        label="OCR API Base URL"
+                        description="Custom OCR service endpoint - also in OCR tab"
+                        type="text"
+                        value={configuration.ocrApiBase || ""}
+                        onChange={(value) => onConfigurationChange({ ocrApiBase: value as string })}
+                        placeholder="https://api.ocr-service.com"
+                        data-testid="input-api-ocr-base"
+                      />
+                      <SettingInput
+                        label="OCR API Key"
+                        description="API key for custom OCR service - also in OCR tab"
+                        type="password"
+                        value={configuration.ocrApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ ocrApiKey: value as string })}
+                        placeholder="Enter OCR API key"
+                        data-testid="input-api-ocr-key"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Search & Web Services */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Search className="h-5 w-5 text-violet-600" />
+                      <h4 className="font-semibold text-violet-800">Search & Web Services</h4>
+                      <Badge variant="outline" className="text-xs">May Require API Key</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pl-6 border-l-2 border-violet-100">
+                      <SettingInput
+                        label="Search Provider"
+                        description="Web search service - Serper requires API key - also in Search tab"
+                        type="select"
+                        value={configuration.searchProvider}
+                        onChange={(value) => onConfigurationChange({ searchProvider: value as "Serper" | "SearXNG" })}
+                        options={[
+                          { value: "Serper", label: "Serper (Requires API Key)" },
+                          { value: "SearXNG", label: "SearXNG (Self-hosted)" }
+                        ]}
+                        data-testid="input-api-search-provider"
+                      />
+                      <SettingInput
+                        label="Search Scraper"
+                        description="Content scraping service - also in Search tab"
+                        type="select"
+                        value={configuration.searchScraper}
+                        onChange={(value) => onConfigurationChange({ searchScraper: value as "Firecrawl" | "Serper" })}
+                        options={[
+                          { value: "Firecrawl", label: "Firecrawl (Requires API Key)" },
+                          { value: "Serper", label: "Serper (Requires API Key)" }
+                        ]}
+                        data-testid="input-api-search-scraper"
+                      />
+                      <SettingInput
+                        label="Search Reranker"
+                        description="Result reranking service - also in Search tab"
+                        type="select"
+                        value={configuration.searchReranker}
+                        onChange={(value) => onConfigurationChange({ searchReranker: value as "Jina" | "Cohere" })}
+                        options={[
+                          { value: "Jina", label: "Jina (Requires API Key)" },
+                          { value: "Cohere", label: "Cohere (Requires API Key)" }
+                        ]}
+                        data-testid="input-api-search-reranker"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Database Services */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Database className="h-5 w-5 text-green-600" />
+                      <h4 className="font-semibold text-green-800">External Database Services</h4>
+                      <Badge variant="outline" className="text-xs">Cloud Services</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pl-6 border-l-2 border-green-100">
+                      <SettingInput
+                        label="MongoDB URI"
+                        description="External MongoDB connection string - also in Database tab"
+                        type="password"
+                        value={configuration.mongoUri || ""}
+                        onChange={(value) => onConfigurationChange({ mongoUri: value as string })}
+                        placeholder="mongodb://username:password@host:port/database"
+                        data-testid="input-api-mongo-uri"
+                      />
+                      <SettingInput
+                        label="Redis URI"
+                        description="External Redis connection string - also in Database tab"
+                        type="password"
+                        value={configuration.redisUri || ""}
+                        onChange={(value) => onConfigurationChange({ redisUri: value as string })}
+                        placeholder="redis://username:password@host:port"
+                        data-testid="input-api-redis-uri"
+                      />
+                    </div>
+                  </div>
+
+                  {/* CDN & Storage Services */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Network className="h-5 w-5 text-cyan-600" />
+                      <h4 className="font-semibold text-cyan-800">CDN & Storage Services</h4>
+                      <Badge variant="outline" className="text-xs">Optional Services</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 pl-6 border-l-2 border-cyan-100">
+                      <SettingInput
+                        label="CDN Provider"
+                        description="Content delivery network configuration"
+                        type="text"
+                        value={configuration.cdnProvider || ""}
+                        onChange={(value) => onConfigurationChange({ cdnProvider: value as string })}
+                        placeholder="cloudflare, aws-cloudfront, etc."
+                        data-testid="input-api-cdn-provider"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Authentication Services */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-5 w-5 text-orange-600" />
+                      <h4 className="font-semibold text-orange-800">Social Login Providers</h4>
+                      <Badge variant="outline" className="text-xs">OAuth Setup Required</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 pl-6 border-l-2 border-orange-100">
+                      <SettingInput
+                        label="Social Login Providers"
+                        description="OAuth providers requiring client IDs/secrets - also in Authentication tab"
+                        type="array"
+                        value={configuration.authSocialLogins}
+                        onChange={(value) => onConfigurationChange({ authSocialLogins: value as string[] })}
+                        placeholder="github, google, discord, etc."
+                        data-testid="input-api-social-logins"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Information Notice */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Key className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-blue-800 mb-2">Quick Access Information</h4>
+                        <p className="text-sm text-blue-700 mb-2">
+                          This tab provides convenient access to all third-party service credentials in one place. 
+                          All fields here are also available in their respective configuration tabs.
+                        </p>
+                        <p className="text-sm text-blue-600">
+                          <strong>Note:</strong> Most external services require account creation and may have associated costs. 
+                          Check each provider's pricing before implementation.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                 </CardContent>
               </Card>
             </div>
