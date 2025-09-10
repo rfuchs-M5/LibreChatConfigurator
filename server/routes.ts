@@ -469,6 +469,7 @@ endpoints:
 
 # Interface Configuration
 interface:
+  agents: true
   ${config.customWelcome ? `customWelcome: "${config.customWelcome}"` : ''}
   privacyPolicy:
     externalUrl: 'https://librechat.ai/privacy-policy'

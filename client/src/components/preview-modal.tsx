@@ -89,7 +89,8 @@ endpoints:
     titleModel: "${configuration.endpointDefaults.titleModel}"
 
 # Interface Configuration
-interface:${configuration.customWelcome ? `
+interface:
+  agents: true${configuration.customWelcome ? `
   customWelcome: "${configuration.customWelcome}"` : ''}
   privacyPolicy:
     externalUrl: 'https://librechat.ai/privacy-policy'
