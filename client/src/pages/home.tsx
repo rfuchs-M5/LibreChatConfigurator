@@ -474,7 +474,7 @@ export default function Home() {
                 <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuItem onClick={handleSaveProfile} data-testid="menu-save">
                     <Save className="h-4 w-4 mr-2" />
-                    Save Profile
+                    Export profile (json)
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleResetToDefaults} data-testid="menu-reset">
