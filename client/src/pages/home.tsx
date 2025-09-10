@@ -370,11 +370,8 @@ export default function Home() {
   const handleResetToDefaults = () => {
     console.log("🔄 [RESET DEBUG] Resetting to LibreChat defaults");
     
-    // Reset configuration to LibreChat defaults
+    // Reset configuration to LibreChat defaults (keep profile name unchanged)
     updateConfiguration(defaultConfiguration);
-    
-    // Reset profile name to default
-    setConfigurationName("LibreChat Default Configuration");
     
     toast({
       title: "Reset Complete",
