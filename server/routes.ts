@@ -490,6 +490,21 @@ ui:
   runCode: ${config.showRunCode}
 
 
+# Agent Configuration (Required for Agent Builder with MCP)
+agents:
+  defaultRecursionLimit: ${config.agentDefaultRecursionLimit}
+  maxRecursionLimit: ${config.agentMaxRecursionLimit}
+  disableBuilder: false
+  capabilities:
+    - "execute_code"
+    - "web_search" 
+    - "file_search"
+    - "mcp"
+  citations:
+    totalLimit: ${config.agentCitationsTotalLimit}
+    perFileLimit: ${config.agentCitationsPerFileLimit}
+    threshold: ${config.agentCitationsThreshold}
+
 # Rate Limits
 rateLimits:
   perUser: ${config.rateLimitsPerUser}

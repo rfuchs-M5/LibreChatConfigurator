@@ -110,14 +110,16 @@ ui:
   fileCitations: ${configuration.showFileCitations}
   runCode: ${configuration.showRunCode}
 
-# Agent Configuration
+# Agent Configuration (Required for Agent Builder with MCP)
 agents:
   defaultRecursionLimit: ${configuration.agentDefaultRecursionLimit}
   maxRecursionLimit: ${configuration.agentMaxRecursionLimit}
-  allowedProviders:${configuration.agentAllowedProviders.map((provider: string) => `
-    - "${provider}"`).join('')}
-  allowedCapabilities:${configuration.agentAllowedCapabilities.map((capability: string) => `
-    - "${capability}"`).join('')}
+  disableBuilder: false
+  capabilities:
+    - "execute_code"
+    - "web_search" 
+    - "file_search"
+    - "mcp"
   citations:
     totalLimit: ${configuration.agentCitationsTotalLimit}
     perFileLimit: ${configuration.agentCitationsPerFileLimit}
