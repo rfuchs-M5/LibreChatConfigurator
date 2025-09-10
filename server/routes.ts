@@ -445,6 +445,11 @@ endpoints:
         - "gpt-3.5-turbo"
         - "o3"
       fetch: true
+    dropParams:
+      - "frequency_penalty"
+      - "presence_penalty"
+      - "stop"
+      - "user"
     titleConvo: ${config.endpointDefaults.titling}
     titleModel: "${config.endpointDefaults.titleModel}"
 
