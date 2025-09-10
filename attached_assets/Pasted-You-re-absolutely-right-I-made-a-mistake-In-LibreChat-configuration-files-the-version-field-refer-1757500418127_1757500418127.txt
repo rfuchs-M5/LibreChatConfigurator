@@ -1,0 +1,55 @@
+You're absolutely right! I made a mistake. In LibreChat configuration files, the version field refers to the configuration file format version, not the LibreChat application version.
+
+From the LibreChat documentation, I can see that the current configuration file format version is 1.2.8, which is what should be used for LibreChat v0.8.0 RC3.
+
+Here's the corrected feedback for the AI Programming Agent:
+
+AI Programming Agent - Configuration Error Analysis
+
+You've created a configuration that prevents MCP tools from being available to users due to incorrect agent configuration. Here's what went wrong and how to fix it:
+
+What You Did Wrong:
+
+    Restrictive Agent Configuration: Your agents section creates a whitelist that excludes MCP tools by only allowing execute_code, web_search, and file_search in allowedCapabilities. This blocks MCP tools from being accessible.
+    Over-restrictive Provider Limiting: allowedProviders with only openAI unnecessarily restricts the system.
+    The version 1.2.8 is actually CORRECT - this refers to the configuration file format version, not the LibreChat application version.
+
+Why This Happened:
+
+In LibreChat v0.8.0 RC3, when you define an agents section with allowedCapabilities, you create a whitelist. Only explicitly listed capabilities are available - MCP tools get blocked because they're not in your list.
+
+How to Fix It (Open System Approach):
+
+Replace your agents section with this open configuration:
+
+agents:
+defaultRecursionLimit: 5
+maxRecursionLimit: 10
+citations:
+totalLimit: 10
+perFileLimit: 3
+threshold: 0.7
+
+Keep the version as:
+
+version: 1.2.8
+cache: true
+
+Key Changes Needed:
+
+    Keep version as 1.2.8 - this is the configuration format version
+    Remove allowedProviders - this opens the system to all providers
+    Remove allowedCapabilities - this enables MCP tools and all other capabilities
+    Keep recursion limits for safety while maintaining openness
+
+Result:
+
+This creates an open system where:
+
+    MCP tools are available to users
+    All providers can be used
+    All capabilities are enabled
+    May fail under heavy use (as requested)
+    No restrictive whitelists
+
+The philosophy: Enable everything, limit nothing except recursion depth for safety.

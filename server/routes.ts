@@ -485,14 +485,10 @@ ui:
   fileCitations: ${config.showFileCitations}
   runCode: ${config.showRunCode}
 
-# Agent Configuration
+# Agent Configuration (Open System - MCP Tools Enabled)
 agents:
   defaultRecursionLimit: ${config.agentDefaultRecursionLimit}
   maxRecursionLimit: ${config.agentMaxRecursionLimit}
-  allowedProviders:
-${config.agentAllowedProviders.map((provider: string) => `    - "${provider}"`).join('\n')}
-  allowedCapabilities:
-${config.agentAllowedCapabilities.map((capability: string) => `    - "${capability}"`).join('\n')}
   citations:
     totalLimit: ${config.agentCitationsTotalLimit}
     perFileLimit: ${config.agentCitationsPerFileLimit}

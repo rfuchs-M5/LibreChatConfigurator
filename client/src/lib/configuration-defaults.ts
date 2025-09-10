@@ -37,14 +37,14 @@ export const defaultConfiguration: Configuration = {
     titleModel: "gpt-3.5-turbo",  // More realistic default
   },
 
-  // Agent Configuration (LibreChat v0.8.0-rc3 defaults)
-  agentDefaultRecursionLimit: 50,  // LibreChat default: 50
-  agentMaxRecursionLimit: 100,     // LibreChat default: 100
-  agentAllowedProviders: ["openAI"],
-  agentAllowedCapabilities: ["execute_code", "web_search", "file_search"],
-  agentCitationsTotalLimit: 30,    // LibreChat default: 30
-  agentCitationsPerFileLimit: 7,   // LibreChat default: 7
-  agentCitationsThreshold: 0.45,   // LibreChat default: 0.45
+  // Agent Configuration (LibreChat v0.8.0-rc3 open system - no restrictions)
+  agentDefaultRecursionLimit: 5,   // Safe default for recursion
+  agentMaxRecursionLimit: 10,      // Conservative limit for safety
+  agentAllowedProviders: [],       // Empty = open system (all providers allowed)
+  agentAllowedCapabilities: [],    // Empty = open system (MCP tools enabled)
+  agentCitationsTotalLimit: 10,    // Citations configuration
+  agentCitationsPerFileLimit: 3,   
+  agentCitationsThreshold: 0.7,
 
   // File Configuration (LibreChat defaults)
   filesMaxSizeMB: 20,  // More generous default
