@@ -451,14 +451,6 @@ endpoints:
     title: "OpenAI"
     apiKey: "\${OPENAI_API_KEY}"
     models:
-      default: 
-        - "gpt-5"
-        - "gpt-4.1"
-        - "gpt-4.1-mini"
-        - "o4-mini"
-        - "gpt-4o"
-        - "gpt-4o-mini"
-        - "gpt-realtime"
       fetch: true
     dropParams:
       - "frequency_penalty"
