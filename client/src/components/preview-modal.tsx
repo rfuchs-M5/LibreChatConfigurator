@@ -146,20 +146,20 @@ ${configuration.memoryEnabled ? `memory:
       temperature: 0.2
       max_tokens: 2000` : '# Memory system is disabled'}
 
-# Search Configuration
-search:
-  provider: "${configuration.searchProvider}"
-  scraper: "${configuration.searchScraper}"
-  reranker: "${configuration.searchReranker}"
-  safeSearch: ${configuration.searchSafeSearch}
-  timeout: ${configuration.searchTimeout}
+# Web Search Configuration
+${configuration.searchProvider ? `webSearch:
+  searchProvider: "${configuration.searchProvider.toLowerCase()}"
+  scraperType: "${configuration.searchScraper.toLowerCase()}"
+  rerankerType: "${configuration.searchReranker.toLowerCase()}"
+  safeSearch: ${configuration.searchSafeSearch ? 1 : 0}
+  scraperTimeout: ${configuration.searchTimeout}` : '# Web search is not configured'}
 
 # OCR Configuration
 ${configuration.ocrProvider ? `ocr:
   strategy: "${configuration.ocrProvider === 'mistral' ? 'mistral_ocr' : configuration.ocrProvider === 'custom' ? 'custom_ocr' : 'mistral_ocr'}"${configuration.ocrProvider === 'mistral' ? `
-  mistralModel: "${configuration.ocrModel}"` : ''}
-  ${configuration.ocrApiBase ? `baseURL: "${configuration.ocrApiBase}"` : ''}
-  ${configuration.ocrApiKey ? `apiKey: "${configuration.ocrApiKey}"` : ''}` : '# OCR is not configured'}
+  mistralModel: "mistral-ocr-latest"` : ''}
+  apiKey: "\${OCR_API_KEY}"
+  baseURL: "https://api.mistral.ai/v1"` : '# OCR is not configured'}
 
 # Actions Configuration
 ${configuration.actionsAllowedDomains.length > 0 ? `actions:
