@@ -468,6 +468,7 @@ endpoints:
 # Interface Configuration
 interface:
   agents: true
+  temporaryChatRetention: ${config.temporaryChatsRetentionHours}
 
 # File Configuration
 fileConfig:
@@ -507,11 +508,27 @@ rateLimits:
 
 # Memory Configuration
 ${config.memoryEnabled ? `memory:
-  enabled: ${config.memoryEnabled}
-  personalization: ${config.memoryPersonalization}
-  windowSize: ${config.memoryWindowSize}
-  maxTokens: ${config.memoryMaxTokens}
-  agent: "${config.memoryAgent}"` : '# Memory system is disabled'}
+  disabled: false
+  validKeys:
+    - "user_preferences"
+    - "conversation_context"
+    - "learned_facts"
+    - "personal_information"
+  tokenLimit: ${config.memoryMaxTokens}
+  personalize: ${config.memoryPersonalization}
+  messageWindowSize: ${config.memoryWindowSize}
+  agent:
+    provider: "${config.memoryAgent}"
+    model: "gpt-4"
+    instructions: |
+      Store memory using only the specified validKeys.
+      For user_preferences: save explicitly stated preferences.
+      For conversation_context: save important facts or ongoing projects.
+      For learned_facts: save objective information about the user.
+      For personal_information: save only what the user explicitly shares.
+    model_parameters:
+      temperature: 0.2
+      max_tokens: 2000` : '# Memory system is disabled'}
 
 # Search Configuration
 search:
@@ -523,9 +540,9 @@ search:
 
 # OCR Configuration
 ${config.ocrProvider ? `ocr:
-  provider: "${config.ocrProvider}"
-  model: "${config.ocrModel}"
-  ${config.ocrApiBase ? `apiBase: "${config.ocrApiBase}"` : ''}
+  strategy: "${config.ocrProvider === 'mistral' ? 'mistral_ocr' : config.ocrProvider === 'custom' ? 'custom_ocr' : 'mistral_ocr'}"${config.ocrProvider === 'mistral' ? `
+  mistralModel: "${config.ocrModel}"` : ''}
+  ${config.ocrApiBase ? `baseURL: "${config.ocrApiBase}"` : ''}
   ${config.ocrApiKey ? `apiKey: "${config.ocrApiKey}"` : ''}` : '# OCR is not configured'}
 
 # Actions Configuration
@@ -533,9 +550,6 @@ ${config.actionsAllowedDomains.length > 0 ? `actions:
   allowedDomains:
 ${config.actionsAllowedDomains.map((domain: string) => `    - "${domain}"`).join('\n')}` : '# Actions are not configured'}
 
-# Temporary Chats
-temporaryChats:
-  retentionHours: ${config.temporaryChatsRetentionHours}
 `;
 }
 

@@ -89,6 +89,7 @@ endpoints:
 # Interface Configuration
 interface:
   agents: true
+  temporaryChatRetention: ${configuration.temporaryChatsRetentionHours}
 
 # File Configuration
 fileConfig:
@@ -124,7 +125,51 @@ rateLimits:
     ipMax: ${configuration.rateLimitsPerIP}
     ipWindowInMinutes: 1
     userMax: ${configuration.rateLimitsTTS}
-    userWindowInMinutes: 1`;
+    userWindowInMinutes: 1
+
+# Memory Configuration
+${configuration.memoryEnabled ? `memory:
+  disabled: false
+  validKeys:
+    - "user_preferences"
+    - "conversation_context"
+    - "learned_facts"
+    - "personal_information"
+  tokenLimit: ${configuration.memoryMaxTokens}
+  personalize: ${configuration.memoryPersonalization}
+  messageWindowSize: ${configuration.memoryWindowSize}
+  agent:
+    provider: "${configuration.memoryAgent}"
+    model: "gpt-4"
+    instructions: |
+      Store memory using only the specified validKeys.
+      For user_preferences: save explicitly stated preferences.
+      For conversation_context: save important facts or ongoing projects.
+      For learned_facts: save objective information about the user.
+      For personal_information: save only what the user explicitly shares.
+    model_parameters:
+      temperature: 0.2
+      max_tokens: 2000` : '# Memory system is disabled'}
+
+# Search Configuration
+search:
+  provider: "${configuration.searchProvider}"
+  scraper: "${configuration.searchScraper}"
+  reranker: "${configuration.searchReranker}"
+  safeSearch: ${configuration.searchSafeSearch}
+  timeout: ${configuration.searchTimeout}
+
+# OCR Configuration
+${configuration.ocrProvider ? `ocr:
+  strategy: "${configuration.ocrProvider === 'mistral' ? 'mistral_ocr' : configuration.ocrProvider === 'custom' ? 'custom_ocr' : 'mistral_ocr'}"${configuration.ocrProvider === 'mistral' ? `
+  mistralModel: "${configuration.ocrModel}"` : ''}
+  ${configuration.ocrApiBase ? `baseURL: "${configuration.ocrApiBase}"` : ''}
+  ${configuration.ocrApiKey ? `apiKey: "${configuration.ocrApiKey}"` : ''}` : '# OCR is not configured'}
+
+# Actions Configuration
+${configuration.actionsAllowedDomains.length > 0 ? `actions:
+  allowedDomains:
+${configuration.actionsAllowedDomains.map((domain: string) => `    - "${domain}"`).join('\n')}` : '# Actions are not configured'}`;
   };
 
   return (
