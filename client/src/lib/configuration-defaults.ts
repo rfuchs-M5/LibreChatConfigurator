@@ -27,14 +27,14 @@ export const defaultConfiguration: Configuration = {
   // Model Specifications (LibreChat defaults)
   modelSpecs: false,
   enforceModelSpecs: false,
-  defaultModel: "gpt-4.1",  // Current OpenAI flagship model (January 2025)
+  defaultModel: "gpt-5",  // Current OpenAI flagship model (September 2025)
   addedEndpoints: true,
 
   // Endpoint Defaults (LibreChat defaults)
   endpointDefaults: {
     streaming: true,
     titling: true,
-    titleModel: "gpt-4.1-mini",  // Current cost-effective model (January 2025)
+    titleModel: "gpt-4.1-mini",  // Current cost-effective model (September 2025)
   },
 
   // Agent Configuration (LibreChat v0.8.0-rc3 open system - no restrictions)
