@@ -36,7 +36,7 @@ ${configuration.openaiApiKey ? `OPENAI_API_KEY=${configuration.openaiApiKey}` : 
   };
 
   const generateYamlPreview = () => {
-    return `version: ${configuration.configVer}
+    return `version: 1.2.8
 cache: ${configuration.cache}
 
 # MCP Servers Configuration
@@ -73,10 +73,8 @@ endpoints:
     apiKey: "\${OPENAI_API_KEY}"
     models:
       default: 
-        - "${configuration.defaultModel}"
         - "gpt-4o"
         - "gpt-4o-mini"
-        - "o3"
         - "gpt-4-turbo"
         - "gpt-3.5-turbo"
       fetch: true
@@ -90,8 +88,7 @@ endpoints:
 
 # Interface Configuration
 interface:
-  agents: true${configuration.customWelcome ? `
-  customWelcome: "${configuration.customWelcome}"` : ''}
+  agents: true
 
 # File Configuration
 fileConfig:
@@ -108,12 +105,26 @@ fileConfig:
 
 # Rate Limits
 rateLimits:
-  perUser: ${configuration.rateLimitsPerUser}
-  perIP: ${configuration.rateLimitsPerIP}
-  uploads: ${configuration.rateLimitsUploads}
-  imports: ${configuration.rateLimitsImports}
-  tts: ${configuration.rateLimitsTTS}
-  stt: ${configuration.rateLimitsSTT}`;
+  fileUploads:
+    ipMax: ${configuration.rateLimitsPerIP}
+    ipWindowInMinutes: 60
+    userMax: ${configuration.rateLimitsUploads}
+    userWindowInMinutes: 60
+  conversationsImport:
+    ipMax: ${configuration.rateLimitsPerIP}
+    ipWindowInMinutes: 60
+    userMax: ${configuration.rateLimitsImports}
+    userWindowInMinutes: 60
+  stt:
+    ipMax: ${configuration.rateLimitsPerIP}
+    ipWindowInMinutes: 1
+    userMax: ${configuration.rateLimitsSTT}
+    userWindowInMinutes: 1
+  tts:
+    ipMax: ${configuration.rateLimitsPerIP}
+    ipWindowInMinutes: 1
+    userMax: ${configuration.rateLimitsTTS}
+    userWindowInMinutes: 1`;
   };
 
   return (

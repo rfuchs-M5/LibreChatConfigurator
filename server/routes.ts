@@ -419,7 +419,7 @@ function generateYamlFile(config: any): string {
 # LibreChat Configuration for v${config.configVer}
 # =============================================================================
 
-version: ${config.configVer}
+version: 1.2.8
 cache: ${config.cache}
 
 # MCP Servers Configuration
@@ -452,12 +452,10 @@ endpoints:
     apiKey: "\${OPENAI_API_KEY}"
     models:
       default: 
-        - "${config.defaultModel}"
         - "gpt-4o"
         - "gpt-4o-mini"
-        - "gpt-4"
+        - "gpt-4-turbo"
         - "gpt-3.5-turbo"
-        - "o3"
       fetch: true
     dropParams:
       - "frequency_penalty"
@@ -469,8 +467,7 @@ endpoints:
 
 # Interface Configuration
 interface:
-  agents: true${config.customWelcome ? `
-  customWelcome: "${config.customWelcome}"` : ''}
+  agents: true
 
 # File Configuration
 fileConfig:
@@ -487,12 +484,26 @@ ${config.filesAllowedMimeTypes.map((type: string) => `        - "${type}"`).join
 
 # Rate Limits
 rateLimits:
-  perUser: ${config.rateLimitsPerUser}
-  perIP: ${config.rateLimitsPerIP}
-  uploads: ${config.rateLimitsUploads}
-  imports: ${config.rateLimitsImports}
-  tts: ${config.rateLimitsTTS}
-  stt: ${config.rateLimitsSTT}
+  fileUploads:
+    ipMax: ${config.rateLimitsPerIP}
+    ipWindowInMinutes: 60
+    userMax: ${config.rateLimitsUploads}
+    userWindowInMinutes: 60
+  conversationsImport:
+    ipMax: ${config.rateLimitsPerIP}
+    ipWindowInMinutes: 60
+    userMax: ${config.rateLimitsImports}
+    userWindowInMinutes: 60
+  stt:
+    ipMax: ${config.rateLimitsPerIP}
+    ipWindowInMinutes: 1
+    userMax: ${config.rateLimitsSTT}
+    userWindowInMinutes: 1
+  tts:
+    ipMax: ${config.rateLimitsPerIP}
+    ipWindowInMinutes: 1
+    userMax: ${config.rateLimitsTTS}
+    userWindowInMinutes: 1
 
 # Memory Configuration
 ${config.memoryEnabled ? `memory:
