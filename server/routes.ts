@@ -469,14 +469,8 @@ endpoints:
 
 # Interface Configuration
 interface:
-  agents: true
-  ${config.customWelcome ? `customWelcome: "${config.customWelcome}"` : ''}
-  privacyPolicy:
-    externalUrl: 'https://librechat.ai/privacy-policy'
-    openNewTab: true
-  termsOfService:
-    externalUrl: 'https://librechat.ai/tos' 
-    openNewTab: true
+  agents: true${config.customWelcome ? `
+  customWelcome: "${config.customWelcome}"` : ''}
 
 # File Configuration
 fileConfig:
@@ -489,35 +483,7 @@ fileConfig:
       supportedMimeTypes:
 ${config.filesAllowedMimeTypes.map((type: string) => `        - "${type}"`).join('\n')}
 
-# UI Configuration
-ui:
-  modelSelect: ${config.showModelSelect}
-  parameters: ${config.showParameters}
-  sidePanel: ${config.showSidePanel}
-  presets: ${config.showPresets}
-  prompts: ${config.showPrompts}
-  bookmarks: ${config.showBookmarks}
-  multiConvo: ${config.showMultiConvo}
-  agents: ${config.showAgents}
-  webSearch: ${config.showWebSearch}
-  fileSearch: ${config.showFileSearch}
-  fileCitations: ${config.showFileCitations}
-  runCode: ${config.showRunCode}
 
-
-# Agent Configuration (Required for Agent Builder with MCP)
-agents:
-  defaultRecursionLimit: ${config.agentDefaultRecursionLimit}
-  maxRecursionLimit: ${config.agentMaxRecursionLimit}
-  disableBuilder: false
-  capabilities:
-    - "execute_code"
-    - "web_search" 
-    - "file_search"
-  citations:
-    totalLimit: ${config.agentCitationsTotalLimit}
-    perFileLimit: ${config.agentCitationsPerFileLimit}
-    threshold: ${config.agentCitationsThreshold}
 
 # Rate Limits
 rateLimits:
