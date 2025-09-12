@@ -20,7 +20,7 @@ export async function downloadWithSaveAs(options: DownloadOptions): Promise<bool
   const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
   
   // Try modern File System Access API first (Chrome, Edge)
-  if ('showSaveFilePicker' in window && window.self === window.top) {
+  if ('showSaveFilePicker' in window) {
     try {
       // Determine file type and extension for save picker
       const extension = filename.split('.').pop()?.toLowerCase() || '';
@@ -63,20 +63,27 @@ export async function downloadWithSaveAs(options: DownloadOptions): Promise<bool
       await writable.write(blob);
       await writable.close();
       
+      console.info('✅ File saved with Save As dialog:', filename);
       return true; // Successfully saved with Save As dialog
     } catch (err: any) {
       // User cancelled the save dialog
       if (err.name === 'AbortError') {
-        console.log('User cancelled save dialog');
+        console.info('ℹ️ User cancelled save dialog');
         return false;
       }
-      console.warn('File System Access API failed, falling back to traditional download:', err);
+      // Handle security/permission errors
+      if (err.name === 'SecurityError' || err.name === 'NotAllowedError') {
+        console.info('ℹ️ Save As dialog not available in this context, using traditional download');
+      } else {
+        console.warn('File System Access API failed, falling back to traditional download:', err);
+      }
       // Fall through to traditional download
     }
   }
   
   // Fallback: traditional download (all browsers)
   // Note: Whether a save dialog appears depends on browser settings
+  console.info('📁 Using traditional download for:', filename);
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
