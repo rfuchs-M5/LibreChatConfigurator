@@ -41,23 +41,17 @@ export default function Home() {
         createdAt: new Date().toISOString()
       };
 
-      // Download as JSON file
-      const blob = new Blob([JSON.stringify(profileData, null, 2)], { 
-        type: "application/json" 
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}-profile.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Download as JSON file with Save As dialog
+      const { downloadJSON } = await import("@/lib/download-utils");
+      const filename = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}-profile.json`;
+      const success = await downloadJSON(profileData, filename);
 
-      toast({
-        title: "Profile Saved",
-        description: `Configuration "${configurationName}" downloaded successfully.`,
-      });
+      if (success) {
+        toast({
+          title: "Profile Saved",
+          description: `Configuration "${configurationName}" downloaded successfully.`,
+        });
+      }
     } catch (error) {
       toast({
         title: "Save Failed",
@@ -402,22 +396,19 @@ export default function Home() {
         zip.file(filename, content as string);
       });
       
-      // Generate ZIP file and download
+      // Generate ZIP file and download with Save As dialog
       const zipBlob = await zip.generateAsync({ type: "blob" });
-      const url = URL.createObjectURL(zipBlob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const { downloadZIP } = await import("@/lib/download-utils");
+      const filename = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}.zip`;
+      const success = await downloadZIP(zipBlob, filename);
 
-      console.log("✅ [PACKAGE DEBUG] Package generated successfully");
-      toast({
-        title: "Package Generated",
-        description: "LibreChat installation package downloaded as ZIP file.",
-      });
+      if (success) {
+        console.log("✅ [PACKAGE DEBUG] Package generated successfully");
+        toast({
+          title: "Package Generated",
+          description: "LibreChat installation package downloaded as ZIP file.",
+        });
+      }
     } catch (error) {
       toast({
         title: "Generation Failed",
