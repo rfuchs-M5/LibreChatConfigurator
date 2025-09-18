@@ -778,11 +778,11 @@ export function ConfigurationTabs({
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pl-6 border-l-2 border-violet-100">
                       <SettingInput
                         label="Search Provider"
-                        description="Web search service - Serper requires API key - also in Search tab"
+                        description="Web search service - also in Search tab"
                         type="select"
                         value={configuration.searchProvider}
-                        onChange={(value) => onConfigurationChange({ searchProvider: value as "Serper" | "SearXNG" })}
-                        options={["Serper", "SearXNG"]}
+                        onChange={(value) => onConfigurationChange({ searchProvider: value as "Serper" | "SearXNG" | "LinkUp" })}
+                        options={["Serper", "SearXNG", "LinkUp"]}
                         data-testid="input-api-search-provider"
                       />
                       <SettingInput
@@ -802,6 +802,55 @@ export function ConfigurationTabs({
                         onChange={(value) => onConfigurationChange({ searchReranker: value as "Jina" | "Cohere" })}
                         options={["Jina", "Cohere"]}
                         data-testid="input-api-search-reranker"
+                      />
+                    </div>
+                    
+                    {/* Search API Keys */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pl-6 border-l-2 border-violet-100">
+                      <SettingInput
+                        label="Serper API Key"
+                        description="Required for Serper search provider"
+                        type="password"
+                        value={configuration.serperApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ serperApiKey: value as string })}
+                        placeholder="Enter your Serper API key"
+                        data-testid="input-api-serper-key"
+                      />
+                      <SettingInput
+                        label="LinkUp API Key"
+                        description="Required for LinkUp search provider"
+                        type="password"
+                        value={configuration.linkupApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ linkupApiKey: value as string })}
+                        placeholder="Enter your LinkUp API key"
+                        data-testid="input-api-linkup-key"
+                      />
+                      <SettingInput
+                        label="Firecrawl API Key"
+                        description="Required for Firecrawl scraping service"
+                        type="password"
+                        value={configuration.firecrawlApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ firecrawlApiKey: value as string })}
+                        placeholder="Enter your Firecrawl API key"
+                        data-testid="input-api-firecrawl-key"
+                      />
+                      <SettingInput
+                        label="Jina API Key"
+                        description="Required for Jina reranker service"
+                        type="password"
+                        value={configuration.jinaApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ jinaApiKey: value as string })}
+                        placeholder="Enter your Jina API key"
+                        data-testid="input-api-jina-key"
+                      />
+                      <SettingInput
+                        label="Cohere API Key"
+                        description="Required for Cohere reranker service"
+                        type="password"
+                        value={configuration.cohereApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ cohereApiKey: value as string })}
+                        placeholder="Enter your Cohere API key"
+                        data-testid="input-api-cohere-key"
                       />
                     </div>
                   </div>

@@ -407,6 +407,13 @@ MONGO_DB_NAME=${config.mongoDbName}
 # =============================================================================
 ${config.openaiApiKey ? `OPENAI_API_KEY=${config.openaiApiKey}` : '# OPENAI_API_KEY=your_openai_api_key_here'}
 
+# Search & Web Services API Keys
+${config.serperApiKey ? `SERPER_API_KEY=${config.serperApiKey}` : '# SERPER_API_KEY=your_serper_api_key_here'}
+${config.linkupApiKey ? `LINKUP_API_KEY=${config.linkupApiKey}` : '# LINKUP_API_KEY=your_linkup_api_key_here'}
+${config.firecrawlApiKey ? `FIRECRAWL_API_KEY=${config.firecrawlApiKey}` : '# FIRECRAWL_API_KEY=your_firecrawl_api_key_here'}
+${config.jinaApiKey ? `JINA_API_KEY=${config.jinaApiKey}` : '# JINA_API_KEY=your_jina_api_key_here'}
+${config.cohereApiKey ? `COHERE_API_KEY=${config.cohereApiKey}` : '# COHERE_API_KEY=your_cohere_api_key_here'}
+
 # =============================================================================
 # Optional Configuration
 # =============================================================================

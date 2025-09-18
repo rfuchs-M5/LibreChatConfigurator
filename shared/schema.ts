@@ -102,6 +102,13 @@ export const configurationSchema = z.object({
   searchReranker: z.enum(["Jina", "Cohere"]).default("Jina"),
   searchSafeSearch: z.boolean().default(true),
   searchTimeout: z.number().min(1000).max(60000).default(10000),
+  
+  // Search API Keys
+  serperApiKey: z.string().optional(),
+  linkupApiKey: z.string().optional(),
+  firecrawlApiKey: z.string().optional(),
+  jinaApiKey: z.string().optional(),
+  cohereApiKey: z.string().optional(),
 
   // MCP Servers
   mcpServers: z.array(z.object({
