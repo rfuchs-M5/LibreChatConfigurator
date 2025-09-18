@@ -1294,8 +1294,8 @@ export function ConfigurationTabs({
                     description="Web search provider"
                     type="select"
                     value={configuration.searchProvider}
-                    onChange={(value) => onConfigurationChange({ searchProvider: value as "Serper" | "SearXNG" })}
-                    options={["Serper", "SearXNG"]}
+                    onChange={(value) => onConfigurationChange({ searchProvider: value as "Serper" | "SearXNG" | "LinkUp" })}
+                    options={["Serper", "SearXNG", "LinkUp"]}
                     data-testid="input-search-provider"
                   />
                   <SettingInput

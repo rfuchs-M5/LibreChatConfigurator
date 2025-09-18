@@ -97,7 +97,7 @@ export const configurationSchema = z.object({
   ocrApiKey: z.string().optional(),
 
   // Search Configuration
-  searchProvider: z.enum(["Serper", "SearXNG"]).default("Serper"),
+  searchProvider: z.enum(["Serper", "SearXNG", "LinkUp"]).default("Serper"),
   searchScraper: z.enum(["Firecrawl", "Serper"]).default("Serper"),
   searchReranker: z.enum(["Jina", "Cohere"]).default("Jina"),
   searchSafeSearch: z.boolean().default(true),
