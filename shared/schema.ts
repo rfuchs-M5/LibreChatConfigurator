@@ -103,6 +103,14 @@ export const configurationSchema = z.object({
   searchSafeSearch: z.boolean().default(true),
   searchTimeout: z.number().min(1000).max(60000).default(10000),
 
+  // Search Service API Keys
+  serperApiKey: z.string().optional(),
+  searxngApiKey: z.string().optional(),
+  searxngInstanceUrl: z.string().optional(),
+  firecrawlApiKey: z.string().optional(),
+  jinaApiKey: z.string().optional(),
+  cohereApiKey: z.string().optional(),
+
   // MCP Servers
   mcpServers: z.array(z.object({
     name: z.string(),

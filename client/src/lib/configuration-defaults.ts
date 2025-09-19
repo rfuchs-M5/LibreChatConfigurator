@@ -81,6 +81,8 @@ export const defaultConfiguration: Configuration = {
   // OCR Configuration (LibreChat defaults)
   ocrProvider: "mistral",       // Default provider
   ocrModel: "",         // No default model
+  ocrApiBase: "",       // Empty by default for security
+  ocrApiKey: "",        // Empty by default for security
 
   // Search Configuration (LibreChat defaults)
   searchProvider: "Serper",        // Default provider
@@ -88,6 +90,14 @@ export const defaultConfiguration: Configuration = {
   searchReranker: "Jina",       // Default reranker
   searchSafeSearch: true,
   searchTimeout: 10000,
+
+  // Search Service API Keys (Empty by default for security)
+  serperApiKey: "",
+  searxngApiKey: "",
+  searxngInstanceUrl: "",
+  firecrawlApiKey: "",
+  jinaApiKey: "",
+  cohereApiKey: "",
 
   // MCP Servers (Empty by default)
   mcpServers: [],
@@ -112,4 +122,11 @@ export const defaultConfiguration: Configuration = {
 
   // API Keys (Empty by default for security)
   openaiApiKey: "",
+  
+  // Database URIs (Empty by default for security)
+  mongoUri: "",
+  redisUri: "",
+  
+  // CDN Configuration (Empty by default)
+  cdnProvider: "",
 };

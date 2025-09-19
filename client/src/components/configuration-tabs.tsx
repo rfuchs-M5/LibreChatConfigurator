@@ -106,7 +106,7 @@ export function ConfigurationTabs({
       icon: Key,
       description: "Third-Party Services",
       color: "from-emerald-500 to-emerald-600",
-      settings: ["openaiApiKey", "ocrApiKey", "ocrApiBase", "searchProvider", "searchScraper", "searchReranker", "mongoUri", "redisUri", "cdnProvider", "authSocialLogins"],
+      settings: ["openaiApiKey", "ocrApiKey", "ocrApiBase", "searchProvider", "searchScraper", "searchReranker", "serperApiKey", "searxngApiKey", "searxngInstanceUrl", "firecrawlApiKey", "jinaApiKey", "cohereApiKey", "mongoUri", "redisUri", "cdnProvider", "authSocialLogins"],
     },
     {
       id: "agents",
@@ -802,6 +802,64 @@ export function ConfigurationTabs({
                         onChange={(value) => onConfigurationChange({ searchReranker: value as "Jina" | "Cohere" })}
                         options={["Jina", "Cohere"]}
                         data-testid="input-api-search-reranker"
+                      />
+                    </div>
+                    
+                    {/* Search Service API Keys */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pl-6 border-l-2 border-violet-100 mt-4">
+                      <SettingInput
+                        label="Serper API Key"
+                        description="Required when using Serper search provider"
+                        type="password"
+                        value={configuration.serperApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ serperApiKey: value as string })}
+                        placeholder="Enter Serper API key"
+                        data-testid="input-api-serper-key"
+                      />
+                      <SettingInput
+                        label="SearXNG Instance URL"
+                        description="Required when using SearXNG search provider"
+                        type="text"
+                        value={configuration.searxngInstanceUrl || ""}
+                        onChange={(value) => onConfigurationChange({ searxngInstanceUrl: value as string })}
+                        placeholder="https://your-searxng-instance.com"
+                        data-testid="input-api-searxng-url"
+                      />
+                      <SettingInput
+                        label="SearXNG API Key"
+                        description="Optional API key for SearXNG instance"
+                        type="password"
+                        value={configuration.searxngApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ searxngApiKey: value as string })}
+                        placeholder="Enter SearXNG API key (if required)"
+                        data-testid="input-api-searxng-key"
+                      />
+                      <SettingInput
+                        label="Firecrawl API Key"
+                        description="Required when using Firecrawl scraper"
+                        type="password"
+                        value={configuration.firecrawlApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ firecrawlApiKey: value as string })}
+                        placeholder="Enter Firecrawl API key"
+                        data-testid="input-api-firecrawl-key"
+                      />
+                      <SettingInput
+                        label="Jina API Key"
+                        description="Required when using Jina reranker"
+                        type="password"
+                        value={configuration.jinaApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ jinaApiKey: value as string })}
+                        placeholder="Enter Jina API key"
+                        data-testid="input-api-jina-key"
+                      />
+                      <SettingInput
+                        label="Cohere API Key"
+                        description="Required when using Cohere reranker"
+                        type="password"
+                        value={configuration.cohereApiKey || ""}
+                        onChange={(value) => onConfigurationChange({ cohereApiKey: value as string })}
+                        placeholder="Enter Cohere API key"
+                        data-testid="input-api-cohere-key"
                       />
                     </div>
                   </div>
