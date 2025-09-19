@@ -97,18 +97,11 @@ export const configurationSchema = z.object({
   ocrApiKey: z.string().optional(),
 
   // Search Configuration
-  searchProvider: z.enum(["Serper", "SearXNG", "LinkUp"]).default("Serper"),
+  searchProvider: z.enum(["Serper", "SearXNG"]).default("Serper"),
   searchScraper: z.enum(["Firecrawl", "Serper"]).default("Serper"),
   searchReranker: z.enum(["Jina", "Cohere"]).default("Jina"),
   searchSafeSearch: z.boolean().default(true),
   searchTimeout: z.number().min(1000).max(60000).default(10000),
-  
-  // Search API Keys
-  serperApiKey: z.string().optional(),
-  linkupApiKey: z.string().optional(),
-  firecrawlApiKey: z.string().optional(),
-  jinaApiKey: z.string().optional(),
-  cohereApiKey: z.string().optional(),
 
   // MCP Servers
   mcpServers: z.array(z.object({
