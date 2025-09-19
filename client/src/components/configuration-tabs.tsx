@@ -744,27 +744,50 @@ export function ConfigurationTabs({
                     <div className="flex items-center gap-2">
                       <Camera className="h-5 w-5 text-amber-600" />
                       <h4 className="font-semibold text-amber-800">OCR & Document Processing</h4>
-                      <Badge variant="outline" className="text-xs">Optional Service</Badge>
+                      <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">Agent Capability</Badge>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 pl-6 border-l-2 border-amber-100">
-                      <SettingInput
-                        label="OCR API Base URL"
-                        description="Custom OCR service endpoint - also in OCR tab"
-                        type="text"
-                        value={configuration.ocrApiBase || ""}
-                        onChange={(value) => onConfigurationChange({ ocrApiBase: value as string })}
-                        placeholder="https://api.ocr-service.com"
-                        data-testid="input-api-ocr-base"
-                      />
-                      <SettingInput
-                        label="OCR API Key"
-                        description="API key for custom OCR service - also in OCR tab"
-                        type="password"
-                        value={configuration.ocrApiKey || ""}
-                        onChange={(value) => onConfigurationChange({ ocrApiKey: value as string })}
-                        placeholder="Enter OCR API key"
-                        data-testid="input-api-ocr-key"
-                      />
+                    
+                    {/* OCR Requirements Notice */}
+                    <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-3 mb-4">
+                      <div className="flex items-start gap-2">
+                        <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Camera className="h-3 w-3 text-amber-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-amber-800 mb-1">OCR Works Through AI Agents Only</h4>
+                          <p className="text-xs text-amber-700">
+                            LibreChat's OCR extracts text from images and documents. 
+                            <strong> Must use Agents endpoint</strong> with <strong>OCR capability enabled</strong> to function.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <h5 className="font-semibold text-blue-800 mb-2">🤖 Mistral OCR (Default)</h5>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <SettingInput
+                          label="OCR API Key"
+                          description="🔸 Required: Get Mistral API key for OCR processing"
+                          type="password"
+                          value={configuration.ocrApiKey || ""}
+                          onChange={(value) => onConfigurationChange({ ocrApiKey: value as string })}
+                          placeholder="Enter Mistral API key"
+                          data-testid="input-api-ocr-key"
+                        />
+                        <SettingInput
+                          label="OCR API Base URL"
+                          description="🔸 Optional: Defaults to https://api.mistral.ai/v1"
+                          type="text"
+                          value={configuration.ocrApiBase || ""}
+                          onChange={(value) => onConfigurationChange({ ocrApiBase: value as string })}
+                          placeholder="https://api.mistral.ai/v1"
+                          data-testid="input-api-ocr-base"
+                        />
+                      </div>
+                      <p className="text-xs text-blue-600 mt-2 italic">
+                        💡 Tip: OCR enables text extraction from PDFs and images uploaded to agents
+                      </p>
                     </div>
                   </div>
 
@@ -772,8 +795,24 @@ export function ConfigurationTabs({
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Search className="h-5 w-5 text-violet-600" />
-                      <h4 className="font-semibold text-violet-800">Search & Web Services</h4>
-                      <Badge variant="outline" className="text-xs">May Require API Key</Badge>
+                      <h4 className="font-semibold text-violet-800">Web Search Services</h4>
+                      <Badge variant="outline" className="text-xs bg-orange-50 text-orange-700 border-orange-200">3 Components Required</Badge>
+                    </div>
+                    
+                    {/* Web Search Requirements Notice */}
+                    <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-lg p-3 mb-4">
+                      <div className="flex items-start gap-2">
+                        <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-sm font-bold text-orange-600">!</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-orange-800 mb-1">Web Search Requires ALL 3 Components</h4>
+                          <p className="text-xs text-orange-700">
+                            LibreChat needs: <strong>1) Search Provider</strong> + <strong>2) Scraper</strong> + <strong>3) Reranker</strong>. 
+                            Missing any component will prevent web search from working.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pl-6 border-l-2 border-violet-100">
                       <SettingInput
@@ -806,61 +845,87 @@ export function ConfigurationTabs({
                     </div>
                     
                     {/* Search Service API Keys */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pl-6 border-l-2 border-violet-100 mt-4">
-                      <SettingInput
-                        label="Serper API Key"
-                        description="Required when using Serper search provider"
-                        type="password"
-                        value={configuration.serperApiKey || ""}
-                        onChange={(value) => onConfigurationChange({ serperApiKey: value as string })}
-                        placeholder="Enter Serper API key"
-                        data-testid="input-api-serper-key"
-                      />
-                      <SettingInput
-                        label="SearXNG Instance URL"
-                        description="Required when using SearXNG search provider"
-                        type="text"
-                        value={configuration.searxngInstanceUrl || ""}
-                        onChange={(value) => onConfigurationChange({ searxngInstanceUrl: value as string })}
-                        placeholder="https://your-searxng-instance.com"
-                        data-testid="input-api-searxng-url"
-                      />
-                      <SettingInput
-                        label="SearXNG API Key"
-                        description="Optional API key for SearXNG instance"
-                        type="password"
-                        value={configuration.searxngApiKey || ""}
-                        onChange={(value) => onConfigurationChange({ searxngApiKey: value as string })}
-                        placeholder="Enter SearXNG API key (if required)"
-                        data-testid="input-api-searxng-key"
-                      />
-                      <SettingInput
-                        label="Firecrawl API Key"
-                        description="Required when using Firecrawl scraper"
-                        type="password"
-                        value={configuration.firecrawlApiKey || ""}
-                        onChange={(value) => onConfigurationChange({ firecrawlApiKey: value as string })}
-                        placeholder="Enter Firecrawl API key"
-                        data-testid="input-api-firecrawl-key"
-                      />
-                      <SettingInput
-                        label="Jina API Key"
-                        description="Required when using Jina reranker"
-                        type="password"
-                        value={configuration.jinaApiKey || ""}
-                        onChange={(value) => onConfigurationChange({ jinaApiKey: value as string })}
-                        placeholder="Enter Jina API key"
-                        data-testid="input-api-jina-key"
-                      />
-                      <SettingInput
-                        label="Cohere API Key"
-                        description="Required when using Cohere reranker"
-                        type="password"
-                        value={configuration.cohereApiKey || ""}
-                        onChange={(value) => onConfigurationChange({ cohereApiKey: value as string })}
-                        placeholder="Enter Cohere API key"
-                        data-testid="input-api-cohere-key"
-                      />
+                    <div className="space-y-4 pl-6 border-l-2 border-violet-100 mt-4">
+                      
+                      {/* 1. Search Provider Section */}
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <h5 className="font-semibold text-blue-800 mb-2">1️⃣ Search Provider (Choose One)</h5>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                          <SettingInput
+                            label="Serper API Key"
+                            description="🔸 Recommended: Get from serper.dev"
+                            type="password"
+                            value={configuration.serperApiKey || ""}
+                            onChange={(value) => onConfigurationChange({ serperApiKey: value as string })}
+                            placeholder="Enter Serper API key"
+                            data-testid="input-api-serper-key"
+                          />
+                          <div className="space-y-2">
+                            <SettingInput
+                              label="SearXNG Instance URL"
+                              description="🔸 Alternative: Self-hosted SearXNG"
+                              type="text"
+                              value={configuration.searxngInstanceUrl || ""}
+                              onChange={(value) => onConfigurationChange({ searxngInstanceUrl: value as string })}
+                              placeholder="https://your-searxng-instance.com"
+                              data-testid="input-api-searxng-url"
+                            />
+                            <SettingInput
+                              label="SearXNG API Key"
+                              description="Optional: Only if SearXNG requires auth"
+                              type="password"
+                              value={configuration.searxngApiKey || ""}
+                              onChange={(value) => onConfigurationChange({ searxngApiKey: value as string })}
+                              placeholder="Enter SearXNG API key (optional)"
+                              data-testid="input-api-searxng-key"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 2. Scraper Section */}
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <h5 className="font-semibold text-green-800 mb-2">2️⃣ Content Scraper (Required)</h5>
+                        <div className="grid grid-cols-1 gap-3">
+                          <SettingInput
+                            label="Firecrawl API Key"
+                            description="🔸 Recommended: Get from firecrawl.dev - Professional web scraping"
+                            type="password"
+                            value={configuration.firecrawlApiKey || ""}
+                            onChange={(value) => onConfigurationChange({ firecrawlApiKey: value as string })}
+                            placeholder="Enter Firecrawl API key"
+                            data-testid="input-api-firecrawl-key"
+                          />
+                          <p className="text-xs text-green-600 italic">
+                            💡 Tip: Firecrawl provides better content extraction than Serper scraper
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* 3. Reranker Section */}
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                        <h5 className="font-semibold text-purple-800 mb-2">3️⃣ Result Reranker (Choose One)</h5>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                          <SettingInput
+                            label="Jina API Key"
+                            description="🔸 Option 1: Jina reranking service"
+                            type="password"
+                            value={configuration.jinaApiKey || ""}
+                            onChange={(value) => onConfigurationChange({ jinaApiKey: value as string })}
+                            placeholder="Enter Jina API key"
+                            data-testid="input-api-jina-key"
+                          />
+                          <SettingInput
+                            label="Cohere API Key"
+                            description="🔸 Option 2: Cohere reranking service"
+                            type="password"
+                            value={configuration.cohereApiKey || ""}
+                            onChange={(value) => onConfigurationChange({ cohereApiKey: value as string })}
+                            placeholder="Enter Cohere API key"
+                            data-testid="input-api-cohere-key"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
 

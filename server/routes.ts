@@ -417,6 +417,7 @@ ${config.cohereApiKey ? `COHERE_API_KEY=${config.cohereApiKey}` : '# COHERE_API_
 
 # OCR Service API Keys
 ${config.ocrApiKey ? `OCR_API_KEY=${config.ocrApiKey}` : '# OCR_API_KEY=your_ocr_api_key_here'}
+${config.ocrApiBase ? `OCR_BASEURL=${config.ocrApiBase}` : '# OCR_BASEURL=https://api.mistral.ai/v1'}
 
 # =============================================================================
 # Optional Configuration
@@ -542,14 +543,20 @@ ${config.searchProvider ? `webSearch:
   scraperType: "${config.searchScraper.toLowerCase()}"
   rerankerType: "${config.searchReranker.toLowerCase()}"
   safeSearch: ${config.searchSafeSearch ? 1 : 0}
-  scraperTimeout: ${config.searchTimeout}` : '# Web search is not configured'}
+  scraperTimeout: ${config.searchTimeout}
+  serperApiKey: "\${SERPER_API_KEY}"
+  searxngApiKey: "\${SEARXNG_API_KEY}"
+  searxngInstanceUrl: "\${SEARXNG_INSTANCE_URL}"
+  firecrawlApiKey: "\${FIRECRAWL_API_KEY}"
+  jinaApiKey: "\${JINA_API_KEY}"
+  cohereApiKey: "\${COHERE_API_KEY}"` : '# Web search is not configured'}
 
 # OCR Configuration
 ${config.ocrProvider ? `ocr:
   strategy: "${config.ocrProvider === 'mistral' ? 'mistral_ocr' : config.ocrProvider === 'custom' ? 'custom_ocr' : 'mistral_ocr'}"${config.ocrProvider === 'mistral' ? `
   mistralModel: "mistral-ocr-latest"` : ''}
   apiKey: "\${OCR_API_KEY}"
-  baseURL: "https://api.mistral.ai/v1"` : '# OCR is not configured'}
+  baseURL: "\${OCR_BASEURL}"` : '# OCR is not configured'}
 
 # Actions Configuration
 ${config.actionsAllowedDomains.length > 0 ? `actions:
