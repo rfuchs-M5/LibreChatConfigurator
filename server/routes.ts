@@ -474,8 +474,20 @@ endpoints:
 
 # Interface Configuration
 interface:
-  agents: true
-  temporaryChatRetention: ${config.temporaryChatsRetentionHours}
+  agents: ${config.showAgents}
+  modelSelect: ${config.showModelSelect}
+  parameters: ${config.showParameters}
+  sidePanel: ${config.showSidePanel}
+  presets: ${config.showPresets}
+  prompts: ${config.showPrompts}
+  bookmarks: ${config.showBookmarks}
+  multiConvo: ${config.showMultiConvo}
+  webSearch: ${config.showWebSearch}
+  fileSearch: ${config.showFileSearch}
+  fileCitations: ${config.showFileCitations}
+  runCode: ${config.showRunCode}
+  temporaryChatRetention: ${config.temporaryChatsRetentionHours}${config.customWelcome ? `
+  customWelcome: "${config.customWelcome}"` : ''}
 
 # File Configuration
 fileConfig:
