@@ -177,7 +177,12 @@ const mcpServerSchema = z.object({
   })).optional(),
 });
 
-const mcpServersSchema = z.record(mcpServerSchema).optional();
+const mcpServersSchema = z.union([
+  z.record(mcpServerSchema),
+  z.array(mcpServerSchema.extend({
+    name: z.string()
+  }))
+]).optional();
 
 // Base Provider Configuration Schema for RC4 Unified Endpoints
 const baseProviderSchema = z.object({
@@ -342,7 +347,7 @@ export const configurationSchema = z.object({
     })
   ]).default("local"),
   secureImageLinks: z.boolean().default(false),
-  imageOutputType: z.enum(["png", "webp", "jpeg"]).default("png"),
+  imageOutputType: z.enum(["png", "webp", "jpeg", "url"]).default("png"),
   filteredTools: z.array(z.string()).optional(),
   includedTools: z.array(z.string()).optional(),
   
