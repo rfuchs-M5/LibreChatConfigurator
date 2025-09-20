@@ -492,9 +492,9 @@ ALLOW_SOCIAL_REGISTRATION=${config.allowSocialRegistration !== undefined ? confi
 # =============================================================================
 # Database Configuration
 # =============================================================================
-MONGO_ROOT_USERNAME=${config.mongoRootUsername}
-MONGO_ROOT_PASSWORD=${config.mongoRootPassword}
-MONGO_DB_NAME=${config.mongoDbName}
+MONGO_ROOT_USERNAME=${config.mongoRootUsername || 'librechat_admin'}
+MONGO_ROOT_PASSWORD=${config.mongoRootPassword || 'librechat_password_change_this'}
+MONGO_DB_NAME=${config.mongoDbName || 'librechat'}
 
 # =============================================================================
 # API Keys
