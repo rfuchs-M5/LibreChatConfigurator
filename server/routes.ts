@@ -207,6 +207,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ocrModel: flatConfig.ocrModel,
         // Other missing properties
         temporaryChatRetention: flatConfig.temporaryChatsRetentionHours,
+        // Flat properties needed for README generation
+        filesAllowedMimeTypes: flatConfig.filesAllowedMimeTypes || [],
+        filesMaxSizeMB: flatConfig.filesMaxSizeMB || 10,
+        filesMaxFilesPerRequest: flatConfig.filesMaxFilesPerRequest || 5,
+        rateLimitsPerUser: flatConfig.rateLimitsPerUser || 100,
+        rateLimitsPerIP: flatConfig.rateLimitsPerIP || 100,
+        showAgents: flatConfig.showAgents,
+        showWebSearch: flatConfig.showWebSearch,
+        showFileSearch: flatConfig.showFileSearch,
+        showPresets: flatConfig.showPresets,
+        showPrompts: flatConfig.showPrompts,
+        showBookmarks: flatConfig.showBookmarks,
+        memoryEnabled: flatConfig.memoryEnabled,
+        enableRegistration: flatConfig.enableRegistration,
+        debugLogging: flatConfig.debugLogging,
+        defaultModel: flatConfig.defaultModel,
+        host: flatConfig.host || 'localhost',
+        port: flatConfig.port || 3080,
       };
       
       const packageFiles: { [key: string]: string } = {};
