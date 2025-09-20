@@ -469,75 +469,75 @@ endpoints:
       - "presence_penalty"
       - "stop"
       - "user"
-    titleConvo: ${config.endpointDefaults.titling}
-    titleModel: "${config.endpointDefaults.titleModel}"
+    titleConvo: ${config.endpoints?.openAI?.titleConvo ?? true}
+    titleModel: "${config.endpoints?.openAI?.titleModel ?? 'gpt-3.5-turbo'}"
 
 # Interface Configuration
 interface:
-  agents: ${config.showAgents}
-  modelSelect: ${config.showModelSelect}
-  parameters: ${config.showParameters}
-  sidePanel: ${config.showSidePanel}
-  presets: ${config.showPresets}
-  prompts: ${config.showPrompts}
-  bookmarks: ${config.showBookmarks}
-  multiConvo: ${config.showMultiConvo}
-  webSearch: ${config.showWebSearch}
-  fileSearch: ${config.showFileSearch}
-  fileCitations: ${config.showFileCitations}
-  runCode: ${config.showRunCode}
-  temporaryChatRetention: ${config.temporaryChatsRetentionHours}${config.customWelcome ? `
-  customWelcome: "${config.customWelcome}"` : ''}
+  agents: ${config.interface?.agents ?? true}
+  modelSelect: ${config.interface?.modelSelect ?? true}
+  parameters: ${config.interface?.parameters ?? true}
+  sidePanel: ${config.interface?.sidePanel ?? true}
+  presets: ${config.interface?.presets ?? true}
+  prompts: ${config.interface?.prompts ?? true}
+  bookmarks: ${config.interface?.bookmarks ?? true}
+  multiConvo: ${config.interface?.multiConvo ?? false}
+  webSearch: ${config.interface?.webSearch ?? true}
+  fileSearch: ${config.interface?.fileSearch ?? true}
+  fileCitations: ${config.interface?.fileCitations ?? true}
+  runCode: ${config.interface?.runCode ?? true}
+  temporaryChatRetention: ${config.temporaryChatRetention ?? 720}${config.interface?.customWelcome ? `
+  customWelcome: "${config.interface.customWelcome}"` : ''}
 
 # File Configuration
 fileConfig:
   endpoints:
     openAI:
       disabled: false
-      fileLimit: ${config.filesMaxFilesPerRequest}
-      fileSizeLimit: ${config.filesMaxSizeMB}
-      totalSizeLimit: ${config.filesMaxSizeMB * config.filesMaxFilesPerRequest}
+      fileLimit: ${config.fileConfig?.maxFiles ?? 5}
+      fileSizeLimit: ${config.fileConfig?.fileSizeLimit ?? 10}
+      totalSizeLimit: ${(config.fileConfig?.fileSizeLimit ?? 10) * (config.fileConfig?.maxFiles ?? 5)}
       supportedMimeTypes:
-${config.filesAllowedMimeTypes.map((type: string) => `        - "${type}"`).join('\n')}
+${(config.fileConfig?.supportedMimeTypes ?? ['text/plain', 'application/pdf']).map((type: string) => `        - "${type}"`).join('\n')}
 
 
 
 # Rate Limits
 rateLimits:
   fileUploads:
-    ipMax: ${config.rateLimitsPerIP}
+    ipMax: ${config.rateLimits?.fileUploads?.ipMax ?? 100}
     ipWindowInMinutes: 60
-    userMax: ${config.rateLimitsUploads}
+    userMax: ${config.rateLimits?.fileUploads?.userMax ?? 50}
     userWindowInMinutes: 60
   conversationsImport:
-    ipMax: ${config.rateLimitsPerIP}
+    ipMax: ${config.rateLimits?.conversationsImport?.ipMax ?? 100}
     ipWindowInMinutes: 60
-    userMax: ${config.rateLimitsImports}
+    userMax: ${config.rateLimits?.conversationsImport?.userMax ?? 50}
     userWindowInMinutes: 60
   stt:
-    ipMax: ${config.rateLimitsPerIP}
+    ipMax: ${config.rateLimits?.stt?.ipMax ?? 100}
     ipWindowInMinutes: 1
-    userMax: ${config.rateLimitsSTT}
+    userMax: ${config.rateLimits?.stt?.userMax ?? 50}
     userWindowInMinutes: 1
   tts:
-    ipMax: ${config.rateLimitsPerIP}
+    ipMax: ${config.rateLimits?.tts?.ipMax ?? 100}
     ipWindowInMinutes: 1
-    userMax: ${config.rateLimitsTTS}
+    userMax: ${config.rateLimits?.tts?.userMax ?? 50}
     userWindowInMinutes: 1
 
 # Memory Configuration
-${config.memoryEnabled ? `memory:
+${config.memory?.enabled ? `memory:
   disabled: false
   validKeys:
     - "user_preferences"
     - "conversation_context"
     - "learned_facts"
     - "personal_information"
-  tokenLimit: ${config.memoryMaxTokens}
-  personalize: ${config.memoryPersonalization}
-  messageWindowSize: ${config.memoryWindowSize}
+  tokenLimit: ${config.memory?.tokenLimit ?? 10000}
+  personalize: ${config.memory?.personalize ?? true}
+  messageWindowSize: ${config.memory?.messageWindowSize ?? 10}
   agent:
-    provider: "${config.memoryAgent}"
+    provider: "${config.memory?.agent?.provider ?? 'openai'}"
     model: "gpt-4"
     instructions: |
       Store memory using only the specified validKeys.
