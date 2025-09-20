@@ -244,9 +244,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         packageFiles["docker-compose.yml"] = generateDockerComposeFile(configuration);
       }
 
-      // Generate install.sh script
+      // Generate installation scripts
       if (includeFiles.includes("install-script")) {
-        packageFiles["install.sh"] = generateInstallScript(configuration);
+        packageFiles["install_dockerimage.sh"] = generateDockerInstallScript(configuration);
+        packageFiles["install_localgitrepo.sh"] = generateLocalRepoInstallScript(configuration);
       }
 
       // Generate README.md
@@ -773,17 +774,17 @@ networks:
 `;
 }
 
-function generateInstallScript(config: any): string {
+function generateDockerInstallScript(config: any): string {
   return `#!/bin/bash
 
 # =============================================================================
-# LibreChat Installation Script
+# LibreChat Docker Installation Script
 # Generated Configuration for v0.8.0-RC4
 # =============================================================================
 
 set -e
 
-echo "🚀 Starting LibreChat installation..."
+echo "🚀 Starting LibreChat Docker installation..."
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then
@@ -841,7 +842,223 @@ else
 fi
 
 echo ""
-echo "🎉 Installation complete! Enjoy using LibreChat!"
+echo "🎉 Docker installation complete! Enjoy using LibreChat!"
+`;
+}
+
+function generateLocalRepoInstallScript(config: any): string {
+  return `#!/bin/bash
+
+# =============================================================================
+# LibreChat Local Repository Installation Script
+# Generated Configuration for v0.8.0-RC4
+# =============================================================================
+
+set -e
+
+echo "🚀 Starting LibreChat local repository installation..."
+
+# Function to validate LibreChat repository
+validate_librechat_repo() {
+    local repo_path="$1"
+    
+    if [ ! -d "$repo_path" ]; then
+        echo "❌ Directory does not exist: $repo_path"
+        return 1
+    fi
+    
+    if [ ! -f "$repo_path/package.json" ]; then
+        echo "❌ Not a valid LibreChat repository (missing package.json)"
+        return 1
+    fi
+    
+    if ! grep -q "librechat" "$repo_path/package.json"; then
+        echo "❌ Not a LibreChat repository (package.json doesn't contain 'librechat')"
+        return 1
+    fi
+    
+    if [ ! -d "$repo_path/api" ] || [ ! -d "$repo_path/client" ]; then
+        echo "❌ Not a valid LibreChat repository (missing api or client directories)"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Prompt for LibreChat repository path
+while true; do
+    echo ""
+    echo "📁 Please provide the path to your local LibreChat repository:"
+    echo "   (This should be a directory containing the LibreChat source code)"
+    echo ""
+    read -p "LibreChat repository path: " LIBRECHAT_PATH
+    
+    # Expand tilde and resolve relative paths
+    LIBRECHAT_PATH=\${LIBRECHAT_PATH/#\\~/$HOME}
+    LIBRECHAT_PATH=\$(realpath "$LIBRECHAT_PATH" 2>/dev/null || echo "$LIBRECHAT_PATH")
+    
+    if validate_librechat_repo "$LIBRECHAT_PATH"; then
+        echo "✅ Valid LibreChat repository found at: $LIBRECHAT_PATH"
+        break
+    else
+        echo ""
+        echo "Please try again with a valid LibreChat repository path."
+        echo "Example: /home/user/projects/LibreChat"
+        echo ""
+        read -p "Would you like to try again? (y/n): " retry
+        if [[ "$retry" != "y" && "$retry" != "Y" ]]; then
+            echo "Installation cancelled."
+            exit 1
+        fi
+    fi
+done
+
+# Check prerequisites
+echo ""
+echo "🔍 Checking prerequisites..."
+
+# Check Node.js
+if ! command -v node &> /dev/null; then
+    echo "❌ Node.js is not installed. Please install Node.js 18+ first."
+    echo "Visit: https://nodejs.org/"
+    exit 1
+fi
+
+NODE_VERSION=\$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
+if [ "$NODE_VERSION" -lt 18 ]; then
+    echo "❌ Node.js version 18+ required. Current version: \$(node --version)"
+    exit 1
+fi
+
+# Check npm
+if ! command -v npm &> /dev/null; then
+    echo "❌ npm is not installed. Please install npm first."
+    exit 1
+fi
+
+# Check Docker for databases
+if ! command -v docker &> /dev/null; then
+    echo "❌ Docker is not installed. Please install Docker first."
+    echo "Visit: https://docs.docker.com/get-docker/"
+    exit 1
+fi
+
+if ! command -v docker-compose &> /dev/null; then
+    echo "❌ Docker Compose is not installed. Please install Docker Compose first."
+    echo "Visit: https://docs.docker.com/compose/install/"
+    exit 1
+fi
+
+echo "✅ All prerequisites are installed"
+
+# Copy configuration files to LibreChat repository
+echo ""
+echo "📁 Setting up configuration files..."
+
+# Copy .env file
+cp .env "$LIBRECHAT_PATH/.env"
+echo "✅ Copied .env to $LIBRECHAT_PATH/.env"
+
+# Copy librechat-config.yaml
+cp librechat-config.yaml "$LIBRECHAT_PATH/librechat.yaml"
+echo "✅ Copied librechat-config.yaml to $LIBRECHAT_PATH/librechat.yaml"
+
+# Navigate to LibreChat directory
+cd "$LIBRECHAT_PATH"
+
+# Install dependencies
+echo ""
+echo "📦 Installing dependencies..."
+npm ci
+
+# Start database services (MongoDB and Redis)
+echo ""
+echo "🔄 Starting database services..."
+cat > docker-compose.db.yml << 'EOF'
+version: '3.8'
+
+services:
+  mongodb:
+    container_name: librechat-mongodb
+    image: mongo:7.0
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: \${MONGO_ROOT_USERNAME:-${config.mongoRootUsername || 'librechat_admin'}}
+      MONGO_INITDB_ROOT_PASSWORD: \${MONGO_ROOT_PASSWORD:-${config.mongoRootPassword || 'librechat_password_change_this'}}
+      MONGO_INITDB_DATABASE: \${MONGO_DB_NAME:-${config.mongoDbName || 'librechat'}}
+    ports:
+      - "27017:27017"
+
+  redis:
+    container_name: librechat-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+EOF
+
+# Start database services
+docker-compose -f docker-compose.db.yml up -d
+
+echo "⏳ Waiting for databases to start..."
+sleep 15
+
+# Build the client
+echo ""
+echo "🔨 Building LibreChat client..."
+npm run frontend
+
+# Start the LibreChat application
+echo ""
+echo "🚀 Starting LibreChat application..."
+echo "📝 Starting in background... Check logs with: npm run logs"
+
+# Start in background
+nohup npm run backend > librechat.log 2>&1 &
+BACKEND_PID=\$!
+
+echo "⏳ Waiting for application to start..."
+sleep 30
+
+# Check if application is running
+if kill -0 \$BACKEND_PID 2>/dev/null; then
+    echo ""
+    echo "✅ LibreChat is running successfully!"
+    echo ""
+    echo "🌐 Access your LibreChat instance at:"
+    echo "   http://localhost:${config.port || 3080}"
+    echo ""
+    echo "📝 Application logs: tail -f librechat.log"
+    echo "🛑 To stop: kill \$BACKEND_PID && docker-compose -f docker-compose.db.yml down"
+    echo "🔄 To restart: npm run backend"
+    echo ""
+    echo "💾 Backend PID: \$BACKEND_PID (saved to .backend.pid)"
+    echo \$BACKEND_PID > .backend.pid
+else
+    echo "❌ Application failed to start. Check logs:"
+    cat librechat.log
+    exit 1
+fi
+
+echo ""
+echo "🎉 Local repository installation complete! Enjoy using LibreChat!"
+echo ""
+echo "📋 Quick commands:"
+echo "   View logs: tail -f librechat.log"
+echo "   Stop app: kill \$(cat .backend.pid) 2>/dev/null || echo 'Not running'"
+echo "   Stop databases: docker-compose -f docker-compose.db.yml down"
+echo "   Restart: npm run backend"
 `;
 }
 
@@ -855,7 +1072,8 @@ This package contains a complete LibreChat v0.8.0-RC4 installation with your cus
 - \`.env\` - Environment variables configuration
 - \`librechat-config.yaml\` - Main LibreChat configuration file
 - \`docker-compose.yml\` - Docker services orchestration
-- \`install.sh\` - Automated installation script
+- \`install_dockerimage.sh\` - Docker-based installation script
+- \`install_localgitrepo.sh\` - Local repository installation script
 - \`profile.json\` - Configuration profile for easy re-import
 - \`README.md\` - This documentation file
 
@@ -866,10 +1084,18 @@ This package contains a complete LibreChat v0.8.0-RC4 installation with your cus
    - At least 4GB RAM and 10GB disk space
    - Open ports: ${config.port}, 27017 (MongoDB)
 
-2. **Installation**
+2. **Installation Options**
+   
+   **Option A: Docker Installation (Recommended)**
    \`\`\`bash
-   chmod +x install.sh
-   ./install.sh
+   chmod +x install_dockerimage.sh
+   ./install_dockerimage.sh
+   \`\`\`
+   
+   **Option B: Local Repository Installation**
+   \`\`\`bash
+   chmod +x install_localgitrepo.sh
+   ./install_localgitrepo.sh
    \`\`\`
 
 3. **Access**
