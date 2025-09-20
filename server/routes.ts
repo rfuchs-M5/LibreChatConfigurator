@@ -515,7 +515,7 @@ ${config.cdnProvider ? `CDN_PROVIDER=${config.cdnProvider}` : '# CDN_PROVIDER='}
 
 function generateYamlFile(config: any): string {
   return `# =============================================================================
-# LibreChat Configuration for v${config.configVer}
+# LibreChat Configuration for v0.8.0-RC4
 # =============================================================================
 
 version: 1.2.8
@@ -771,7 +771,7 @@ function generateInstallScript(config: any): string {
 
 # =============================================================================
 # LibreChat Installation Script
-# Generated Configuration for v${config.configVer}
+# Generated Configuration for v0.8.0-RC4
 # =============================================================================
 
 set -e
@@ -841,7 +841,7 @@ echo "🎉 Installation complete! Enjoy using LibreChat!"
 function generateReadmeFile(config: any): string {
   return `# LibreChat Configuration
 
-This package contains a complete LibreChat v0.8.0-rc3 installation with your custom configuration (using configuration schema v${config.configVer}).
+This package contains a complete LibreChat v0.8.0-RC4 installation with your custom configuration (using configuration schema v${config.configVer}).
 
 ## 📋 Package Contents
 
@@ -872,7 +872,7 @@ This package contains a complete LibreChat v0.8.0-rc3 installation with your cus
 ## ⚙️ Configuration Summary
 
 ### Core Settings
-- **LibreChat Version**: v0.8.0-rc3
+- **LibreChat Version**: v0.8.0-RC4
 - **Configuration Schema**: v${config.configVer}
 - **Host**: ${config.host}:${config.port}
 - **Registration**: ${config.enableRegistration ? 'Enabled' : 'Disabled'}
@@ -1021,7 +1021,7 @@ If you encounter issues:
 ---
 
 **Generated on**: ${new Date().toISOString().split('T')[0]}
-**LibreChat Version**: v0.8.0-rc3
+**LibreChat Version**: v0.8.0-RC4
 **Configuration Schema**: v${config.configVer}
 **Support**: https://docs.librechat.ai
 `;
