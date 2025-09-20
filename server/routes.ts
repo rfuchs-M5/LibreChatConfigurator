@@ -129,16 +129,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const { configuration, includeFiles } = result.data;
+      const { configuration: flatConfig, includeFiles } = result.data;
       console.log("✅ [PACKAGE DEBUG] Validated configuration received:");
-      console.log("   - configVer:", configuration.configVer);
-      console.log("   - mcpServers count:", configuration.mcpServers?.length || 0);
-      console.log("   - mcpServers data:", JSON.stringify(configuration.mcpServers, null, 2));
+      console.log("   - configVer:", flatConfig.configVer);
+      console.log("   - mcpServers count:", flatConfig.mcpServers?.length || 0);
+      console.log("   - mcpServers data:", JSON.stringify(flatConfig.mcpServers, null, 2));
       console.log("   - UI settings:", {
-        showModelSelect: configuration.showModelSelect,
-        showAgents: configuration.showAgents,
-        defaultModel: configuration.defaultModel
+        showModelSelect: flatConfig.showModelSelect,
+        showAgents: flatConfig.showAgents,
+        defaultModel: flatConfig.defaultModel
       });
+      
+      // Map flat frontend properties to nested schema structure
+      const configuration = {
+        ...flatConfig,
+        interface: {
+          agents: flatConfig.showAgents,
+          modelSelect: flatConfig.showModelSelect,
+          parameters: flatConfig.showParameters,
+          sidePanel: flatConfig.showSidePanel,
+          presets: flatConfig.showPresets,
+          prompts: flatConfig.showPrompts,
+          bookmarks: flatConfig.showBookmarks,
+          multiConvo: flatConfig.showMultiConvo,
+          webSearch: flatConfig.showWebSearch,
+          fileSearch: flatConfig.showFileSearch,
+          fileCitations: flatConfig.showFileCitations,
+          runCode: flatConfig.showRunCode,
+          customWelcome: flatConfig.customWelcome,
+        },
+        fileConfig: {
+          maxFiles: flatConfig.filesMaxFilesPerRequest,
+          fileSizeLimit: flatConfig.filesMaxSizeMB,
+          supportedMimeTypes: flatConfig.filesAllowedMimeTypes,
+        },
+        rateLimits: {
+          fileUploads: {
+            ipMax: flatConfig.rateLimitsPerIP,
+            userMax: flatConfig.rateLimitsUploads,
+          },
+          conversationsImport: {
+            ipMax: flatConfig.rateLimitsPerIP,
+            userMax: flatConfig.rateLimitsImports,
+          },
+          stt: {
+            ipMax: flatConfig.rateLimitsPerIP,
+            userMax: flatConfig.rateLimitsSTT,
+          },
+          tts: {
+            ipMax: flatConfig.rateLimitsPerIP,
+            userMax: flatConfig.rateLimitsTTS,
+          },
+        },
+        endpoints: {
+          openAI: {
+            titleConvo: flatConfig.endpointDefaults?.titling,
+            titleModel: flatConfig.endpointDefaults?.titleModel,
+          },
+        },
+        memory: {
+          enabled: flatConfig.memoryEnabled,
+          tokenLimit: flatConfig.memoryMaxTokens,
+          personalize: flatConfig.memoryPersonalization,
+          messageWindowSize: flatConfig.memoryWindowSize,
+          agent: {
+            provider: flatConfig.memoryAgent,
+          },
+        },
+      };
       
       const packageFiles: { [key: string]: string } = {};
 
