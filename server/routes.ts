@@ -196,6 +196,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
             provider: flatConfig.memoryAgent,
           },
         },
+        // Actions, search, and OCR properties
+        actionsAllowedDomains: flatConfig.actionsAllowedDomains || [],
+        searchProvider: flatConfig.searchProvider,
+        searchScraper: flatConfig.searchScraper,
+        searchReranker: flatConfig.searchReranker,
+        searchSafeSearch: flatConfig.searchSafeSearch,
+        searchTimeout: flatConfig.searchTimeout,
+        ocrProvider: flatConfig.ocrProvider,
+        ocrModel: flatConfig.ocrModel,
+        // Other missing properties
+        temporaryChatRetention: flatConfig.temporaryChatsRetentionHours,
       };
       
       const packageFiles: { [key: string]: string } = {};
