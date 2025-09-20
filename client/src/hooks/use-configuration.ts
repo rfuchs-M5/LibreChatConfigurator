@@ -50,19 +50,7 @@ export function useConfiguration() {
   const updateConfiguration = (updates: Partial<Configuration>) => {
     console.log("🔄 [CONFIG DEBUG] Updating configuration:", Object.keys(updates));
     if (updates.mcpServers) {
-      // Redact sensitive headers for logging
-      const redactedServers = updates.mcpServers.map(server => ({
-        ...server,
-        headers: server.headers ? Object.fromEntries(
-          Object.entries(server.headers).map(([key, value]) => [
-            key, 
-            key.toLowerCase().includes('authorization') || key.toLowerCase().includes('token') 
-              ? '[REDACTED]' 
-              : value
-          ])
-        ) : {}
-      }));
-      console.log("   - MCP servers update:", redactedServers);
+      console.log("   - MCP servers update:", updates.mcpServers);
     }
     setConfiguration(prev => {
       const newConfig = { ...prev, ...updates };

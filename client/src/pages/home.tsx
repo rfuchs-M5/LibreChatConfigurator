@@ -25,19 +25,7 @@ export default function Home() {
       console.log("   - Name:", configurationName);
       console.log("   - Config keys:", Object.keys(configuration));
       console.log("   - MCP servers count:", configuration.mcpServers?.length || 0);
-      // Redact sensitive headers for logging
-      const redactedMcpServers = configuration.mcpServers?.map(server => ({
-        ...server,
-        headers: server.headers ? Object.fromEntries(
-          Object.entries(server.headers).map(([key, value]) => [
-            key, 
-            key.toLowerCase().includes('authorization') || key.toLowerCase().includes('token') 
-              ? '[REDACTED]' 
-              : value
-          ])
-        ) : {}
-      }));
-      console.log("   - MCP servers:", redactedMcpServers);
+      console.log("   - MCP servers:", configuration.mcpServers);
       console.log("   - UI settings:", {
         showModelSelect: configuration.showModelSelect,
         showAgents: configuration.showAgents,
