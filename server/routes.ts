@@ -475,12 +475,19 @@ CREDS_IV=${config.credsIV || 'REPLACE_16_CHARS'}
 # =============================================================================
 # Application Configuration
 # =============================================================================
-HOST=${config.host}
-PORT=${config.port}
-ALLOW_REGISTRATION=${config.enableRegistration}
-SESSION_EXPIRY=${config.sessionExpiry}
-REFRESH_TOKEN_EXPIRY=${config.refreshTokenExpiry}
-DEBUG_LOGGING=${config.debugLogging}
+HOST=${config.host || '0.0.0.0'}
+PORT=${config.port || 3080}
+SESSION_EXPIRY=${config.sessionExpiry || '1000 * 60 * 15'}
+REFRESH_TOKEN_EXPIRY=${config.refreshTokenExpiry || '1000 * 60 * 60 * 24 * 7'}
+DEBUG_LOGGING=${config.debugLogging || false}
+
+# =============================================================================
+# Auth Configuration
+# =============================================================================
+ALLOW_REGISTRATION=${config.enableRegistration !== undefined ? config.enableRegistration : true}
+ALLOW_EMAIL_LOGIN=${config.allowEmailLogin !== undefined ? config.allowEmailLogin : true}
+ALLOW_SOCIAL_LOGIN=${config.allowSocialLogin !== undefined ? config.allowSocialLogin : false}
+ALLOW_SOCIAL_REGISTRATION=${config.allowSocialRegistration !== undefined ? config.allowSocialRegistration : false}
 
 # =============================================================================
 # Database Configuration
