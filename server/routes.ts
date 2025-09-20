@@ -455,6 +455,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 }
 
 // Helper functions for file generation
+function generateSecureSecret(length: number): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 function generateEnvFile(config: any): string {
   const currentDate = new Date().toISOString().split('T')[0];
   
@@ -467,10 +476,10 @@ function generateEnvFile(config: any): string {
 # REQUIRED: Security Configuration
 # Generate secure random values for production use
 # =============================================================================
-JWT_SECRET=${config.jwtSecret || 'REPLACE_WITH_32_CHAR_RANDOM_STRING'}
-JWT_REFRESH_SECRET=${config.jwtRefreshSecret || 'REPLACE_WITH_32_CHAR_RANDOM_STRING'}
-CREDS_KEY=${config.credsKey || 'REPLACE_WITH_32_CHAR_RANDOM_KEY'}
-CREDS_IV=${config.credsIV || 'REPLACE_16_CHARS'}
+JWT_SECRET=${config.jwtSecret || generateSecureSecret(32)}
+JWT_REFRESH_SECRET=${config.jwtRefreshSecret || generateSecureSecret(32)}
+CREDS_KEY=${config.credsKey || generateSecureSecret(32)}
+CREDS_IV=${config.credsIV || generateSecureSecret(16)}
 
 # =============================================================================
 # Application Configuration
@@ -684,9 +693,9 @@ services:
     volumes:
       - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: \${MONGO_ROOT_USERNAME:-${config.mongoRootUsername}}
-      MONGO_INITDB_ROOT_PASSWORD: \${MONGO_ROOT_PASSWORD:-${config.mongoRootPassword}}
-      MONGO_INITDB_DATABASE: \${MONGO_DB_NAME:-${config.mongoDbName}}
+      MONGO_INITDB_ROOT_USERNAME: \${MONGO_ROOT_USERNAME:-${config.mongoRootUsername || 'librechat_admin'}}
+      MONGO_INITDB_ROOT_PASSWORD: \${MONGO_ROOT_PASSWORD:-${config.mongoRootPassword || 'librechat_password_change_this'}}
+      MONGO_INITDB_DATABASE: \${MONGO_DB_NAME:-${config.mongoDbName || 'librechat'}}
     networks:
       - librechat-network
     ports:
@@ -715,7 +724,7 @@ services:
       - "\${LIBRECHAT_PORT:-${config.port}}:3080"
     environment:
       # Database Configuration
-      MONGO_URI: mongodb://\${MONGO_ROOT_USERNAME:-${config.mongoRootUsername}}:\${MONGO_ROOT_PASSWORD:-${config.mongoRootPassword}}@mongodb:27017/\${MONGO_DB_NAME:-${config.mongoDbName}}?authSource=admin
+      MONGO_URI: mongodb://\${MONGO_ROOT_USERNAME:-${config.mongoRootUsername || 'librechat_admin'}}:\${MONGO_ROOT_PASSWORD:-${config.mongoRootPassword || 'librechat_password_change_this'}}@mongodb:27017/\${MONGO_DB_NAME:-${config.mongoDbName || 'librechat'}}?authSource=admin
       
       # Redis Configuration
       REDIS_URI: redis://redis:6379
@@ -735,11 +744,11 @@ services:
       OPENAI_API_KEY: \${OPENAI_API_KEY}
       
       # Session Configuration
-      SESSION_EXPIRY: \${SESSION_EXPIRY:-${config.sessionExpiry}}
-      REFRESH_TOKEN_EXPIRY: \${REFRESH_TOKEN_EXPIRY:-${config.refreshTokenExpiry}}
+      SESSION_EXPIRY: \${SESSION_EXPIRY:-${config.sessionExpiry || '1000 * 60 * 15'}}
+      REFRESH_TOKEN_EXPIRY: \${REFRESH_TOKEN_EXPIRY:-${config.refreshTokenExpiry || '1000 * 60 * 60 * 24 * 7'}}
       
       # Registration
-      ALLOW_REGISTRATION: \${ALLOW_REGISTRATION:-${config.enableRegistration}}
+      ALLOW_REGISTRATION: \${ALLOW_REGISTRATION:-${config.enableRegistration !== undefined ? config.enableRegistration : true}}
       
       # Logging
       DEBUG_LOGGING: \${DEBUG_LOGGING:-${config.debugLogging}}
