@@ -10,60 +10,60 @@ export const defaultConfiguration: Configuration = {
   enableConversations: true,
   enableRegistration: true,
 
-  // UI/Visibility Settings (LibreChat defaults)
+  // UI/Visibility Settings (frits.ai optimized defaults)
   showModelSelect: true,
   showParameters: true,
   showSidePanel: true,
-  showPresets: true,
+  showPresets: false,  // Disabled for cleaner interface
   showPrompts: true,
   showBookmarks: true,
-  showMultiConvo: false,  // Default false in LibreChat
+  showMultiConvo: false,
   showAgents: true,
   showWebSearch: true,
   showFileSearch: true,
   showFileCitations: true,
   showRunCode: true,
 
-  // Model Specifications (LibreChat defaults)
+  // Model Specifications (frits.ai defaults)
   modelSpecs: false,
   enforceModelSpecs: false,
-  defaultModel: "gpt-5",  // Current OpenAI flagship model (September 2025)
+  defaultModel: "gpt-4",  // Stable, reliable model choice
   addedEndpoints: true,
 
-  // Endpoint Defaults (LibreChat defaults)
+  // Endpoint Defaults (frits.ai defaults)
   endpointDefaults: {
     streaming: true,
     titling: true,
-    titleModel: "gpt-4.1-mini",  // Current cost-effective model (September 2025)
+    titleModel: "gpt-3.5-turbo",  // Cost-effective for titling
   },
 
-  // Agent Configuration (LibreChat v0.8.0-rc3 open system - no restrictions)
-  agentDefaultRecursionLimit: 5,   // Safe default for recursion
-  agentMaxRecursionLimit: 10,      // Conservative limit for safety
-  agentAllowedProviders: [],       // Empty = open system (all providers allowed)
-  agentAllowedCapabilities: [],    // Empty = open system (MCP tools enabled)
-  agentCitationsTotalLimit: 10,    // Citations configuration
+  // Agent Configuration (frits.ai optimized for OpenAI + core capabilities)
+  agentDefaultRecursionLimit: 5,
+  agentMaxRecursionLimit: 10,
+  agentAllowedProviders: ["openAI"],  // Focus on OpenAI for consistency
+  agentAllowedCapabilities: ["execute_code", "web_search", "file_search"],  // Core capabilities
+  agentCitationsTotalLimit: 10,
   agentCitationsPerFileLimit: 3,   
   agentCitationsThreshold: 0.7,
 
-  // File Configuration (LibreChat defaults)
-  filesMaxSizeMB: 20,  // More generous default
+  // File Configuration (frits.ai defaults)
+  filesMaxSizeMB: 10,  // Balanced file size limit
   filesAllowedMimeTypes: ["text/plain", "application/pdf", "image/jpeg", "image/png", "image/webp"],
-  filesMaxFilesPerRequest: 10,  // LibreChat default
+  filesMaxFilesPerRequest: 5,  // Conservative file count
   filesClientResizeImages: true,
 
-  // Rate Limits (LibreChat defaults)
+  // Rate Limits (frits.ai defaults)
   rateLimitsPerUser: 100,
-  rateLimitsPerIP: 100,     // LibreChat default
-  rateLimitsUploads: 50,    // LibreChat default: 50 per hour
-  rateLimitsImports: 50,    // LibreChat default: 50 per hour
-  rateLimitsTTS: 50,        // LibreChat default: 50 per minute
-  rateLimitsSTT: 50,        // LibreChat default: 50 per minute
+  rateLimitsPerIP: 500,     // Higher IP limits for better UX
+  rateLimitsUploads: 50,
+  rateLimitsImports: 10,    // Conservative import limits
+  rateLimitsTTS: 100,       // Generous TTS limits
+  rateLimitsSTT: 100,       // Generous STT limits
 
-  // Authentication (LibreChat defaults)
+  // Authentication (frits.ai defaults - email focused)
   authAllowedDomains: [],
-  authSocialLogins: ["github", "google", "discord", "openid", "facebook"],  // LibreChat defaults
-  authLoginOrder: ["email", "github", "google"],
+  authSocialLogins: [],  // Email-only authentication for simplicity
+  authLoginOrder: ["email"],
 
   // Memory System (LibreChat defaults - disabled by default)
   memoryEnabled: false,
@@ -75,14 +75,14 @@ export const defaultConfiguration: Configuration = {
   // Actions/Tools (LibreChat defaults)
   actionsAllowedDomains: [],
 
-  // Temporary Chats (LibreChat default: 7 days)
-  temporaryChatsRetentionHours: 168,  // 7 days
+  // Temporary Chats (frits.ai default: 30 days)
+  temporaryChatsRetentionHours: 720,  // 30 days
 
-  // OCR Configuration (LibreChat defaults)
-  ocrProvider: "mistral",       // Default provider
-  ocrModel: "",         // No default model
-  ocrApiBase: "",       // Empty by default for security
-  ocrApiKey: "",        // Empty by default for security
+  // OCR Configuration (frits.ai defaults)
+  ocrProvider: "mistral",
+  ocrModel: "mistral-7b",  // Default Mistral OCR model
+  ocrApiBase: "",          // Empty by default for security
+  ocrApiKey: "",           // Empty by default for security
 
   // Search Configuration (LibreChat defaults)
   searchProvider: "Serper",        // Default provider
@@ -102,9 +102,9 @@ export const defaultConfiguration: Configuration = {
   // MCP Servers (Empty by default)
   mcpServers: [],
 
-  // Security Configuration (LibreChat defaults)
-  host: "localhost",        // LibreChat default: localhost
-  port: 3080,              // LibreChat default: 3080
+  // Security Configuration (frits.ai defaults)
+  host: "0.0.0.0",         // Allow external connections
+  port: 3080,
   jwtSecret: "",
   jwtRefreshSecret: "",
   credsKey: "",
@@ -129,4 +129,7 @@ export const defaultConfiguration: Configuration = {
   
   // CDN Configuration (Empty by default)
   cdnProvider: "",
+  
+  // Custom Welcome Message (frits.ai branding)
+  customWelcome: "Welcome to frits.ai -- Select an agent to get started",
 };

@@ -8,6 +8,21 @@ The system implements a full-stack architecture with React frontend, Express bac
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Security Updates (September 2025)
+
+### Security Enhancements
+- **Credential Redaction**: Implemented automatic redaction of sensitive headers (Authorization, tokens) in all debug logging
+- **Preset Sanitization**: All saved preset files use placeholder variables instead of actual API keys/tokens
+- **Profile Security**: Profile save/export operations automatically redact sensitive data before logging
+
+### Default Configuration (frits.ai Optimized)
+- **UI Settings**: Show Presets disabled for cleaner interface, custom welcome message
+- **Models**: gpt-4 default with gpt-3.5-turbo for titling (cost optimization)
+- **Authentication**: Email-only (no social logins) for simplicity
+- **Agent Configuration**: OpenAI-focused with core capabilities (execute_code, web_search, file_search)
+- **File Handling**: Conservative limits (10MB, 5 files max) with standard MIME types
+- **Rate Limits**: Balanced settings (500 IP limit, 100 TTS/STT) for good UX
+
 # System Architecture
 
 ## Frontend Architecture
