@@ -10,6 +10,7 @@ import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
 import { Label } from "@/components/ui/label";
+import { ConfigurationHistory } from "@/components/ConfigurationHistory";
 import yaml from "js-yaml";
 
 export default function Home() {
@@ -489,6 +490,9 @@ export default function Home() {
               </DropdownMenu>
               
               <div className="h-6 border-l border-border mx-2"></div>
+              
+              {/* Configuration History */}
+              <ConfigurationHistory onConfigurationLoad={updateConfiguration} />
               
               {/* Package Generation Dropdown */}
               <DropdownMenu>

@@ -1,4 +1,11 @@
 import { type ConfigurationProfile, type InsertConfigurationProfile, type Configuration, type ValidationStatus, type Deployment, type InsertDeployment, type UpdateDeployment } from "@shared/schema";
+
+export interface ConfigurationHistory {
+  id: string;
+  configuration: Configuration;
+  timestamp: string;
+  packageName: string;
+}
 import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
@@ -27,6 +34,12 @@ export interface IStorage {
   updateDeployment(id: string, deployment: UpdateDeployment): Promise<Deployment>;
   deleteDeployment(id: string): Promise<boolean>;
   
+  // Configuration History Management
+  getConfigurationHistory(): Promise<ConfigurationHistory[]>;
+  saveConfigurationToHistory(config: Configuration, packageName?: string): Promise<void>;
+  loadConfigurationFromHistory(id: string): Promise<Configuration | undefined>;
+  getLatestConfiguration(): Promise<Configuration | undefined>;
+  
   // File System Operations
   initializeStorage(): Promise<void>;
 }
@@ -34,16 +47,20 @@ export interface IStorage {
 export class FileStorage implements IStorage {
   private profiles: Map<string, ConfigurationProfile>;
   private deployments: Map<string, Deployment>;
+  private configHistory: ConfigurationHistory[] = [];
   private defaultConfig: Configuration;
   private profilesDir: string;
   private deploymentsDir: string;
+  private configHistoryFile: string;
   private defaultProfileId: string | null = null;
 
   constructor() {
     this.profiles = new Map();
     this.deployments = new Map();
+    this.configHistory = [];
     this.profilesDir = path.join(process.cwd(), "data", "profiles");
     this.deploymentsDir = path.join(process.cwd(), "data", "deployments");
+    this.configHistoryFile = path.join(process.cwd(), "data", "config-history.json");
     this.defaultConfig = this.loadDefaultConfiguration();
   }
 
@@ -56,6 +73,13 @@ export class FileStorage implements IStorage {
       // Load existing profiles and deployments from files
       await this.loadProfilesFromFiles();
       await this.loadDeploymentsFromFiles();
+      await this.loadConfigurationHistory();
+      
+      // Load latest configuration as default if available
+      const latestConfig = await this.getLatestConfiguration();
+      if (latestConfig) {
+        this.defaultConfig = { ...this.defaultConfig, ...latestConfig };
+      }
       
       // Create default profile if it doesn't exist
       await this.ensureDefaultProfile();
@@ -626,6 +650,61 @@ When someone wants to share information company-wide, create a topic in Frits No
       await this.deleteDeploymentFile(id);
     }
     return deleted;
+  }
+
+  // Configuration History Management Methods
+  async getConfigurationHistory(): Promise<ConfigurationHistory[]> {
+    return [...this.configHistory].sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  }
+
+  async saveConfigurationToHistory(config: Configuration, packageName?: string): Promise<void> {
+    const historyEntry: ConfigurationHistory = {
+      id: randomUUID(),
+      configuration: config,
+      timestamp: new Date().toISOString(),
+      packageName: packageName || `Package ${new Date().toLocaleString()}`
+    };
+
+    // Add to beginning of array
+    this.configHistory.unshift(historyEntry);
+    
+    // Keep only latest 10 entries
+    if (this.configHistory.length > 10) {
+      this.configHistory = this.configHistory.slice(0, 10);
+    }
+
+    // Save to file
+    await this.saveConfigurationHistoryToFile();
+  }
+
+  async loadConfigurationFromHistory(id: string): Promise<Configuration | undefined> {
+    const entry = this.configHistory.find(h => h.id === id);
+    return entry?.configuration;
+  }
+
+  async getLatestConfiguration(): Promise<Configuration | undefined> {
+    if (this.configHistory.length === 0) {
+      return undefined;
+    }
+    return this.configHistory[0].configuration;
+  }
+
+  private async loadConfigurationHistory(): Promise<void> {
+    try {
+      const content = await fs.readFile(this.configHistoryFile, 'utf-8');
+      this.configHistory = JSON.parse(content);
+    } catch (error) {
+      // File might not exist yet, that's okay
+      this.configHistory = [];
+    }
+  }
+
+  private async saveConfigurationHistoryToFile(): Promise<void> {
+    const dataDir = path.dirname(this.configHistoryFile);
+    await fs.mkdir(dataDir, { recursive: true });
+    await fs.writeFile(this.configHistoryFile, JSON.stringify(this.configHistory, null, 2));
   }
 }
 

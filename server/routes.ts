@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { configurationSchema, insertConfigurationProfileSchema, packageGenerationSchema, insertDeploymentSchema, updateDeploymentSchema, deploymentRequestSchema } from "@shared/schema";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
+import JSZip from "jszip";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -130,6 +131,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const { configuration: flatConfig, includeFiles } = result.data;
+      
+      // Save configuration to history for future reference
+      await storage.saveConfigurationToHistory(flatConfig);
+      
       console.log("✅ [PACKAGE DEBUG] Validated configuration received:");
       console.log("   - configVer:", flatConfig.configVer);
       console.log("   - mcpServers count:", flatConfig.mcpServers?.length || 0);
@@ -448,6 +453,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error performing health check:", error);
       res.status(500).json({ error: "Failed to perform health check" });
+    }
+  });
+
+  // Configuration History API Routes
+  app.get("/api/configuration/history", async (req, res) => {
+    try {
+      const history = await storage.getConfigurationHistory();
+      res.json(history);
+    } catch (error) {
+      console.error("Error fetching configuration history:", error);
+      res.status(500).json({ error: "Failed to fetch configuration history" });
+    }
+  });
+
+  app.post("/api/configuration/load/:id", async (req, res) => {
+    try {
+      const configuration = await storage.loadConfigurationFromHistory(req.params.id);
+      if (!configuration) {
+        return res.status(404).json({ error: "Configuration not found" });
+      }
+      res.json(configuration);
+    } catch (error) {
+      console.error("Error loading configuration from history:", error);
+      res.status(500).json({ error: "Failed to load configuration" });
     }
   });
 
