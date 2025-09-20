@@ -58,6 +58,7 @@ const rateLimitsSchema = z.object({
 const interfaceSchema = z.object({
   customWelcome: z.string().optional(),
   fileSearch: z.boolean().default(true),
+  uploadAsText: z.boolean().default(false), // RC4 "Upload as Text" feature
   privacyPolicy: z.object({
     externalUrl: z.string().url().optional(),
     openNewTab: z.boolean().default(true),
@@ -68,9 +69,6 @@ const interfaceSchema = z.object({
     modalAcceptance: z.boolean().default(false),
     modalTitle: z.string().optional(),
     modalContent: z.string().optional(),
-  }).optional(),
-  mcpServers: z.object({
-    placeholder: z.string().default("MCP Servers"),
   }).optional(),
   endpointsMenu: z.boolean().default(true),
   modelSelect: z.boolean().default(true),
@@ -106,8 +104,9 @@ const actionsSchema = z.object({
   allowedDomains: z.array(z.string()).default([]),
 }).optional();
 
-// Web Search Configuration
+// Web Search Configuration with expanded RC4 providers
 const webSearchSchema = z.object({
+  // API Keys
   serperApiKey: z.string().optional(),
   searxngInstanceUrl: z.string().optional(),
   searxngApiKey: z.string().optional(),
@@ -115,8 +114,12 @@ const webSearchSchema = z.object({
   firecrawlApiUrl: z.string().optional(),
   jinaApiKey: z.string().optional(),
   cohereApiKey: z.string().optional(),
-  searchProvider: z.enum(["serper", "searxng"]).default("serper"),
-  scraperType: z.enum(["firecrawl", "serper"]).default("serper"),
+  braveApiKey: z.string().optional(), // RC4 addition
+  tavilyApiKey: z.string().optional(), // RC4 addition
+  
+  // Provider Configuration
+  searchProvider: z.enum(["serper", "searxng", "brave", "tavily"]).default("serper"),
+  scraperType: z.enum(["firecrawl", "serper", "brave"]).default("serper"),
   rerankerType: z.enum(["jina", "cohere"]).default("jina"),
   scraperTimeout: z.number().min(1000).max(60000).default(10000),
   safeSearch: z.boolean().default(true),
@@ -128,6 +131,30 @@ const ocrSchema = z.object({
   baseURL: z.string().optional(),
   strategy: z.enum(["mistral_ocr", "custom_ocr"]).default("mistral_ocr"),
   mistralModel: z.string().default("pixtral-12b-2409"),
+}).optional();
+
+// Speech-to-Text (STT) Configuration
+const sttSchema = z.object({
+  provider: z.enum(["openai", "azure", "google", "deepgram", "assemblyai", "local"]).default("openai"),
+  model: z.string().default("whisper-1"),
+  apiKey: z.string().optional(),
+  baseURL: z.string().optional(),
+  language: z.string().optional(),
+  streaming: z.boolean().default(false),
+  punctuation: z.boolean().default(true),
+  profanityFilter: z.boolean().default(false),
+}).optional();
+
+// Text-to-Speech (TTS) Configuration
+const ttsSchema = z.object({
+  provider: z.enum(["openai", "azure", "google", "elevenlabs", "aws", "local"]).default("openai"),
+  model: z.string().default("tts-1"),
+  voice: z.string().default("alloy"),
+  apiKey: z.string().optional(),
+  baseURL: z.string().optional(),
+  speed: z.number().min(0.25).max(4.0).default(1.0),
+  quality: z.enum(["standard", "hd"]).default("standard"),
+  streaming: z.boolean().default(false),
 }).optional();
 
 // MCP Servers Configuration
@@ -152,7 +179,80 @@ const mcpServerSchema = z.object({
 
 const mcpServersSchema = z.record(mcpServerSchema).optional();
 
-// Custom Endpoint Configuration
+// Base Provider Configuration Schema for RC4 Unified Endpoints
+const baseProviderSchema = z.object({
+  disabled: z.boolean().default(false),
+  apiKey: z.string().optional(),
+  baseURL: z.string().optional(),
+  models: z.object({
+    default: z.array(z.string()).default([]),
+    fetch: z.boolean().default(false),
+    userIdQuery: z.boolean().default(false),
+  }).optional(),
+  titleConvo: z.boolean().default(true),
+  titleModel: z.string().optional(),
+  titleMethod: z.enum(["completion", "functions"]).default("completion"),
+  summarize: z.boolean().default(false),
+  summaryModel: z.string().optional(),
+  forcePrompt: z.boolean().default(false),
+  modelDisplayLabel: z.string().optional(),
+  addParams: z.record(z.any()).default({}),
+  dropParams: z.array(z.string()).default([]),
+  headers: z.record(z.string()).default({}),
+  iconURL: z.string().optional(),
+  order: z.number().optional(),
+});
+
+// OpenAI Provider Configuration
+const openAISchema = baseProviderSchema.extend({
+  endpoints: z.object({
+    completions: z.string().default("/v1/chat/completions"),
+    models: z.string().default("/v1/models"),
+  }).optional(),
+  maxOutputTokens: z.number().min(1).max(100000).optional(),
+  addModelMapping: z.record(z.string()).optional(),
+});
+
+// Azure OpenAI Provider Configuration
+const azureSchema = baseProviderSchema.extend({
+  deploymentName: z.string().optional(),
+  apiVersion: z.string().default("2023-12-01-preview"),
+  instanceName: z.string().optional(),
+  addModelMapping: z.record(z.string()).optional(),
+  additionalOptions: z.record(z.any()).optional(),
+});
+
+// Google Provider Configuration
+const googleSchema = baseProviderSchema.extend({
+  serviceKey: z.string().optional(),
+  location: z.string().default("us-central1"),
+  projectId: z.string().optional(),
+  additionalOptions: z.record(z.any()).optional(),
+});
+
+// Anthropic Provider Configuration
+const anthropicSchema = baseProviderSchema.extend({
+  maxOutputTokens: z.number().min(1).max(8192).optional(),
+  addModelMapping: z.record(z.string()).optional(),
+});
+
+// AWS Bedrock Provider Configuration
+const bedrockSchema = baseProviderSchema.extend({
+  region: z.string().default("us-east-1"),
+  accessKeyId: z.string().optional(),
+  secretAccessKey: z.string().optional(),
+  sessionToken: z.string().optional(),
+  profile: z.string().optional(),
+  addModelMapping: z.record(z.string()).optional(),
+});
+
+// Generic Provider Schema for other providers
+const genericProviderSchema = baseProviderSchema.extend({
+  name: z.string().optional(),
+  additionalOptions: z.record(z.any()).optional(),
+});
+
+// Custom Endpoint Configuration (for backwards compatibility)
 const customEndpointSchema = z.object({
   name: z.string(),
   apiKey: z.string().optional(),
@@ -200,10 +300,29 @@ const agentsSchema = z.object({
   ])).default(["execute_code", "file_search", "actions", "tools"]),
 }).optional();
 
-// Endpoints Configuration
+// Unified Endpoints Configuration for RC4
 const endpointsSchema = z.object({
+  // Standard AI Providers (RC4 Unified Endpoints Framework)
+  openAI: openAISchema.optional(),
+  azureOpenAI: azureSchema.optional(),
+  anthropic: anthropicSchema.optional(),
+  google: googleSchema.optional(),
+  groq: genericProviderSchema.optional(),
+  openRouter: genericProviderSchema.optional(),
+  mistral: genericProviderSchema.optional(),
+  xAI: genericProviderSchema.optional(),
+  perplexity: genericProviderSchema.optional(),
+  deepseek: genericProviderSchema.optional(),
+  bedrock: bedrockSchema.optional(),
+  cohere: genericProviderSchema.optional(),
+  ollama: genericProviderSchema.optional(),
+  localAI: genericProviderSchema.optional(),
+  
+  // Special Endpoints
   assistants: assistantsSchema,
   agents: agentsSchema,
+  
+  // Custom endpoints array for backwards compatibility
   custom: z.array(customEndpointSchema).optional(),
 }).optional();
 
@@ -238,8 +357,15 @@ export const configurationSchema = z.object({
   actions: actionsSchema,
   webSearch: webSearchSchema,
   ocr: ocrSchema,
+  stt: sttSchema,
+  tts: ttsSchema,
   mcpServers: mcpServersSchema,
   endpoints: endpointsSchema,
+  
+  // Subdirectory hosting support (RC4 feature)
+  basePath: z.string().optional(),
+  appUrl: z.string().optional(),
+  publicSubPath: z.string().optional(),
   
   // Environment Variables (for .env generation)
   // Security
