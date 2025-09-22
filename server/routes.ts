@@ -950,9 +950,22 @@ while true; do
     echo ""
     read -p "LibreChat repository path: " LIBRECHAT_PATH
     
-    # Expand tilde and resolve relative paths
-    LIBRECHAT_PATH=\${LIBRECHAT_PATH/#\\~/$HOME}
-    LIBRECHAT_PATH=\$(realpath "$LIBRECHAT_PATH" 2>/dev/null || echo "$LIBRECHAT_PATH")
+    # Normalize path for cross-platform compatibility
+    # Convert Windows backslashes to forward slashes and handle tilde expansion
+    LIBRECHAT_PATH=\$(echo "$LIBRECHAT_PATH" | sed 's|\\\\|/|g')
+    
+    # Handle tilde expansion if not a Windows absolute path
+    if [[ "$LIBRECHAT_PATH" == ~* ]] && [[ ! "$LIBRECHAT_PATH" =~ ^[A-Za-z]: ]]; then
+        LIBRECHAT_PATH="\${LIBRECHAT_PATH/#\\~/$HOME}"
+    fi
+    
+    # Resolve relative paths (use readlink if available, fallback to basic handling)
+    if command -v realpath &> /dev/null; then
+        LIBRECHAT_PATH=\$(realpath "$LIBRECHAT_PATH" 2>/dev/null || echo "$LIBRECHAT_PATH")
+    elif [[ "$LIBRECHAT_PATH" != /* ]] && [[ ! "$LIBRECHAT_PATH" =~ ^[A-Za-z]: ]]; then
+        # For relative paths, prepend current directory
+        LIBRECHAT_PATH="\$(pwd)/$LIBRECHAT_PATH"
+    fi
     
     if validate_librechat_repo "$LIBRECHAT_PATH"; then
         echo "✅ Valid LibreChat repository found at: $LIBRECHAT_PATH"
@@ -960,7 +973,10 @@ while true; do
     else
         echo ""
         echo "Please try again with a valid LibreChat repository path."
-        echo "Example: /home/user/projects/LibreChat"
+        echo "Examples:"
+        echo "  Unix/Linux/Mac: /home/user/projects/LibreChat"
+        echo "  Windows:        C:\\Users\\user\\projects\\LibreChat"
+        echo "  Windows (alt):  C:/Users/user/projects/LibreChat"
         echo ""
         read -p "Would you like to try again? (y/n): " retry
         if [[ "$retry" != "y" && "$retry" != "Y" ]]; then
