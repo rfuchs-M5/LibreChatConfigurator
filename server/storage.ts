@@ -659,12 +659,32 @@ When someone wants to share information company-wide, create a topic in Frits No
     );
   }
 
+  private redactSensitiveFields(config: Configuration): Configuration {
+    // Create a copy and redact sensitive fields to prevent secrets exposure
+    const safeConfig = { ...config };
+    
+    // Redact sensitive fields
+    if (safeConfig.jwtSecret) safeConfig.jwtSecret = '[REDACTED]';
+    if (safeConfig.jwtRefreshSecret) safeConfig.jwtRefreshSecret = '[REDACTED]';
+    if (safeConfig.credsKey) safeConfig.credsKey = '[REDACTED]';
+    if (safeConfig.credsIV) safeConfig.credsIV = '[REDACTED]';
+    if (safeConfig.openaiApiKey) safeConfig.openaiApiKey = '[REDACTED]';
+    if (safeConfig.serperApiKey) safeConfig.serperApiKey = '[REDACTED]';
+    if (safeConfig.searxngApiKey) safeConfig.searxngApiKey = '[REDACTED]';
+    if (safeConfig.firecrawlApiKey) safeConfig.firecrawlApiKey = '[REDACTED]';
+    if (safeConfig.jinaApiKey) safeConfig.jinaApiKey = '[REDACTED]';
+    if (safeConfig.cohereApiKey) safeConfig.cohereApiKey = '[REDACTED]';
+    if (safeConfig.ocrApiKey) safeConfig.ocrApiKey = '[REDACTED]';
+    
+    return safeConfig;
+  }
+
   async saveConfigurationToHistory(config: Configuration, packageName?: string): Promise<void> {
     const historyEntry: ConfigurationHistory = {
       id: randomUUID(),
-      configuration: config,
+      configuration: this.redactSensitiveFields(config),
       timestamp: new Date().toISOString(),
-      packageName: packageName || `Package ${new Date().toLocaleString()}`
+      packageName: packageName || `Package-${new Date().toISOString().slice(0,10)}`
     };
 
     // Add to beginning of array

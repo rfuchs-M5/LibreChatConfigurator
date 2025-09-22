@@ -130,10 +130,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const { configuration: flatConfig, includeFiles } = result.data;
+      const { configuration: flatConfig, includeFiles, packageName } = result.data;
       
       // Save configuration to history for future reference
-      await storage.saveConfigurationToHistory(flatConfig);
+      await storage.saveConfigurationToHistory(flatConfig, packageName);
       
       console.log("✅ [PACKAGE DEBUG] Validated configuration received:");
       console.log("   - configVer:", flatConfig.configVer);

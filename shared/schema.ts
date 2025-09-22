@@ -472,6 +472,7 @@ export const packageGenerationSchema = z.object({
     "install-script",
     "readme"
   ])).default(["env", "yaml", "docker-compose", "install-script", "readme"]),
+  packageName: z.string().optional(),
 });
 
 export type PackageGenerationRequest = z.infer<typeof packageGenerationSchema>;

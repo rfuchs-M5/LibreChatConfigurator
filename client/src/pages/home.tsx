@@ -382,8 +382,12 @@ export default function Home() {
       console.log("   - MCP servers:", configuration.mcpServers);
       console.log("   - Full configuration:", configuration);
       
+      // Generate package name from configuration name (without .zip extension)
+      const packageName = configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-').replace(/\s+/g, '-');
+      
       const result = await generatePackage({
         includeFiles: ["env", "yaml", "docker-compose", "install-script", "readme"],
+        packageName: packageName,
       });
       
       console.log("📦 [PACKAGE DEBUG] Package generation result:", Object.keys(result.files || {}));
