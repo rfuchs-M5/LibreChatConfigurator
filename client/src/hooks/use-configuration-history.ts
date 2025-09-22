@@ -16,9 +16,9 @@ export function useConfigurationHistory() {
 
   const loadConfigurationMutation = useMutation({
     mutationFn: async (id: string) => {
-      return apiRequest(`/api/configuration/load/${id}`, {
+      return fetch(`/api/configuration/load/${id}`, {
         method: "POST",
-      });
+      }).then(res => res.json());
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/configuration/default"] });
