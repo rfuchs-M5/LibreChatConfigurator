@@ -38,8 +38,9 @@ export default function Home() {
         name: configurationName,
         description: `Configuration profile created on ${new Date().toLocaleDateString()}`,
         configuration: configuration,
-        version: "0.8.0-rc3",
-        createdAt: new Date().toISOString()
+        version: "0.8.0-rc4", // Updated to RC4
+        createdAt: new Date().toISOString(),
+        exportedFrom: "LibreChat Configuration Manager"
       };
 
       // Download as JSON file with Save As dialog
@@ -257,13 +258,13 @@ export default function Home() {
             
             // Apply the configuration and name
             updateConfiguration(profileData.configuration);
-            if (profileData.name) {
-              setConfigurationName(profileData.name);
-            }
+            // Always try to restore the profile name, with fallback
+            const importedName = profileData.name || `Imported ${new Date().toLocaleDateString()}`;
+            setConfigurationName(importedName);
             
             toast({
-              title: "Profile Imported",
-              description: `Configuration "${profileData.name || 'Unknown'}" loaded successfully.`,
+              title: "Profile Imported", 
+              description: `Configuration "${importedName}" loaded successfully.`,
             });
           } catch (error) {
             toast({
