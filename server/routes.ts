@@ -234,6 +234,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // CRITICAL: All UI fields must be mapped for .env generation
         customFooter: flatConfig.customFooter,
         customWelcome: flatConfig.customWelcome,
+        
+        // RC4 Subdirectory Hosting Support
+        basePath: flatConfig.basePath,
+        appUrl: flatConfig.appUrl,
+        publicSubPath: flatConfig.publicSubPath,
+        
+        // Additional API Keys
+        anthropicApiKey: flatConfig.anthropicApiKey,
+        googleApiKey: flatConfig.googleApiKey,
+        groqApiKey: flatConfig.groqApiKey,
+        mistralApiKey: flatConfig.mistralApiKey,
+        
+        // Web Search API Keys
+        serperApiKey: flatConfig.serperApiKey,
+        searxngApiKey: flatConfig.searxngApiKey,
+        searxngInstanceUrl: flatConfig.searxngInstanceUrl,
+        firecrawlApiKey: flatConfig.firecrawlApiKey,
+        firecrawlApiUrl: flatConfig.firecrawlApiUrl,
+        jinaApiKey: flatConfig.jinaApiKey,
+        cohereApiKey: flatConfig.cohereApiKey,
+        braveApiKey: flatConfig.braveApiKey,
+        tavilyApiKey: flatConfig.tavilyApiKey,
+        
+        // Database Configuration
+        mongoUri: flatConfig.mongoUri,
+        redisUri: flatConfig.redisUri,
+        
+        // Advanced Configuration
+        redisPingInterval: flatConfig.redisPingInterval,
+        minPasswordLength: flatConfig.minPasswordLength,
+        filteredTools: flatConfig.filteredTools,
+        includedTools: flatConfig.includedTools,
+        
+        // OCR Configuration
+        ocrApiKey: flatConfig.ocrApiKey,
+        ocrApiBase: flatConfig.ocrApiBase,
+        
+        // Additional server configuration
+        configVer: flatConfig.configVer || "1.2.8",
+        cache: flatConfig.cache,
+        fileStrategy: flatConfig.fileStrategy,
+        secureImageLinks: flatConfig.secureImageLinks,
+        imageOutputType: flatConfig.imageOutputType,
       };
       
       const packageFiles: { [key: string]: string } = {};
@@ -536,24 +579,48 @@ MONGO_DB_NAME=${config.mongoDbName || 'librechat'}
 # API Keys
 # =============================================================================
 ${config.openaiApiKey ? `OPENAI_API_KEY=${config.openaiApiKey}` : '# OPENAI_API_KEY=your_openai_api_key_here'}
+${config.anthropicApiKey ? `ANTHROPIC_API_KEY=${config.anthropicApiKey}` : '# ANTHROPIC_API_KEY=your_anthropic_api_key_here'}
+${config.googleApiKey ? `GOOGLE_API_KEY=${config.googleApiKey}` : '# GOOGLE_API_KEY=your_google_api_key_here'}
+${config.groqApiKey ? `GROQ_API_KEY=${config.groqApiKey}` : '# GROQ_API_KEY=your_groq_api_key_here'}
+${config.mistralApiKey ? `MISTRAL_API_KEY=${config.mistralApiKey}` : '# MISTRAL_API_KEY=your_mistral_api_key_here'}
 
 # Search Service API Keys
 ${config.serperApiKey ? `SERPER_API_KEY=${config.serperApiKey}` : '# SERPER_API_KEY=your_serper_api_key_here'}
 ${config.searxngApiKey ? `SEARXNG_API_KEY=${config.searxngApiKey}` : '# SEARXNG_API_KEY=your_searxng_api_key_here'}
 ${config.searxngInstanceUrl ? `SEARXNG_INSTANCE_URL=${config.searxngInstanceUrl}` : '# SEARXNG_INSTANCE_URL=https://your-searxng-instance.com'}
 ${config.firecrawlApiKey ? `FIRECRAWL_API_KEY=${config.firecrawlApiKey}` : '# FIRECRAWL_API_KEY=your_firecrawl_api_key_here'}
+${config.firecrawlApiUrl ? `FIRECRAWL_API_URL=${config.firecrawlApiUrl}` : '# FIRECRAWL_API_URL=https://api.firecrawl.dev'}
 ${config.jinaApiKey ? `JINA_API_KEY=${config.jinaApiKey}` : '# JINA_API_KEY=your_jina_api_key_here'}
 ${config.cohereApiKey ? `COHERE_API_KEY=${config.cohereApiKey}` : '# COHERE_API_KEY=your_cohere_api_key_here'}
+${config.braveApiKey ? `BRAVE_API_KEY=${config.braveApiKey}` : '# BRAVE_API_KEY=your_brave_api_key_here'}
+${config.tavilyApiKey ? `TAVILY_API_KEY=${config.tavilyApiKey}` : '# TAVILY_API_KEY=your_tavily_api_key_here'}
 
 # OCR Service API Keys
 ${config.ocrApiKey ? `OCR_API_KEY=${config.ocrApiKey}` : '# OCR_API_KEY=your_ocr_api_key_here'}
 ${config.ocrApiBase ? `OCR_BASEURL=${config.ocrApiBase}` : '# OCR_BASEURL=https://api.mistral.ai/v1'}
 
 # =============================================================================
+# Database Configuration
+# =============================================================================
+${config.mongoUri ? `MONGODB_URI=${config.mongoUri}` : '# MONGODB_URI=your_mongodb_connection_string'}
+${config.redisUri ? `REDIS_URI=${config.redisUri}` : '# REDIS_URI=your_redis_connection_string'}
+
+# Advanced Configuration
+# =============================================================================
+${config.redisPingInterval ? `REDIS_PING_INTERVAL=${config.redisPingInterval}` : '# REDIS_PING_INTERVAL=30000'}
+${config.minPasswordLength ? `MIN_PASSWORD_LENGTH=${config.minPasswordLength}` : '# MIN_PASSWORD_LENGTH=8'}
+
+# RC4 Subdirectory Hosting
+# =============================================================================
+${config.basePath ? `BASE_PATH=${config.basePath}` : '# BASE_PATH=/subdirectory'}
+${config.appUrl ? `APP_URL=${config.appUrl}` : '# APP_URL=https://yourdomain.com'}
+${config.publicSubPath ? `PUBLIC_SUB_PATH=${config.publicSubPath}` : '# PUBLIC_SUB_PATH=/public'}
+
 # Optional Configuration
 # =============================================================================
 ${config.cdnProvider ? `CDN_PROVIDER=${config.cdnProvider}` : '# CDN_PROVIDER='}
 ${config.customFooter ? `CUSTOM_FOOTER=${config.customFooter}` : '# CUSTOM_FOOTER='}
+${config.customWelcome ? `CUSTOM_WELCOME=${config.customWelcome}` : '# CUSTOM_WELCOME='}
 `;
 }
 
