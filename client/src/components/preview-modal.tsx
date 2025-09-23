@@ -15,24 +15,91 @@ export function PreviewModal({ configuration, onClose, onGenerate }: PreviewModa
   const generateEnvPreview = () => {
     const currentDate = new Date().toISOString().split('T')[0];
     
-    return `# LibreChat Environment Configuration
+    return `# =============================================================================
+# LibreChat Environment Configuration
 # Generated on ${currentDate}
+# =============================================================================
 
-# Security
-JWT_SECRET=${configuration.jwtSecret}
-JWT_REFRESH_SECRET=${configuration.jwtRefreshSecret}
-CREDS_KEY=${configuration.credsKey}
-CREDS_IV=${configuration.credsIV}
+# =============================================================================
+# Security Configuration
+# =============================================================================
+${configuration.jwtSecret ? `JWT_SECRET=${configuration.jwtSecret}` : '# JWT_SECRET=your_jwt_secret_here'}
+${configuration.jwtRefreshSecret ? `JWT_REFRESH_SECRET=${configuration.jwtRefreshSecret}` : '# JWT_REFRESH_SECRET=your_jwt_refresh_secret_here'}
+${configuration.credsKey ? `CREDS_KEY=${configuration.credsKey}` : '# CREDS_KEY=your_32_character_key_here'}
+${configuration.credsIV ? `CREDS_IV=${configuration.credsIV}` : '# CREDS_IV=your_16_character_iv_here'}
 
-# Application
-HOST=${configuration.host}
-PORT=${configuration.port}
-ALLOW_REGISTRATION=${configuration.enableRegistration}
-SESSION_EXPIRY=${configuration.sessionExpiry}
-REFRESH_TOKEN_EXPIRY=${configuration.refreshTokenExpiry}
+# =============================================================================
+# Application Configuration
+# =============================================================================
+${configuration.host ? `HOST=${configuration.host}` : '# HOST=localhost'}
+${configuration.port ? `PORT=${configuration.port}` : '# PORT=3080'}
+${configuration.enableRegistration !== undefined ? `ALLOW_REGISTRATION=${configuration.enableRegistration}` : '# ALLOW_REGISTRATION=true'}
+${configuration.sessionExpiry ? `SESSION_EXPIRY=${configuration.sessionExpiry}` : '# SESSION_EXPIRY=15_minutes'}
+${configuration.refreshTokenExpiry ? `REFRESH_TOKEN_EXPIRY=${configuration.refreshTokenExpiry}` : '# REFRESH_TOKEN_EXPIRY=7_days'}
 
-# API Keys
-${configuration.openaiApiKey ? `OPENAI_API_KEY=${configuration.openaiApiKey}` : '# OPENAI_API_KEY=your_openai_api_key_here'}`;
+# =============================================================================
+# OpenAI Configuration
+# =============================================================================
+${configuration.openaiApiKey ? `OPENAI_API_KEY=${configuration.openaiApiKey}` : '# OPENAI_API_KEY=your_openai_api_key_here'}
+
+# =============================================================================
+# Additional AI API Keys
+# =============================================================================
+${configuration.anthropicApiKey ? `ANTHROPIC_API_KEY=${configuration.anthropicApiKey}` : '# ANTHROPIC_API_KEY=your_anthropic_api_key_here'}
+${configuration.googleApiKey ? `GOOGLE_API_KEY=${configuration.googleApiKey}` : '# GOOGLE_API_KEY=your_google_api_key_here'}
+${configuration.groqApiKey ? `GROQ_API_KEY=${configuration.groqApiKey}` : '# GROQ_API_KEY=your_groq_api_key_here'}
+${configuration.mistralApiKey ? `MISTRAL_API_KEY=${configuration.mistralApiKey}` : '# MISTRAL_API_KEY=your_mistral_api_key_here'}
+
+# =============================================================================
+# Web Search API Keys
+# =============================================================================
+${configuration.serperApiKey ? `SERPER_API_KEY=${configuration.serperApiKey}` : '# SERPER_API_KEY=your_serper_api_key_here'}
+${configuration.searxngApiKey ? `SEARXNG_API_KEY=${configuration.searxngApiKey}` : '# SEARXNG_API_KEY=your_searxng_api_key_here'}
+${configuration.searxngInstanceUrl ? `SEARXNG_INSTANCE_URL=${configuration.searxngInstanceUrl}` : '# SEARXNG_INSTANCE_URL=https://searx.domain.com'}
+${configuration.firecrawlApiKey ? `FIRECRAWL_API_KEY=${configuration.firecrawlApiKey}` : '# FIRECRAWL_API_KEY=your_firecrawl_api_key_here'}
+${configuration.firecrawlApiUrl ? `FIRECRAWL_API_URL=${configuration.firecrawlApiUrl}` : '# FIRECRAWL_API_URL=https://api.firecrawl.dev'}
+${configuration.jinaApiKey ? `JINA_API_KEY=${configuration.jinaApiKey}` : '# JINA_API_KEY=your_jina_api_key_here'}
+${configuration.cohereApiKey ? `COHERE_API_KEY=${configuration.cohereApiKey}` : '# COHERE_API_KEY=your_cohere_api_key_here'}
+${configuration.braveApiKey ? `BRAVE_API_KEY=${configuration.braveApiKey}` : '# BRAVE_API_KEY=your_brave_api_key_here'}
+${configuration.tavilyApiKey ? `TAVILY_API_KEY=${configuration.tavilyApiKey}` : '# TAVILY_API_KEY=your_tavily_api_key_here'}
+
+# =============================================================================
+# Database Configuration
+# =============================================================================
+${configuration.mongoUri ? `MONGO_URI=${configuration.mongoUri}` : '# MONGO_URI=mongodb://127.0.0.1:27017/LibreChat'}
+${configuration.redisUri ? `REDIS_URI=${configuration.redisUri}` : '# REDIS_URI=redis://localhost:6379'}
+
+# =============================================================================
+# Database Credentials
+# =============================================================================
+${configuration.mongoRootUsername ? `MONGO_ROOT_USERNAME=${configuration.mongoRootUsername}` : '# MONGO_ROOT_USERNAME=root'}
+${configuration.mongoRootPassword ? `MONGO_ROOT_PASSWORD=${configuration.mongoRootPassword}` : '# MONGO_ROOT_PASSWORD=your_password_here'}
+${configuration.mongoDbName ? `MONGO_DB_NAME=${configuration.mongoDbName}` : '# MONGO_DB_NAME=LibreChat'}
+
+# =============================================================================
+# File Configuration
+# =============================================================================
+${configuration.filesMaxSizeMB !== undefined ? `FILE_SIZE_LIMIT=${configuration.filesMaxSizeMB}` : '# FILE_SIZE_LIMIT=20'}
+${configuration.filesMaxFilesPerRequest !== undefined ? `FILE_UPLOAD_LIMIT=${configuration.filesMaxFilesPerRequest}` : '# FILE_UPLOAD_LIMIT=5'}
+
+# =============================================================================
+# Debug and Development
+# =============================================================================
+${configuration.debugLogging !== undefined ? `DEBUG_LOGGING=${configuration.debugLogging}` : '# DEBUG_LOGGING=false'}
+
+# =============================================================================
+# RC4 Subdirectory Hosting Support
+# =============================================================================
+${configuration.basePath ? `BASE_PATH=${configuration.basePath}` : '# BASE_PATH=/librechat'}
+${configuration.appUrl ? `APP_URL=${configuration.appUrl}` : '# APP_URL=https://yourdomain.com'}
+${configuration.publicSubPath ? `PUBLIC_SUB_PATH=${configuration.publicSubPath}` : '# PUBLIC_SUB_PATH=/public'}
+
+# Optional Configuration
+# =============================================================================
+${configuration.cdnProvider ? `CDN_PROVIDER=${configuration.cdnProvider}` : '# CDN_PROVIDER='}
+${configuration.customFooter ? `CUSTOM_FOOTER=${configuration.customFooter}` : '# CUSTOM_FOOTER='}
+${configuration.customWelcome ? `CUSTOM_WELCOME=${configuration.customWelcome}` : '# CUSTOM_WELCOME='}
+`;
   };
 
   const generateYamlPreview = () => {
