@@ -253,7 +253,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (includeFiles.includes("install-script")) {
         packageFiles["install_dockerimage.sh"] = generateDockerInstallScript(configuration);
         packageFiles["install_localgitrepo.sh"] = generateLocalRepoInstallScript(configuration);
-        packageFiles["install_localgitrepo.py"] = generateLocalRepoInstallScriptPy(configuration);
       }
 
       // Generate README.md
@@ -951,22 +950,9 @@ while true; do
     echo ""
     read -p "LibreChat repository path: " LIBRECHAT_PATH
     
-    # Normalize path for cross-platform compatibility
-    # Convert Windows backslashes to forward slashes and handle tilde expansion
-    LIBRECHAT_PATH=\$(echo "$LIBRECHAT_PATH" | sed 's|\\\\|/|g')
-    
-    # Handle tilde expansion if not a Windows absolute path
-    if [[ "$LIBRECHAT_PATH" == ~* ]] && [[ ! "$LIBRECHAT_PATH" =~ ^[A-Za-z]: ]]; then
-        LIBRECHAT_PATH="\${LIBRECHAT_PATH/#\\~/$HOME}"
-    fi
-    
-    # Resolve relative paths (use readlink if available, fallback to basic handling)
-    if command -v realpath &> /dev/null; then
-        LIBRECHAT_PATH=\$(realpath "$LIBRECHAT_PATH" 2>/dev/null || echo "$LIBRECHAT_PATH")
-    elif [[ "$LIBRECHAT_PATH" != /* ]] && [[ ! "$LIBRECHAT_PATH" =~ ^[A-Za-z]: ]]; then
-        # For relative paths, prepend current directory
-        LIBRECHAT_PATH="\$(pwd)/$LIBRECHAT_PATH"
-    fi
+    # Expand tilde and resolve relative paths
+    LIBRECHAT_PATH=\${LIBRECHAT_PATH/#\\~/$HOME}
+    LIBRECHAT_PATH=\$(realpath "$LIBRECHAT_PATH" 2>/dev/null || echo "$LIBRECHAT_PATH")
     
     if validate_librechat_repo "$LIBRECHAT_PATH"; then
         echo "✅ Valid LibreChat repository found at: $LIBRECHAT_PATH"
@@ -974,10 +960,7 @@ while true; do
     else
         echo ""
         echo "Please try again with a valid LibreChat repository path."
-        echo "Examples:"
-        echo "  Unix/Linux/Mac: /home/user/projects/LibreChat"
-        echo "  Windows:        C:\\Users\\user\\projects\\LibreChat"
-        echo "  Windows (alt):  C:/Users/user/projects/LibreChat"
+        echo "Example: /home/user/projects/LibreChat"
         echo ""
         read -p "Would you like to try again? (y/n): " retry
         if [[ "$retry" != "y" && "$retry" != "Y" ]]; then
@@ -1136,341 +1119,6 @@ echo "   Restart: npm run backend"
 `;
 }
 
-function generateLocalRepoInstallScriptPy(config: any): string {
-  return `#!/usr/bin/env python3
-"""
-LibreChat Local Repository Installation Script (Python)
-Generated Configuration for v0.8.0-RC4
-Cross-platform installer that works on Windows, macOS, and Linux
-"""
-
-import os
-import sys
-import subprocess
-import shutil
-import json
-import time
-from pathlib import Path
-
-def print_header():
-    print("🚀 Starting LibreChat local repository installation...")
-    print("   This Python script works on Windows, macOS, and Linux")
-    print()
-
-def validate_librechat_repo(repo_path):
-    """Validate that the given path is a valid LibreChat repository"""
-    repo_path = Path(repo_path)
-    
-    if not repo_path.exists():
-        print(f"❌ Directory does not exist: {repo_path}")
-        return False
-    
-    if not (repo_path / "package.json").exists():
-        print("❌ Not a valid LibreChat repository (missing package.json)")
-        return False
-    
-    try:
-        with open(repo_path / "package.json", 'r') as f:
-            package_data = json.load(f)
-            if "librechat" not in str(package_data).lower():
-                print("❌ Not a LibreChat repository (package.json doesn't contain 'librechat')")
-                return False
-    except Exception:
-        print("❌ Could not read package.json")
-        return False
-    
-    if not (repo_path / "api").exists() or not (repo_path / "client").exists():
-        print("❌ Not a valid LibreChat repository (missing api or client directories)")
-        return False
-    
-    return True
-
-def get_librechat_path():
-    """Get and validate LibreChat repository path from user"""
-    while True:
-        print()
-        print("📁 Please provide the path to your local LibreChat repository:")
-        print("   (This should be a directory containing the LibreChat source code)")
-        print()
-        print("Examples:")
-        print("  Windows: C:\\\\Users\\\\user\\\\projects\\\\LibreChat")
-        print("  macOS:   /Users/user/projects/LibreChat")
-        print("  Linux:   /home/user/projects/LibreChat")
-        print()
-        
-        librechat_path = input("LibreChat repository path: ").strip()
-        
-        if not librechat_path:
-            print("❌ Please provide a valid path")
-            continue
-        
-        # Convert to Path object for cross-platform handling
-        librechat_path = Path(librechat_path).expanduser().resolve()
-        
-        if validate_librechat_repo(librechat_path):
-            print(f"✅ Valid LibreChat repository found at: {librechat_path}")
-            return librechat_path
-        else:
-            print()
-            retry = input("Would you like to try again? (y/n): ").strip().lower()
-            if retry != 'y':
-                print("Installation cancelled.")
-                sys.exit(1)
-
-def check_command(cmd, name, install_url=None):
-    """Check if a command is available"""
-    if shutil.which(cmd):
-        return True
-    else:
-        print(f"❌ {name} is not installed.")
-        if install_url:
-            print(f"   Install from: {install_url}")
-        return False
-
-def check_prerequisites():
-    """Check all required prerequisites"""
-    print()
-    print("🔍 Checking prerequisites...")
-    
-    all_good = True
-    
-    # Check Python version
-    if sys.version_info < (3, 7):
-        print(f"❌ Python 3.7+ required. Current version: {sys.version}")
-        all_good = False
-    
-    # Check Node.js
-    if not check_command("node", "Node.js", "https://nodejs.org/"):
-        all_good = False
-    else:
-        try:
-            result = subprocess.run(["node", "--version"], capture_output=True, text=True)
-            version = result.stdout.strip().replace('v', '')
-            major_version = int(version.split('.')[0])
-            if major_version < 18:
-                print(f"❌ Node.js version 18+ required. Current version: v{version}")
-                all_good = False
-        except Exception:
-            print("❌ Could not determine Node.js version")
-            all_good = False
-    
-    # Check npm
-    if not check_command("npm", "npm"):
-        all_good = False
-    
-    # Check Docker
-    if not check_command("docker", "Docker", "https://docs.docker.com/get-docker/"):
-        all_good = False
-    
-    # Check Docker Compose
-    docker_compose_available = False
-    if shutil.which("docker-compose"):
-        docker_compose_available = True
-    elif shutil.which("docker"):
-        # Check for docker compose plugin
-        try:
-            result = subprocess.run(["docker", "compose", "version"], 
-                                  capture_output=True, text=True)
-            if result.returncode == 0:
-                docker_compose_available = True
-        except Exception:
-            pass
-    
-    if not docker_compose_available:
-        print("❌ Docker Compose is not installed.")
-        print("   Install from: https://docs.docker.com/compose/install/")
-        all_good = False
-    
-    if all_good:
-        print("✅ All prerequisites are installed")
-    else:
-        print("❌ Please install missing prerequisites before continuing")
-        sys.exit(1)
-
-def copy_config_files(librechat_path):
-    """Copy configuration files to LibreChat repository"""
-    print()
-    print("📁 Setting up configuration files...")
-    
-    # Copy .env file
-    env_src = Path(".env")
-    env_dst = librechat_path / ".env"
-    if env_src.exists():
-        shutil.copy2(env_src, env_dst)
-        print(f"✅ Copied .env to {env_dst}")
-    else:
-        print("⚠️  .env file not found in current directory")
-    
-    # Copy librechat-config.yaml
-    config_src = Path("librechat-config.yaml")
-    config_dst = librechat_path / "librechat.yaml"
-    if config_src.exists():
-        shutil.copy2(config_src, config_dst)
-        print(f"✅ Copied librechat-config.yaml to {config_dst}")
-    else:
-        print("⚠️  librechat-config.yaml file not found in current directory")
-
-def run_command(cmd, cwd=None, shell=False):
-    """Run a command and handle errors"""
-    try:
-        result = subprocess.run(cmd, cwd=cwd, shell=shell, check=True, 
-                              capture_output=True, text=True)
-        return result
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Command failed: {' '.join(cmd) if isinstance(cmd, list) else cmd}")
-        print(f"   Error: {e.stderr}")
-        sys.exit(1)
-
-def install_dependencies(librechat_path):
-    """Install Node.js dependencies"""
-    print()
-    print("📦 Installing dependencies...")
-    os.chdir(librechat_path)
-    run_command(["npm", "ci"])
-
-def setup_databases():
-    """Start database services using Docker Compose"""
-    print()
-    print("🔄 Starting database services...")
-    
-    # Create docker-compose.db.yml
-    docker_compose_content = f'''version: '3.8'
-
-services:
-  mongodb:
-    container_name: librechat-mongodb
-    image: mongo:7.0
-    restart: unless-stopped
-    volumes:
-      - mongodb_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${config.mongoRootUsername || 'librechat_admin'}
-      MONGO_INITDB_ROOT_PASSWORD: ${config.mongoRootPassword || 'librechat_password_change_this'}
-      MONGO_INITDB_DATABASE: ${config.mongoDbName || 'librechat'}
-    ports:
-      - "27017:27017"
-
-  redis:
-    container_name: librechat-redis
-    image: redis:7-alpine
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
-    ports:
-      - "6379:6379"
-
-volumes:
-  mongodb_data:
-    driver: local
-  redis_data:
-    driver: local
-'''
-    
-    with open("docker-compose.db.yml", "w") as f:
-        f.write(docker_compose_content)
-    
-    # Start database services
-    # Try docker compose first, fall back to docker-compose
-    try:
-        run_command(["docker", "compose", "-f", "docker-compose.db.yml", "up", "-d"])
-    except:
-        run_command(["docker-compose", "-f", "docker-compose.db.yml", "up", "-d"])
-    
-    print("⏳ Waiting for databases to start...")
-    time.sleep(15)
-
-def build_application():
-    """Build the LibreChat client"""
-    print()
-    print("🔨 Building LibreChat client...")
-    run_command(["npm", "run", "frontend"])
-
-def start_application():
-    """Start the LibreChat application"""
-    print()
-    print("🚀 Starting LibreChat application...")
-    print("📝 Starting in background... Check logs with: npm run logs")
-    
-    # Start in background
-    with open("librechat.log", "w") as log_file:
-        process = subprocess.Popen(["npm", "run", "backend"], 
-                                 stdout=log_file, stderr=subprocess.STDOUT)
-    
-    # Save PID
-    with open(".backend.pid", "w") as pid_file:
-        pid_file.write(str(process.pid))
-    
-    print("⏳ Waiting for application to start...")
-    time.sleep(30)
-    
-    # Check if process is still running
-    if process.poll() is None:
-        print()
-        print("✅ LibreChat is running successfully!")
-        print()
-        print("🌐 Access your LibreChat instance at:")
-        print(f"   http://localhost:${config.port || 3080}")
-        print()
-        print("📝 Application logs: tail -f librechat.log")
-        print(f"🛑 To stop: kill {process.pid} && docker compose -f docker-compose.db.yml down")
-        print("🔄 To restart: npm run backend")
-        print()
-        print(f"💾 Backend PID: {process.pid} (saved to .backend.pid)")
-    else:
-        print("❌ Application failed to start. Check logs:")
-        with open("librechat.log", "r") as log_file:
-            print(log_file.read())
-        sys.exit(1)
-
-def main():
-    """Main installation process"""
-    print_header()
-    
-    # Get LibreChat repository path
-    librechat_path = get_librechat_path()
-    
-    # Check prerequisites
-    check_prerequisites()
-    
-    # Copy configuration files
-    copy_config_files(librechat_path)
-    
-    # Install dependencies
-    install_dependencies(librechat_path)
-    
-    # Setup databases
-    setup_databases()
-    
-    # Build application
-    build_application()
-    
-    # Start application
-    start_application()
-    
-    print()
-    print("🎉 Local repository installation complete! Enjoy using LibreChat!")
-    print()
-    print("📋 Quick commands:")
-    print("   View logs: tail -f librechat.log")
-    with open(".backend.pid", "r") as f:
-        pid = f.read().strip()
-        print(f"   Stop app: kill {pid}")
-    print("   Stop databases: docker compose -f docker-compose.db.yml down")
-    print("   Restart: npm run backend")
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\\n❌ Installation cancelled by user")
-        sys.exit(1)
-    except Exception as e:
-        print(f"\\n❌ Unexpected error: {e}")
-        sys.exit(1)
-`;
-}
-
 function generateReadmeFile(config: any): string {
   return `# LibreChat Configuration
 
@@ -1482,8 +1130,7 @@ This package contains a complete LibreChat v0.8.0-RC4 installation with your cus
 - \`librechat-config.yaml\` - Main LibreChat configuration file
 - \`docker-compose.yml\` - Docker services orchestration
 - \`install_dockerimage.sh\` - Docker-based installation script
-- \`install_localgitrepo.sh\` - Local repository installation script (Bash)
-- \`install_localgitrepo.py\` - Local repository installation script (Python - Windows compatible)
+- \`install_localgitrepo.sh\` - Local repository installation script
 - \`profile.json\` - Configuration profile for easy re-import
 - \`README.md\` - This documentation file
 
@@ -1503,16 +1150,9 @@ This package contains a complete LibreChat v0.8.0-RC4 installation with your cus
    \`\`\`
    
    **Option B: Local Repository Installation**
-   
-   *Bash Script (Unix/Linux/macOS/Git Bash):*
    \`\`\`bash
    chmod +x install_localgitrepo.sh
    ./install_localgitrepo.sh
-   \`\`\`
-   
-   *Python Script (Windows/Cross-platform):*
-   \`\`\`bash
-   python install_localgitrepo.py
    \`\`\`
 
 3. **Access**
