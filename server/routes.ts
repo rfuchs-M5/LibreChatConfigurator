@@ -117,14 +117,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate installation package
   app.post("/api/package/generate", async (req, res) => {
     try {
+      // Debug: Log what we receive from frontend
+      console.log("🔍 [RAW REQUEST DEBUG] Received req.body.configuration.customFooter:", JSON.stringify(req.body?.configuration?.customFooter));
+      console.log("🔍 [RAW REQUEST DEBUG] Raw configuration keys:", req.body?.configuration ? Object.keys(req.body.configuration) : "no config");
+      
       const result = packageGenerationSchema.safeParse(req.body);
       if (!result.success) {
+        console.log("🚨 [VALIDATION ERROR] Schema validation failed:", result.error.format());
         const validationError = fromZodError(result.error);
         return res.status(400).json({ 
           error: "Invalid package generation request", 
           details: validationError.message 
         });
       }
+      
+      // Debug: Log what passed validation
+      console.log("✅ [VALIDATION SUCCESS] After validation customFooter:", JSON.stringify(result.data.configuration.customFooter));
 
       const { configuration: flatConfig, includeFiles, packageName } = result.data;
       
