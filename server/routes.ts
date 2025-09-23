@@ -117,12 +117,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate installation package
   app.post("/api/package/generate", async (req, res) => {
     try {
-      console.log("🔍 [PACKAGE DEBUG] Raw request body keys:", Object.keys(req.body));
-      console.log("🔍 [PACKAGE DEBUG] Configuration keys:", req.body.configuration ? Object.keys(req.body.configuration) : 'NO CONFIG');
-      
       const result = packageGenerationSchema.safeParse(req.body);
       if (!result.success) {
-        console.error("❌ [PACKAGE DEBUG] Validation failed:", result.error.issues);
         const validationError = fromZodError(result.error);
         return res.status(400).json({ 
           error: "Invalid package generation request", 
@@ -135,16 +131,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Save configuration to history for future reference
       await storage.saveConfigurationToHistory(flatConfig, packageName);
       
-      console.log("✅ [PACKAGE DEBUG] Validated configuration received:");
-      console.log("   - configVer:", flatConfig.configVer);
-      console.log("   - mcpServers count:", flatConfig.mcpServers?.length || 0);
-      console.log("   - mcpServers data:", JSON.stringify(flatConfig.mcpServers, null, 2));
-      console.log("   - UI settings:", {
-        showModelSelect: flatConfig.showModelSelect,
-        showAgents: flatConfig.showAgents,
-        defaultModel: flatConfig.defaultModel
-      });
-      console.log("🔍 [DEBUG] customFooter from flatConfig:", flatConfig.customFooter);
       
       // Map flat frontend properties to nested schema structure
       const configuration = {
@@ -280,8 +266,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         imageOutputType: flatConfig.imageOutputType,
       };
       
-      console.log("🔍 [DEBUG] Final configuration customFooter:", configuration.customFooter);
-      console.log("🔍 [DEBUG] Final configuration interface.customFooter:", configuration.interface?.customFooter);
       
       const packageFiles: { [key: string]: string } = {};
 
@@ -313,10 +297,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Always include a profile file for easy re-import
       packageFiles["profile.json"] = generateProfileFile(configuration);
 
-      console.log("📦 [PACKAGE DEBUG] Generated files:", Object.keys(packageFiles));
       res.json({ files: packageFiles });
     } catch (error) {
-      console.error("❌ [PACKAGE DEBUG] Error generating package:", error);
+      console.error("Error generating package:", error);
       res.status(500).json({ error: "Failed to generate package" });
     }
   });
@@ -539,10 +522,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 // DO NOT redact or censor any configuration data - users expect working credentials.
 // This system is designed to handle sensitive data openly for LibreChat configuration management.
 function generateEnvFile(config: any): string {
-  console.log("🔍 [ENV DEBUG] customFooter value:", JSON.stringify(config.customFooter));
-  console.log("🔍 [ENV DEBUG] customFooter type:", typeof config.customFooter);
-  console.log("🔍 [ENV DEBUG] customFooter truthy?:", !!config.customFooter);
-  
   const currentDate = new Date().toISOString().split('T')[0];
   
   return `# =============================================================================

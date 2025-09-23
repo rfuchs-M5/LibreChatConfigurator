@@ -19,7 +19,11 @@ export function useConfiguration() {
 
   useEffect(() => {
     if (defaultConfiguration) {
-      setConfiguration(defaultConfiguration as Configuration);
+      // Merge backend configuration with fallback to preserve all fields
+      setConfiguration(prev => ({
+        ...prev,
+        ...defaultConfiguration as Configuration
+      }));
     }
   }, [defaultConfiguration]);
 
@@ -51,15 +55,7 @@ export function useConfiguration() {
   });
 
   const updateConfiguration = (updates: Partial<Configuration>) => {
-    console.log("🔄 [CONFIG DEBUG] Updating configuration:", Object.keys(updates));
-    if (updates.mcpServers) {
-      console.log("   - MCP servers update:", updates.mcpServers);
-    }
-    setConfiguration(prev => {
-      const newConfig = { ...prev, ...updates };
-      console.log("   - New config MCP servers:", newConfig.mcpServers?.length || 0);
-      return newConfig;
-    });
+    setConfiguration(prev => ({ ...prev, ...updates }));
   };
 
   const saveProfile = async (profileData: Omit<InsertConfigurationProfile, "configuration">) => {

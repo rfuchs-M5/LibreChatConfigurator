@@ -364,7 +364,6 @@ export default function Home() {
   };
 
   const handleResetToDefaults = () => {
-    console.log("🔄 [RESET DEBUG] Resetting to LibreChat defaults");
     
     // Reset configuration to LibreChat defaults (keep profile name unchanged)
     updateConfiguration(defaultConfiguration);
@@ -377,12 +376,6 @@ export default function Home() {
 
   const handleGeneratePackage = async () => {
     try {
-      console.log("🚀 [PACKAGE DEBUG] Generating package with configuration:");
-      console.log("   - Config keys:", Object.keys(configuration));
-      console.log("   - MCP servers count:", configuration.mcpServers?.length || 0);
-      console.log("   - MCP servers:", configuration.mcpServers);
-      console.log("   - Full configuration:", configuration);
-      
       // Generate package name from configuration name (without .zip extension)
       const packageName = configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-').replace(/\s+/g, '-');
       
@@ -391,7 +384,6 @@ export default function Home() {
         packageName: packageName,
       });
       
-      console.log("📦 [PACKAGE DEBUG] Package generation result:", Object.keys(result.files || {}));
       
       // Import JSZip dynamically
       const JSZip = (await import('jszip')).default;
@@ -409,7 +401,6 @@ export default function Home() {
       const success = await downloadZIP(zipBlob, filename);
 
       if (success) {
-        console.log("✅ [PACKAGE DEBUG] Package generated successfully");
         toast({
           title: "Package Generated",
           description: "LibreChat installation package downloaded as ZIP file.",
