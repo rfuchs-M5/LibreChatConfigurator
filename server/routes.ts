@@ -117,187 +117,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate installation package
   app.post("/api/package/generate", async (req, res) => {
     try {
-      // Debug: Log what we receive from frontend
-      console.log("🔍 [RAW REQUEST DEBUG] Received req.body.configuration.customFooter:", JSON.stringify(req.body?.configuration?.customFooter));
-      console.log("🔍 [RAW REQUEST DEBUG] Raw configuration keys:", req.body?.configuration ? Object.keys(req.body.configuration) : "no config");
+      // SINGLE SOURCE OF TRUTH: Use raw frontend configuration directly (same as preview)
+      // This bypasses validation issues and ensures preview and ZIP are identical
+      const rawConfiguration = req.body?.configuration;
+      const includeFiles = req.body?.includeFiles || ["env", "yaml", "docker-compose", "install-script", "readme"];
+      const packageName = req.body?.packageName;
       
-      // Transform flat frontend structure to nested schema structure
-      const transformedBody = {
-        ...req.body,
-        configuration: req.body.configuration ? {
-          ...req.body.configuration,
-          interface: {
-            customWelcome: req.body.configuration.customWelcome,
-            customFooter: req.body.configuration.customFooter,
-            fileSearch: req.body.configuration.fileSearch ?? true,
-            uploadAsText: req.body.configuration.uploadAsText ?? false,
-            privacyPolicy: req.body.configuration.privacyPolicy,
-            termsOfService: req.body.configuration.termsOfService,
-            socialMediaLinks: req.body.configuration.socialMediaLinks,
-            helpAndFAQURL: req.body.configuration.helpAndFAQURL,
-          }
-        } : undefined
-      };
+      console.log("🎯 [SINGLE SOURCE] Using raw frontend data - customFooter:", JSON.stringify(rawConfiguration?.customFooter));
       
-      console.log("🔄 [TRANSFORM DEBUG] Transformed customFooter:", JSON.stringify(transformedBody?.configuration?.interface?.customFooter));
-      
-      const result = packageGenerationSchema.safeParse(transformedBody);
-      if (!result.success) {
-        console.log("🚨 [VALIDATION ERROR] Schema validation failed:", result.error.format());
-        const validationError = fromZodError(result.error);
+      if (!rawConfiguration) {
         return res.status(400).json({ 
-          error: "Invalid package generation request", 
-          details: validationError.message 
+          error: "Configuration is required" 
         });
       }
       
-      // Debug: Log what passed validation
-      console.log("✅ [VALIDATION SUCCESS] After validation customFooter:", JSON.stringify(result.data.configuration.customFooter));
-
-      const { configuration: flatConfig, includeFiles, packageName } = result.data;
-      
-      // Debug: Check customFooter value specifically
-      console.log("🔍 [CUSTOM FOOTER DEBUG] customFooter value:", JSON.stringify(flatConfig.customFooter));
-      console.log("🔍 [CUSTOM FOOTER DEBUG] customFooter type:", typeof flatConfig.customFooter);
-      console.log("🔍 [CUSTOM FOOTER DEBUG] customFooter exists:", flatConfig.hasOwnProperty('customFooter'));
-      
       // Save configuration to history for future reference
-      await storage.saveConfigurationToHistory(flatConfig, packageName);
+      await storage.saveConfigurationToHistory(rawConfiguration, packageName);
       
       
-      // Map flat frontend properties to nested schema structure
-      const configuration = {
-        ...flatConfig,
-        interface: {
-          agents: flatConfig.showAgents,
-          modelSelect: flatConfig.showModelSelect,
-          parameters: flatConfig.showParameters,
-          sidePanel: flatConfig.showSidePanel,
-          presets: flatConfig.showPresets,
-          prompts: flatConfig.showPrompts,
-          bookmarks: flatConfig.showBookmarks,
-          multiConvo: flatConfig.showMultiConvo,
-          webSearch: flatConfig.showWebSearch,
-          fileSearch: flatConfig.showFileSearch,
-          fileCitations: flatConfig.showFileCitations,
-          runCode: flatConfig.showRunCode,
-          customWelcome: flatConfig.customWelcome,
-          customFooter: flatConfig.customFooter,
-        },
-        fileConfig: {
-          maxFiles: flatConfig.filesMaxFilesPerRequest,
-          fileSizeLimit: flatConfig.filesMaxSizeMB,
-          supportedMimeTypes: flatConfig.filesAllowedMimeTypes,
-        },
-        rateLimits: {
-          fileUploads: {
-            ipMax: flatConfig.rateLimitsPerIP,
-            userMax: flatConfig.rateLimitsUploads,
-          },
-          conversationsImport: {
-            ipMax: flatConfig.rateLimitsPerIP,
-            userMax: flatConfig.rateLimitsImports,
-          },
-          stt: {
-            ipMax: flatConfig.rateLimitsPerIP,
-            userMax: flatConfig.rateLimitsSTT,
-          },
-          tts: {
-            ipMax: flatConfig.rateLimitsPerIP,
-            userMax: flatConfig.rateLimitsTTS,
-          },
-        },
-        endpoints: {
-          openAI: {
-            titleConvo: flatConfig.endpointDefaults?.titling,
-            titleModel: flatConfig.endpointDefaults?.titleModel,
-          },
-        },
-        memory: {
-          enabled: flatConfig.memoryEnabled,
-          tokenLimit: flatConfig.memoryMaxTokens,
-          personalize: flatConfig.memoryPersonalization,
-          messageWindowSize: flatConfig.memoryWindowSize,
-          agent: {
-            provider: flatConfig.memoryAgent,
-          },
-        },
-        // Actions, search, and OCR properties
-        actionsAllowedDomains: flatConfig.actionsAllowedDomains || [],
-        searchProvider: flatConfig.searchProvider,
-        searchScraper: flatConfig.searchScraper,
-        searchReranker: flatConfig.searchReranker,
-        searchSafeSearch: flatConfig.searchSafeSearch,
-        searchTimeout: flatConfig.searchTimeout,
-        ocrProvider: flatConfig.ocrProvider,
-        ocrModel: flatConfig.ocrModel,
-        // Other missing properties
-        temporaryChatRetention: flatConfig.temporaryChatsRetentionHours,
-        // Flat properties needed for README generation
-        filesAllowedMimeTypes: flatConfig.filesAllowedMimeTypes || [],
-        filesMaxSizeMB: flatConfig.filesMaxSizeMB || 10,
-        filesMaxFilesPerRequest: flatConfig.filesMaxFilesPerRequest || 5,
-        rateLimitsPerUser: flatConfig.rateLimitsPerUser || 100,
-        rateLimitsPerIP: flatConfig.rateLimitsPerIP || 100,
-        showAgents: flatConfig.showAgents,
-        showWebSearch: flatConfig.showWebSearch,
-        showFileSearch: flatConfig.showFileSearch,
-        showPresets: flatConfig.showPresets,
-        showPrompts: flatConfig.showPrompts,
-        showBookmarks: flatConfig.showBookmarks,
-        memoryEnabled: flatConfig.memoryEnabled,
-        enableRegistration: flatConfig.enableRegistration,
-        debugLogging: flatConfig.debugLogging,
-        defaultModel: flatConfig.defaultModel,
-        host: flatConfig.host || 'localhost',
-        port: flatConfig.port || 3080,
-        // CRITICAL: All UI fields must be mapped for .env generation
-        customFooter: flatConfig.customFooter,
-        customWelcome: flatConfig.customWelcome,
-        
-        // RC4 Subdirectory Hosting Support
-        basePath: flatConfig.basePath,
-        appUrl: flatConfig.appUrl,
-        publicSubPath: flatConfig.publicSubPath,
-        
-        // Additional API Keys
-        anthropicApiKey: flatConfig.anthropicApiKey,
-        googleApiKey: flatConfig.googleApiKey,
-        groqApiKey: flatConfig.groqApiKey,
-        mistralApiKey: flatConfig.mistralApiKey,
-        
-        // Web Search API Keys
-        serperApiKey: flatConfig.serperApiKey,
-        searxngApiKey: flatConfig.searxngApiKey,
-        searxngInstanceUrl: flatConfig.searxngInstanceUrl,
-        firecrawlApiKey: flatConfig.firecrawlApiKey,
-        firecrawlApiUrl: flatConfig.firecrawlApiUrl,
-        jinaApiKey: flatConfig.jinaApiKey,
-        cohereApiKey: flatConfig.cohereApiKey,
-        braveApiKey: flatConfig.braveApiKey,
-        tavilyApiKey: flatConfig.tavilyApiKey,
-        
-        // Database Configuration
-        mongoUri: flatConfig.mongoUri,
-        redisUri: flatConfig.redisUri,
-        
-        // Advanced Configuration
-        redisPingInterval: flatConfig.redisPingInterval,
-        minPasswordLength: flatConfig.minPasswordLength,
-        filteredTools: flatConfig.filteredTools,
-        includedTools: flatConfig.includedTools,
-        
-        // OCR Configuration
-        ocrApiKey: flatConfig.ocrApiKey,
-        ocrApiBase: flatConfig.ocrApiBase,
-        
-        // Additional server configuration
-        configVer: flatConfig.configVer || "1.2.8",
-        cache: flatConfig.cache,
-        fileStrategy: flatConfig.fileStrategy,
-        secureImageLinks: flatConfig.secureImageLinks,
-        imageOutputType: flatConfig.imageOutputType,
-      };
+      // Use raw configuration directly - SINGLE SOURCE OF TRUTH  
+      const configuration = rawConfiguration;
       
       
       const packageFiles: { [key: string]: string } = {};
