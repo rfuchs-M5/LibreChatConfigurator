@@ -120,6 +120,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("🔍 [PACKAGE DEBUG] Raw request body keys:", Object.keys(req.body));
       console.log("🔍 [PACKAGE DEBUG] Configuration keys:", req.body.configuration ? Object.keys(req.body.configuration) : 'NO CONFIG');
       
+      // CRITICAL: Check for redacted values that should never reach package generation
+      // Users MUST have real values, not [REDACTED] placeholders from configuration history!
+      if (req.body.configuration) {
+        const config = req.body.configuration;
+        const redactedFields = [];
+        
+        // Use the canonical sensitive fields list to check for ALL redacted values
+        const sensitiveFields = (await import('./storage.js')).FileStorage.getSensitiveFields();
+        
+        for (const field of sensitiveFields) {
+          if (config[field] === '[REDACTED]') {
+            // Convert camelCase to UPPER_CASE for display
+            const envVarName = field.replace(/([A-Z])/g, '_$1').toUpperCase();
+            redactedFields.push(envVarName);
+          }
+        }
+        
+        if (redactedFields.length > 0) {
+          console.error("❌ [PACKAGE ERROR] Cannot generate package with redacted values:", redactedFields);
+          return res.status(400).json({ 
+            error: "Cannot generate package with placeholder values",
+            message: `The following fields contain placeholder values and need real values: ${redactedFields.join(', ')}. Please enter your actual API keys and secrets before generating the package.`,
+            redactedFields
+          });
+        }
+      }
+      
       const result = packageGenerationSchema.safeParse(req.body);
       if (!result.success) {
         console.error("❌ [PACKAGE DEBUG] Validation failed:", result.error.issues);
@@ -133,6 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { configuration: flatConfig, includeFiles, packageName } = result.data;
       
       // Save configuration to history for future reference
+      // CRITICAL: This correctly redacts sensitive data for safe storage
       await storage.saveConfigurationToHistory(flatConfig, packageName);
       
       console.log("✅ [PACKAGE DEBUG] Validated configuration received:");
@@ -235,11 +263,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const packageFiles: { [key: string]: string } = {};
 
       // Generate .env file
+      // CRITICAL: MUST use original, unredacted configuration values for user's actual .env file!
+      // The user NEEDS their real API keys and secrets in the generated package!
       if (includeFiles.includes("env")) {
         packageFiles[".env"] = generateEnvFile(configuration);
       }
 
       // Generate librechat.yaml file
+      // CRITICAL: MUST use original configuration values for user's actual YAML file!
       if (includeFiles.includes("yaml")) {
         packageFiles["librechat.yaml"] = generateYamlFile(configuration);
       }
@@ -472,6 +503,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!configuration) {
         return res.status(404).json({ error: "Configuration not found" });
       }
+      
+      // IMPORTANT: Add warning about redacted sensitive values
+      console.warn("⚠️  [HISTORY LOAD] Configuration loaded from history contains redacted sensitive values.");
+      console.warn("    Users must re-enter their real API keys and secrets before generating packages!");
+      
       res.json(configuration);
     } catch (error) {
       console.error("Error loading configuration from history:", error);

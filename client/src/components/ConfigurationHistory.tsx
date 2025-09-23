@@ -21,7 +21,7 @@ export function ConfigurationHistory({ onConfigurationLoad }: { onConfigurationL
         }
         toast({
           title: "Configuration Loaded",
-          description: `Loaded configuration from ${historyItem.packageName}`,
+          description: `Loaded configuration from ${historyItem.packageName}. ⚠️ Please re-enter your API keys and secrets before generating packages.`,
         });
         setIsOpen(false);
       },
