@@ -162,6 +162,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           fileCitations: flatConfig.showFileCitations,
           runCode: flatConfig.showRunCode,
           customWelcome: flatConfig.customWelcome,
+          customFooter: flatConfig.customFooter,
         },
         fileConfig: {
           maxFiles: flatConfig.filesMaxFilesPerRequest,
@@ -230,6 +231,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         defaultModel: flatConfig.defaultModel,
         host: flatConfig.host || 'localhost',
         port: flatConfig.port || 3080,
+        // CRITICAL: All UI fields must be mapped for .env generation
+        customFooter: flatConfig.customFooter,
+        customWelcome: flatConfig.customWelcome,
       };
       
       const packageFiles: { [key: string]: string } = {};

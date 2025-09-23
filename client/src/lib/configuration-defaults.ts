@@ -129,4 +129,8 @@ export const defaultConfiguration: Configuration = {
   
   // CDN Configuration (Empty by default)
   cdnProvider: "",
+  
+  // UI Customization (Empty by default)
+  customFooter: "",
+  customWelcome: "",
 };
