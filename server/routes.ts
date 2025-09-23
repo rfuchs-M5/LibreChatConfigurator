@@ -128,6 +128,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { configuration: flatConfig, includeFiles, packageName } = result.data;
       
+      // Debug: Check customFooter value specifically
+      console.log("🔍 [CUSTOM FOOTER DEBUG] customFooter value:", JSON.stringify(flatConfig.customFooter));
+      console.log("🔍 [CUSTOM FOOTER DEBUG] customFooter type:", typeof flatConfig.customFooter);
+      console.log("🔍 [CUSTOM FOOTER DEBUG] customFooter exists:", flatConfig.hasOwnProperty('customFooter'));
+      
       // Save configuration to history for future reference
       await storage.saveConfigurationToHistory(flatConfig, packageName);
       
