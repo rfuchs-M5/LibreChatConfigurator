@@ -1,5 +1,58 @@
 [
   {
+    "id": "d6c1cd6a-e549-4173-a74a-3ed1b8d126c4",
+    "configuration": {
+      "version": "1.2.8",
+      "cache": true,
+      "fileStrategy": "local",
+      "secureImageLinks": false,
+      "imageOutputType": "url",
+      "temporaryChatRetention": 720,
+      "interface": {
+        "customWelcome": "Custom Welcome Message",
+        "customFooter": "Custom Welcome Message\n\nCustom welcome text in landing page\nCustom Footer Text",
+        "fileSearch": true,
+        "uploadAsText": false,
+        "endpointsMenu": true,
+        "modelSelect": true,
+        "parameters": true,
+        "sidePanel": true,
+        "presets": true,
+        "prompts": true,
+        "bookmarks": true,
+        "multiConvo": false,
+        "agents": true,
+        "fileCitations": true
+      },
+      "mcpServers": [
+        {
+          "type": "streamable-http",
+          "url": "https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev",
+          "timeout": 30000,
+          "initTimeout": 10000,
+          "headers": {
+            "Authorization": "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
+          },
+          "name": "frits_notes"
+        }
+      ],
+      "redisPingInterval": 30000,
+      "minPasswordLength": 8,
+      "openaiApiKey": "",
+      "mongoUri": "",
+      "redisUri": "",
+      "host": "0.0.0.0",
+      "port": 3080,
+      "debugLogging": false,
+      "jwtSecret": "",
+      "jwtRefreshSecret": "",
+      "credsKey": "",
+      "credsIV": ""
+    },
+    "timestamp": "2025-09-23T21:29:37.473Z",
+    "packageName": "My-LibreChat-Configuration"
+  },
+  {
     "id": "a83fbb5c-732c-41ae-869f-7b2dac65fe3a",
     "configuration": {
       "version": "1.2.8",
