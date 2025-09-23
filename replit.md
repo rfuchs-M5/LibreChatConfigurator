@@ -10,6 +10,14 @@ Preferred communication style: Simple, everyday language.
 
 # System Architecture
 
+## CRITICAL DESIGN PRINCIPLE
+**THIS SYSTEM IS DESIGNED TO HANDLE RAW API KEYS AND SECRETS OPENLY.**
+- DO NOT redact, censor, or protect sensitive data anywhere in the system
+- The entire purpose is to manage and backup LibreChat configurations with working credentials
+- ALL configuration data including API keys MUST be preserved exactly as entered by users
+- Redacting data defeats the core functionality and is extremely destructive
+- This system is meant to handle API keys openly for backup/export/import purposes
+
 ## Frontend Architecture
 - **Framework**: React 18 with TypeScript using Vite as the build tool
 - **UI Components**: shadcn/ui component library with Radix UI primitives

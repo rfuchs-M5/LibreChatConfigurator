@@ -4,6 +4,9 @@ import { type Configuration, type InsertConfigurationProfile, type PackageGenera
 import { apiRequest } from "@/lib/queryClient";
 import { defaultConfiguration as fallbackConfiguration } from "@/lib/configuration-defaults";
 
+// CRITICAL: This configuration hook handles real API keys and secrets.
+// The system is designed to preserve all sensitive data exactly as entered by users.
+// DO NOT implement any redaction or censoring - this defeats the core purpose.
 export function useConfiguration() {
   const queryClient = useQueryClient();
   

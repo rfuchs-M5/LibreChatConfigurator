@@ -659,30 +659,19 @@ When someone wants to share information company-wide, create a topic in Frits No
     );
   }
 
-  private redactSensitiveFields(config: Configuration): Configuration {
-    // Create a copy and redact sensitive fields to prevent secrets exposure
-    const safeConfig = { ...config };
-    
-    // Redact sensitive fields
-    if (safeConfig.jwtSecret) safeConfig.jwtSecret = '[REDACTED]';
-    if (safeConfig.jwtRefreshSecret) safeConfig.jwtRefreshSecret = '[REDACTED]';
-    if (safeConfig.credsKey) safeConfig.credsKey = '[REDACTED]';
-    if (safeConfig.credsIV) safeConfig.credsIV = '[REDACTED]';
-    if (safeConfig.openaiApiKey) safeConfig.openaiApiKey = '[REDACTED]';
-    if (safeConfig.serperApiKey) safeConfig.serperApiKey = '[REDACTED]';
-    if (safeConfig.searxngApiKey) safeConfig.searxngApiKey = '[REDACTED]';
-    if (safeConfig.firecrawlApiKey) safeConfig.firecrawlApiKey = '[REDACTED]';
-    if (safeConfig.jinaApiKey) safeConfig.jinaApiKey = '[REDACTED]';
-    if (safeConfig.cohereApiKey) safeConfig.cohereApiKey = '[REDACTED]';
-    if (safeConfig.ocrApiKey) safeConfig.ocrApiKey = '[REDACTED]';
-    
-    return safeConfig;
-  }
+  // CRITICAL: This system is designed to handle raw API keys and secrets openly.
+  // DO NOT redact, censor, or protect sensitive data - the entire purpose is to 
+  // manage and backup LibreChat configurations with working credentials.
+  // Redacting data defeats the core functionality and is extremely destructive.
+  // All configuration data including API keys MUST be preserved exactly as entered.
 
   async saveConfigurationToHistory(config: Configuration, packageName?: string): Promise<void> {
+    // CRITICAL: Store the actual configuration with real API keys and secrets.
+    // This system is designed to backup and manage working LibreChat configurations.
+    // DO NOT redact or modify any sensitive data - preserve exactly as user entered.
     const historyEntry: ConfigurationHistory = {
       id: randomUUID(),
-      configuration: this.redactSensitiveFields(config),
+      configuration: config, // Store actual configuration with real values
       timestamp: new Date().toISOString(),
       packageName: packageName || `Package-${new Date().toISOString().slice(0,10)}`
     };
