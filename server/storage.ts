@@ -659,33 +659,24 @@ When someone wants to share information company-wide, create a topic in Frits No
     );
   }
 
-  // CRITICAL: This is the definitive list of ALL sensitive fields that get redacted!
-  // This list must be kept in sync between redaction and validation!
-  private static readonly SENSITIVE_FIELDS = [
-    'jwtSecret', 'jwtRefreshSecret', 'credsKey', 'credsIV',
-    'openaiApiKey', 'serperApiKey', 'searxngApiKey', 'firecrawlApiKey', 
-    'jinaApiKey', 'cohereApiKey', 'ocrApiKey', 'braveApiKey', 'tavilyApiKey'
-  ] as const;
-
   private redactSensitiveFields(config: Configuration): Configuration {
-    // CRITICAL: This function is ONLY for configuration history storage security!
-    // It must NEVER be used for package generation - users need their real values!
-    // Create a copy and redact sensitive fields to prevent secrets exposure in history
+    // Create a copy and redact sensitive fields to prevent secrets exposure
     const safeConfig = { ...config };
     
-    // Redact ALL sensitive fields using the canonical list
-    FileStorage.SENSITIVE_FIELDS.forEach(field => {
-      if (safeConfig[field as keyof Configuration]) {
-        (safeConfig as any)[field] = '[REDACTED]';
-      }
-    });
+    // Redact sensitive fields
+    if (safeConfig.jwtSecret) safeConfig.jwtSecret = '[REDACTED]';
+    if (safeConfig.jwtRefreshSecret) safeConfig.jwtRefreshSecret = '[REDACTED]';
+    if (safeConfig.credsKey) safeConfig.credsKey = '[REDACTED]';
+    if (safeConfig.credsIV) safeConfig.credsIV = '[REDACTED]';
+    if (safeConfig.openaiApiKey) safeConfig.openaiApiKey = '[REDACTED]';
+    if (safeConfig.serperApiKey) safeConfig.serperApiKey = '[REDACTED]';
+    if (safeConfig.searxngApiKey) safeConfig.searxngApiKey = '[REDACTED]';
+    if (safeConfig.firecrawlApiKey) safeConfig.firecrawlApiKey = '[REDACTED]';
+    if (safeConfig.jinaApiKey) safeConfig.jinaApiKey = '[REDACTED]';
+    if (safeConfig.cohereApiKey) safeConfig.cohereApiKey = '[REDACTED]';
+    if (safeConfig.ocrApiKey) safeConfig.ocrApiKey = '[REDACTED]';
     
     return safeConfig;
-  }
-
-  // Public method to get sensitive fields list for validation elsewhere
-  static getSensitiveFields(): readonly string[] {
-    return FileStorage.SENSITIVE_FIELDS;
   }
 
   async saveConfigurationToHistory(config: Configuration, packageName?: string): Promise<void> {
