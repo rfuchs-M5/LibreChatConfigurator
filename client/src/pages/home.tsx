@@ -484,7 +484,7 @@ export default function Home() {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleImportYaml} data-testid="menu-import-yaml">
                     <FileText className="h-4 w-4 mr-2" />
-                    Import librechat-config.yaml
+                    Import librechat.yaml
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleImportEnv} data-testid="menu-import-env">
                     <Settings className="h-4 w-4 mr-2" />

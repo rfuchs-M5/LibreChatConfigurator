@@ -187,7 +187,7 @@ ${configuration.actionsAllowedDomains.map((domain: string) => `    - "${domain}"
         <Tabs defaultValue="env" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="env">.env Configuration</TabsTrigger>
-            <TabsTrigger value="yaml">librechat-config.yaml Configuration</TabsTrigger>
+            <TabsTrigger value="yaml">librechat.yaml Configuration</TabsTrigger>
           </TabsList>
           
           <TabsContent value="env" className="mt-4">
