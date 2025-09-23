@@ -121,7 +121,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("🔍 [RAW REQUEST DEBUG] Received req.body.configuration.customFooter:", JSON.stringify(req.body?.configuration?.customFooter));
       console.log("🔍 [RAW REQUEST DEBUG] Raw configuration keys:", req.body?.configuration ? Object.keys(req.body.configuration) : "no config");
       
-      const result = packageGenerationSchema.safeParse(req.body);
+      // Transform flat frontend structure to nested schema structure
+      const transformedBody = {
+        ...req.body,
+        configuration: req.body.configuration ? {
+          ...req.body.configuration,
+          interface: {
+            customWelcome: req.body.configuration.customWelcome,
+            customFooter: req.body.configuration.customFooter,
+            fileSearch: req.body.configuration.fileSearch ?? true,
+            uploadAsText: req.body.configuration.uploadAsText ?? false,
+            privacyPolicy: req.body.configuration.privacyPolicy,
+            termsOfService: req.body.configuration.termsOfService,
+            socialMediaLinks: req.body.configuration.socialMediaLinks,
+            helpAndFAQURL: req.body.configuration.helpAndFAQURL,
+          }
+        } : undefined
+      };
+      
+      console.log("🔄 [TRANSFORM DEBUG] Transformed customFooter:", JSON.stringify(transformedBody?.configuration?.interface?.customFooter));
+      
+      const result = packageGenerationSchema.safeParse(transformedBody);
       if (!result.success) {
         console.log("🚨 [VALIDATION ERROR] Schema validation failed:", result.error.format());
         const validationError = fromZodError(result.error);
