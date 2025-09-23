@@ -144,6 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         showAgents: flatConfig.showAgents,
         defaultModel: flatConfig.defaultModel
       });
+      console.log("🔍 [DEBUG] customFooter from flatConfig:", flatConfig.customFooter);
       
       // Map flat frontend properties to nested schema structure
       const configuration = {
@@ -278,6 +279,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         secureImageLinks: flatConfig.secureImageLinks,
         imageOutputType: flatConfig.imageOutputType,
       };
+      
+      console.log("🔍 [DEBUG] Final configuration customFooter:", configuration.customFooter);
+      console.log("🔍 [DEBUG] Final configuration interface.customFooter:", configuration.interface?.customFooter);
       
       const packageFiles: { [key: string]: string } = {};
 
@@ -535,6 +539,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 // DO NOT redact or censor any configuration data - users expect working credentials.
 // This system is designed to handle sensitive data openly for LibreChat configuration management.
 function generateEnvFile(config: any): string {
+  console.log("🔍 [ENV DEBUG] customFooter value:", JSON.stringify(config.customFooter));
+  console.log("🔍 [ENV DEBUG] customFooter type:", typeof config.customFooter);
+  console.log("🔍 [ENV DEBUG] customFooter truthy?:", !!config.customFooter);
+  
   const currentDate = new Date().toISOString().split('T')[0];
   
   return `# =============================================================================

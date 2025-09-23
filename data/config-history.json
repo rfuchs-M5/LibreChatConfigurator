@@ -1,5 +1,40 @@
 [
   {
+    "id": "30b3c565-5df7-47fa-abfb-d92b862bc74d",
+    "configuration": {
+      "version": "1.2.8",
+      "cache": true,
+      "fileStrategy": "local",
+      "secureImageLinks": false,
+      "imageOutputType": "url",
+      "temporaryChatRetention": 720,
+      "mcpServers": [
+        {
+          "type": "streamable-http",
+          "url": "https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev",
+          "timeout": 30000,
+          "initTimeout": 10000,
+          "headers": {
+            "Authorization": "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
+          },
+          "name": "frits_notes"
+        }
+      ],
+      "redisPingInterval": 30000,
+      "minPasswordLength": 8,
+      "openaiApiKey": "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",
+      "host": "0.0.0.0",
+      "port": 3080,
+      "debugLogging": false,
+      "jwtSecret": "f742e9504eb115b9e78e7ab570f0ff63df57a95f5ae29bba44ea606ccd1019c7",
+      "jwtRefreshSecret": "9e7b1d1d6e9009680e88fbbf0fbd025f278732ccfe721400acd13af3281af773",
+      "credsKey": "c80bb5f3216d1e95751ce781425c0066",
+      "credsIV": "e1abf10453638008"
+    },
+    "timestamp": "2025-09-23T20:48:21.158Z",
+    "packageName": "0_5_b"
+  },
+  {
     "id": "274e8471-6aa8-4d54-9cd7-8a20e8c57e87",
     "configuration": {
       "version": "1.2.8",
