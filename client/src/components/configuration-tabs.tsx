@@ -81,7 +81,7 @@ export function ConfigurationTabs({
         "showModelSelect", "showParameters", "showSidePanel", "showPresets",
         "showPrompts", "showBookmarks", "showMultiConvo", "showAgents",
         "showWebSearch", "showFileSearch", "showFileCitations", "showRunCode",
-        "customWelcome", "enableConversations"
+        "customWelcome", "customFooter", "enableConversations"
       ],
     },
     {
@@ -450,6 +450,14 @@ export function ConfigurationTabs({
                     value={configuration.customWelcome || ""}
                     onChange={(value) => onConfigurationChange({ customWelcome: value as string })}
                     data-testid="input-custom-welcome"
+                  />
+                  <SettingInput
+                    label="Custom Footer Text"
+                    description="Custom footer text with Markdown link support (e.g., [Privacy Policy](https://example.com/privacy) | [Terms](https://example.com/terms))"
+                    type="textarea"
+                    value={configuration.customFooter || ""}
+                    onChange={(value) => onConfigurationChange({ customFooter: value as string })}
+                    data-testid="input-custom-footer"
                   />
                 </CardContent>
               </Card>

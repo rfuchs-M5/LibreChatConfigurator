@@ -57,6 +57,7 @@ const rateLimitsSchema = z.object({
 // Interface Configuration
 const interfaceSchema = z.object({
   customWelcome: z.string().optional(),
+  customFooter: z.string().optional(),
   fileSearch: z.boolean().default(true),
   uploadAsText: z.boolean().default(false), // RC4 "Upload as Text" feature
   privacyPolicy: z.object({
