@@ -558,41 +558,44 @@ version: 1.2.8
 cache: ${config.cache}
 
 # MCP Servers Configuration
-mcpServers:
-${config.mcpServers.map((server: any) => {
-    let serverConfig = `  ${server.name}:
+mcpServers: ${
+  config.mcpServers && config.mcpServers.length > 0 
+    ? `\n${config.mcpServers.map((server: any) => {
+        let serverConfig = `  ${server.name}:
     type: ${server.type}`;
-    
-    if (server.url) {
-      serverConfig += `\n    url: "${server.url}"`;
-    }
-    
-    serverConfig += `\n    timeout: ${server.timeout}`;
-    
-    if (server.initTimeout) {
-      serverConfig += `\n    initTimeout: ${server.initTimeout}`;
-    }
-    
-    if (server.headers && Object.keys(server.headers).length > 0) {
-      serverConfig += `\n    headers:`;
-      Object.entries(server.headers).forEach(([k, v]) => {
-        serverConfig += `\n      ${k}: "${v}"`;
-      });
-    }
-    
-    if (server.env && Object.keys(server.env).length > 0) {
-      serverConfig += `\n    env:`;
-      Object.entries(server.env).forEach(([k, v]) => {
-        serverConfig += `\n      ${k}: "${v}"`;
-      });
-    }
-    
-    if (server.instructions) {
-      serverConfig += `\n    serverInstructions: |\n      ${server.instructions.split('\n').join('\n      ')}`;
-    }
-    
-    return serverConfig;
-  }).join('\n')}
+        
+        if (server.url) {
+          serverConfig += `\n    url: "${server.url}"`;
+        }
+        
+        serverConfig += `\n    timeout: ${server.timeout}`;
+        
+        if (server.initTimeout) {
+          serverConfig += `\n    initTimeout: ${server.initTimeout}`;
+        }
+        
+        if (server.headers && Object.keys(server.headers).length > 0) {
+          serverConfig += `\n    headers:`;
+          Object.entries(server.headers).forEach(([k, v]) => {
+            serverConfig += `\n      ${k}: "${v}"`;
+          });
+        }
+        
+        if (server.env && Object.keys(server.env).length > 0) {
+          serverConfig += `\n    env:`;
+          Object.entries(server.env).forEach(([k, v]) => {
+            serverConfig += `\n      ${k}: "${v}"`;
+          });
+        }
+        
+        if (server.instructions) {
+          serverConfig += `\n    serverInstructions: |\n      ${server.instructions.split('\n').join('\n      ')}`;
+        }
+        
+        return serverConfig;
+      }).join('\n')}`
+    : '{}'
+}
 
 # Endpoints Configuration
 endpoints:
