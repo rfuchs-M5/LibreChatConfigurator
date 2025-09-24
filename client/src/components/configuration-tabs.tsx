@@ -152,6 +152,7 @@ export function ConfigurationTabs({
       description: "File Upload & Storage",
       color: "from-teal-500 to-teal-600",
       settings: [
+        "fileStrategy",
         "fileUploadPath", 
         "firebaseApiKey", "firebaseAuthDomain", "firebaseProjectId", "firebaseStorageBucket", "firebaseMessagingSenderId", "firebaseAppId",
         "azureStorageConnectionString", "azureStoragePublicAccess", "azureContainerName",
@@ -392,7 +393,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "file-storage"; 
       description: string; 
       label: string;
       docUrl?: string;
