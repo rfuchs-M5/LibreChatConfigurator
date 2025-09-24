@@ -294,48 +294,252 @@ export function ConfigurationTabs({
       docSection?: string;
     }> = {
       // App Settings
-      appTitle: { type: "text", description: "Custom application title (APP_TITLE)", label: "App Title" },
-      customWelcome: { type: "textarea", description: "Custom welcome message", label: "Welcome Message" },
-      customFooter: { type: "textarea", description: "Custom footer text", label: "Footer Text" },
-      helpAndFAQURL: { type: "text", description: "Help and FAQ URL", label: "Help & FAQ URL" },
+      appTitle: { 
+        type: "text", 
+        description: "Sets the custom application title displayed in the browser tab and header. This overrides the default 'LibreChat' branding with your preferred name.", 
+        label: "App Title",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#application-domains",
+        docSection: "App Settings"
+      },
+      customWelcome: { 
+        type: "textarea", 
+        description: "Custom welcome message shown to users when they first access LibreChat. Supports markdown formatting for rich text.", 
+        label: "Welcome Message",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
+        docSection: "Interface Config"
+      },
+      customFooter: { 
+        type: "textarea", 
+        description: "Custom footer text displayed at the bottom of the interface. Use this for copyright, contact information, or additional links.", 
+        label: "Footer Text",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
+        docSection: "Interface Config"
+      },
+      helpAndFAQURL: { 
+        type: "text", 
+        description: "URL to your help documentation or FAQ page. This creates a help link in the interface for user support.", 
+        label: "Help & FAQ URL",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
+        docSection: "Interface Config"
+      },
       
       // Server
-      host: { type: "text", description: "Server host address", label: "Host" },
-      port: { type: "number", description: "Server port number", label: "Port" },
-      nodeEnv: { type: "select", description: "Node environment", label: "Environment" },
-      domainClient: { type: "text", description: "Client domain URL", label: "Client Domain" },
-      domainServer: { type: "text", description: "Server domain URL", label: "Server Domain" },
-      noIndex: { type: "boolean", description: "Prevent search engine indexing", label: "No Index" },
+      host: { 
+        type: "text", 
+        description: "The address where LibreChat server listens for connections. Use 0.0.0.0 to accept connections from any IP address, or localhost for local-only access. Critical for Docker deployments.", 
+        label: "Host",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#server-configuration",
+        docSection: "Server Config"
+      },
+      port: { 
+        type: "number", 
+        description: "Port number where LibreChat runs. Default is 3080. Ensure this port is available and matches your Docker compose or proxy configuration.", 
+        label: "Port",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#port",
+        docSection: "Server Config"
+      },
+      nodeEnv: { 
+        type: "select", 
+        description: "Node.js environment mode. 'production' enables optimizations and security features. 'development' provides detailed error messages for debugging.", 
+        label: "Environment",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#server-configuration",
+        docSection: "Server Config"
+      },
+      domainClient: { 
+        type: "text", 
+        description: "Full URL where users access LibreChat (e.g., https://chat.yourcompany.com). Required for proper CORS, OAuth callbacks, and link generation.", 
+        label: "Client Domain",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#application-domains",
+        docSection: "Server Config"
+      },
+      domainServer: { 
+        type: "text", 
+        description: "Internal server URL for API calls. Usually same as client domain unless using separate API server. Critical for proper routing and authentication.", 
+        label: "Server Domain",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#application-domains",
+        docSection: "Server Config"
+      },
+      noIndex: { 
+        type: "boolean", 
+        description: "When enabled, adds meta tags to prevent search engines (Google, Bing) from indexing your LibreChat instance. Recommended for internal/private deployments.", 
+        label: "No Index",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#prevent-public-search-engines-indexing",
+        docSection: "Server Config"
+      },
       
       // Security
-      jwtSecret: { type: "password", description: "JWT secret key (32+ chars)", label: "JWT Secret" },
-      jwtRefreshSecret: { type: "password", description: "JWT refresh secret key", label: "JWT Refresh Secret" },
-      credsKey: { type: "password", description: "Credentials encryption key (32 chars)", label: "Credentials Key" },
-      credsIV: { type: "password", description: "Credentials IV (16 chars)", label: "Credentials IV" },
-      minPasswordLength: { type: "number", description: "Minimum password length", label: "Min Password Length" },
-      sessionExpiry: { type: "number", description: "Session expiry in milliseconds", label: "Session Expiry" },
-      refreshTokenExpiry: { type: "number", description: "Refresh token expiry in milliseconds", label: "Refresh Token Expiry" },
+      jwtSecret: { 
+        type: "password", 
+        description: "Secret key for signing JWT authentication tokens. Must be at least 32 characters long. Keep this secure and unique - changing it will log out all users. CRITICAL for security!", 
+        label: "JWT Secret",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
+      jwtRefreshSecret: { 
+        type: "password", 
+        description: "Separate secret for JWT refresh tokens. Should be different from JWT secret. Used for token rotation and extended authentication sessions.", 
+        label: "JWT Refresh Secret",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
+      credsKey: { 
+        type: "password", 
+        description: "32-byte encryption key (64 hex chars) for securely storing API credentials in database. Required for app startup. Generate with provided key generator tool.", 
+        label: "Credentials Key",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
+      credsIV: { 
+        type: "password", 
+        description: "16-byte initialization vector (32 hex chars) for credential encryption. Must pair with credentials key. Required for secure API key storage.", 
+        label: "Credentials IV",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
+      minPasswordLength: { 
+        type: "number", 
+        description: "Minimum character length required for user passwords. Recommended: 8-12 characters. Higher values increase security but may impact user experience.", 
+        label: "Min Password Length",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
+      sessionExpiry: { 
+        type: "number", 
+        description: "How long user sessions last in milliseconds. Default 15 minutes (900000ms). Shorter values increase security, longer values improve user experience.", 
+        label: "Session Expiry",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
+      refreshTokenExpiry: { 
+        type: "number", 
+        description: "Refresh token lifetime in milliseconds. Default 7 days (604800000ms). Allows users to stay logged in without re-entering credentials.", 
+        label: "Refresh Token Expiry",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#credentials-configuration",
+        docSection: "Security"
+      },
       
       // Database
-      mongoUri: { type: "text", description: "MongoDB connection URI", label: "MongoDB URI" },
-      mongoRootUsername: { type: "text", description: "MongoDB root username", label: "MongoDB Username" },
-      mongoRootPassword: { type: "password", description: "MongoDB root password", label: "MongoDB Password" },
-      mongoDbName: { type: "text", description: "MongoDB database name", label: "Database Name" },
-      redisUri: { type: "text", description: "Redis connection URI", label: "Redis URI" },
-      redisUsername: { type: "text", description: "Redis username", label: "Redis Username" },
-      redisPassword: { type: "password", description: "Redis password", label: "Redis Password" },
-      redisKeyPrefix: { type: "text", description: "Redis key prefix", label: "Redis Key Prefix" },
-      redisKeyPrefixVar: { type: "text", description: "Redis key prefix variable", label: "Redis Key Prefix Var" },
-      redisMaxListeners: { type: "number", description: "Redis max listeners", label: "Redis Max Listeners" },
-      redisPingInterval: { type: "number", description: "Redis ping interval", label: "Redis Ping Interval" },
-      redisUseAlternativeDNSLookup: { type: "boolean", description: "Use alternative DNS lookup", label: "Alternative DNS Lookup" },
+      mongoUri: { 
+        type: "text", 
+        description: "MongoDB connection string. Use mongodb://localhost:27017/LibreChat for local setup or mongodb+srv:// format for cloud databases like MongoDB Atlas. Include database name in URI.", 
+        label: "MongoDB URI",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      mongoRootUsername: { 
+        type: "text", 
+        description: "MongoDB administrator username. Only required if MongoDB authentication is enabled. Leave empty for Docker setups without authentication.", 
+        label: "MongoDB Username",
+        docUrl: "https://www.librechat.ai/docs/configuration/mongodb/mongodb_auth",
+        docSection: "Database"
+      },
+      mongoRootPassword: { 
+        type: "password", 
+        description: "MongoDB administrator password. Must match the username credentials. Keep secure and use strong passwords for production databases.", 
+        label: "MongoDB Password",
+        docUrl: "https://www.librechat.ai/docs/configuration/mongodb/mongodb_auth",
+        docSection: "Database"
+      },
+      mongoDbName: { 
+        type: "text", 
+        description: "Name of the MongoDB database to store LibreChat data. Usually 'LibreChat'. This database will be created automatically if it doesn't exist.", 
+        label: "Database Name",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisUri: { 
+        type: "text", 
+        description: "Redis connection string for caching and session storage. Use redis://localhost:6379/0 for local or cloud Redis URLs. Improves performance significantly.", 
+        label: "Redis URI",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisUsername: { 
+        type: "text", 
+        description: "Redis username if authentication is required. Many Redis setups don't require auth, so this may be optional depending on your configuration.", 
+        label: "Redis Username",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisPassword: { 
+        type: "password", 
+        description: "Redis password for authenticated connections. Required for production Redis instances with AUTH enabled. Keep secure.", 
+        label: "Redis Password",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisKeyPrefix: { 
+        type: "text", 
+        description: "Prefix added to all Redis keys to avoid conflicts when sharing Redis with other applications. Example: 'librechat:' creates keys like 'librechat:session:abc123'.", 
+        label: "Redis Key Prefix",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisKeyPrefixVar: { 
+        type: "text", 
+        description: "Environment variable name that contains the Redis key prefix. Alternative to hardcoding the prefix directly. Allows dynamic configuration per environment.", 
+        label: "Redis Key Prefix Var",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisMaxListeners: { 
+        type: "number", 
+        description: "Maximum number of event listeners Redis client can have. Default is 10. Increase if you get 'MaxListenersExceededWarning' in logs with high traffic.", 
+        label: "Redis Max Listeners",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisPingInterval: { 
+        type: "number", 
+        description: "Interval in milliseconds for Redis connection health checks. Default 30000 (30s). Lower values detect failures faster but increase network traffic.", 
+        label: "Redis Ping Interval",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
+      redisUseAlternativeDNSLookup: { 
+        type: "boolean", 
+        description: "Use alternative DNS resolution for Redis connections. Enable if experiencing DNS issues in containerized environments or with certain cloud providers.", 
+        label: "Alternative DNS Lookup",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#mongodb-database",
+        docSection: "Database"
+      },
       
       // Authentication
-      allowRegistration: { type: "boolean", description: "Allow user registration", label: "Allow Registration" },
-      allowEmailLogin: { type: "boolean", description: "Allow email login", label: "Allow Email Login" },
-      allowSocialLogin: { type: "boolean", description: "Allow social login", label: "Allow Social Login" },
-      allowSocialRegistration: { type: "boolean", description: "Allow social registration", label: "Allow Social Registration" },
-      allowPasswordReset: { type: "boolean", description: "Allow password reset", label: "Allow Password Reset" },
+      allowRegistration: { 
+        type: "boolean", 
+        description: "When enabled, allows new users to create accounts. Disable for invite-only or enterprise deployments where accounts are managed externally.", 
+        label: "Allow Registration",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#authentication",
+        docSection: "Authentication"
+      },
+      allowEmailLogin: { 
+        type: "boolean", 
+        description: "Enables login with email and password. Core authentication method. Disable only if using social login exclusively.", 
+        label: "Allow Email Login",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#authentication",
+        docSection: "Authentication"
+      },
+      allowSocialLogin: { 
+        type: "boolean", 
+        description: "Enables OAuth login with configured providers (Google, GitHub, Discord, etc.). Requires setting up OAuth credentials for each provider.", 
+        label: "Allow Social Login",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#authentication",
+        docSection: "Authentication"
+      },
+      allowSocialRegistration: { 
+        type: "boolean", 
+        description: "Allows new account creation via social OAuth providers. Users can sign up using Google, GitHub, etc. without email verification.", 
+        label: "Allow Social Registration",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#authentication",
+        docSection: "Authentication"
+      },
+      allowPasswordReset: { 
+        type: "boolean", 
+        description: "Enables password reset functionality via email. Requires email service configuration (SMTP or Mailgun) to send reset links to users.", 
+        label: "Allow Password Reset",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#authentication",
+        docSection: "Authentication"
+      },
       
       // Email
       emailService: { type: "text", description: "Email service provider", label: "Email Service" },
