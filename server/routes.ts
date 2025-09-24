@@ -1118,7 +1118,7 @@ ${config.memoryEnabled ? '- ✅ Memory System' : '- ❌ Memory System'}
 ### File Upload Settings
 - **Max File Size**: ${config.filesMaxSizeMB}MB
 - **Max Files per Request**: ${config.filesMaxFilesPerRequest}
-- **Allowed Types**: ${config.filesAllowedMimeTypes.join(', ')}
+- **Allowed Types**: ${config.filesAllowedMimeTypes && config.filesAllowedMimeTypes.length > 0 ? config.filesAllowedMimeTypes.join(', ') : 'Not configured'}
 
 ### Rate Limits
 - **Per User**: ${config.rateLimitsPerUser} requests
