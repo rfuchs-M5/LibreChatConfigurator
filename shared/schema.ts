@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
 
 // LibreChat v0.8.0-RC4 Configuration Schema
-// Based on librechat.yaml structure version 1.2.8
+// Pure RC4 implementation - no backwards compatibility
 
 // Client Image Resize Configuration
 const clientImageResizeSchema = z.object({
@@ -258,7 +258,7 @@ const genericProviderSchema = baseProviderSchema.extend({
   additionalOptions: z.record(z.any()).optional(),
 });
 
-// Custom Endpoint Configuration (for backwards compatibility)
+// Custom Endpoint Configuration
 const customEndpointSchema = z.object({
   name: z.string(),
   apiKey: z.string().optional(),
@@ -328,14 +328,14 @@ const endpointsSchema = z.object({
   assistants: assistantsSchema,
   agents: agentsSchema,
   
-  // Custom endpoints array for backwards compatibility
+  // Custom endpoints array
   custom: z.array(customEndpointSchema).optional(),
 }).optional();
 
 // Main Configuration Schema for LibreChat RC4
 export const configurationSchema = z.object({
-  // Required version for RC4
-  version: z.string().default("1.2.8"),
+  // LibreChat RC4 version identifier
+  version: z.string().default("0.8.0-rc4"),
   
   // Core settings
   cache: z.boolean().default(true),

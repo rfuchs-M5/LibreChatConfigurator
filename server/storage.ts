@@ -174,84 +174,39 @@ export class FileStorage implements IStorage {
   }
 
   private loadDefaultConfiguration(): Configuration {
-    // Basic fallback configuration
+    // Minimal RC4-compliant fallback configuration
     return {
-      // Global Core Settings
-      configVer: "1.2.8",
+      // LibreChat RC4 Core Settings
+      version: "0.8.0-rc4",
       cache: true,
       fileStrategy: "local",
       secureImageLinks: false,
-      imageOutputType: "url",
-      enableConversations: true,
-      enableRegistration: true,
-
-      // UI/Visibility Settings
-      showModelSelect: true,
-      showParameters: true,
-      showSidePanel: true,
-      showPresets: true,
-      showPrompts: true,
-      showBookmarks: true,
-      showMultiConvo: false,
-      showAgents: true,
-      showWebSearch: true,
-      showFileSearch: true,
-      showFileCitations: true,
-      showRunCode: true,
-
-      // Model Specifications
-      modelSpecs: false,
-      enforceModelSpecs: false,
-      defaultModel: "gpt-4o",
-      addedEndpoints: true,
-
-      // Endpoint Defaults
-      endpointDefaults: {
-        streaming: true,
-        titling: true,
-        titleModel: "gpt-4o-mini",
-      },
-
-      // Agent Configuration
-      agentDefaultRecursionLimit: 5,
-      agentMaxRecursionLimit: 10,
-      agentAllowedProviders: ["openAI"],
-      agentAllowedCapabilities: ["execute_code", "web_search", "file_search"],
-      agentCitationsTotalLimit: 10,
-      agentCitationsPerFileLimit: 3,
-      agentCitationsThreshold: 0.7,
-
-      // File Configuration
-      filesMaxSizeMB: 10,
-      filesAllowedMimeTypes: ["text/plain", "application/pdf", "image/jpeg", "image/png"],
-      filesMaxFilesPerRequest: 5,
-      filesClientResizeImages: true,
-
-      // Rate Limits
-      rateLimitsPerUser: 100,
-      rateLimitsPerIP: 500,
-      rateLimitsUploads: 50,
-      rateLimitsImports: 10,
-      rateLimitsTTS: 100,
-      rateLimitsSTT: 100,
-
-      // Authentication
-      authAllowedDomains: [],
-      authSocialLogins: [],
-      authLoginOrder: ["email"],
-
-      // Memory System
-      memoryEnabled: false,
-      memoryPersonalization: false,
-      memoryWindowSize: 4000,
-      memoryMaxTokens: 10000,
-      memoryAgent: "openAI",
-
-      // Actions/Tools
-      actionsAllowedDomains: [],
-
-      // Temporary Chats
-      temporaryChatsRetentionHours: 720,
+      imageOutputType: "png",
+      temporaryChatRetention: 720,
+      
+      // Basic Server Configuration
+      host: "0.0.0.0",
+      port: 3080,
+      debugLogging: false,
+      
+      // Security (empty for security)
+      jwtSecret: "",
+      jwtRefreshSecret: "",
+      credsKey: "",
+      credsIV: "",
+      
+      // Database (empty for security)
+      mongoUri: "",
+      redisUri: "",
+      mongoDbName: "LibreChat",
+      
+      // API Keys (empty for security) 
+      openaiApiKey: "",
+      
+      // UI Customization
+      appTitle: "",
+      customFooter: "",
+      customWelcome: "",
 
       // OCR Configuration
       ocrProvider: "mistral",
@@ -290,14 +245,13 @@ export class FileStorage implements IStorage {
   private createDefaultTestConfiguration(): Configuration {
     // Configuration with Frits Notes MCP server from provided YAML
     return {
-      // Global Core Settings
-      configVer: "1.2.8",
+      // LibreChat RC4 Core Settings
+      version: "0.8.0-rc4",
       cache: true,
       fileStrategy: "local",
       secureImageLinks: false,
       imageOutputType: "url",
-      enableConversations: true,
-      enableRegistration: true,
+
 
       // UI/Visibility Settings
       showModelSelect: true,
@@ -387,7 +341,7 @@ export class FileStorage implements IStorage {
         headers: {
           "Authorization": "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
         },
-        env: {},
+        customUserVars: {},
         instructions: `This is Frits Notes - a shared knowledge system for the organization.
 
 🔧 PROACTIVE BEHAVIOR: Check for notifications naturally in conversations!
@@ -577,7 +531,7 @@ When someone wants to share information company-wide, create a topic in Frits No
     if (this.defaultProfileId) {
       const defaultProfile = await this.getProfile(this.defaultProfileId);
       if (defaultProfile) {
-        // Ensure security fields have fallback values for API compatibility
+        // Ensure security fields have fallback values
         return {
           ...defaultProfile.configuration,
           jwtSecret: defaultProfile.configuration.jwtSecret || "",
