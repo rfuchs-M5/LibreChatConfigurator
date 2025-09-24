@@ -799,13 +799,14 @@ export default function Home() {
               <br /><br />
               <strong>This will:</strong>
               <ul className="mt-2 space-y-1 text-sm">
-                <li>• Test JSON export validation with your current configuration</li>
+                <li>• <span className="text-red-600 font-medium">Overwrite all current content and configuration</span></li>
+                <li>• Test JSON export validation with test data</li>
                 <li>• Generate and validate ENV and YAML files</li>
                 <li>• Run extensive package generation tests</li>
                 <li>• <span className="text-amber-600 font-medium">Potentially generate large test files</span></li>
               </ul>
               <br />
-              The self-test is comprehensive and may take some time to complete.
+              <strong className="text-red-600">WARNING:</strong> Your current configuration will be replaced with test data. Save your profile first if you want to keep your current settings.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
