@@ -327,7 +327,7 @@ export function ConfigurationTabs({
       icon: Bot,
       description: "AI Agents Configuration",
       color: "from-emerald-400 to-emerald-500",
-      settings: ["agentsRecursionLimit", "agentsMaxRecursionLimit", "agentsDisableBuilder", "agentsMaxCitations", "agentsMaxCitationsPerFile", "agentsMinRelevanceScore", "agentsCapabilities"],
+      settings: ["endpoints.agents.recursionLimit", "endpoints.agents.maxRecursionLimit", "endpoints.agents.disableBuilder", "endpoints.agents.maxCitations", "endpoints.agents.maxCitationsPerFile", "endpoints.agents.minRelevanceScore", "endpoints.agents.capabilities"],
     },
     {
       id: "actions",
@@ -1094,13 +1094,77 @@ export function ConfigurationTabs({
       },
       
       // Agents Configuration
-      agentsRecursionLimit: { type: "number", description: "Agent recursion limit", label: "Recursion Limit" },
-      agentsMaxRecursionLimit: { type: "number", description: "Maximum agent recursion limit", label: "Max Recursion Limit" },
-      agentsDisableBuilder: { type: "boolean", description: "Disable agent builder", label: "Disable Agent Builder" },
-      agentsMaxCitations: { type: "number", description: "Maximum citations per agent", label: "Max Citations" },
-      agentsMaxCitationsPerFile: { type: "number", description: "Maximum citations per file", label: "Max Citations Per File" },
-      agentsMinRelevanceScore: { type: "number", description: "Minimum relevance score", label: "Min Relevance Score" },
-      agentsCapabilities: { type: "array", description: "Agent capabilities", label: "Capabilities" },
+      "endpoints.agents.recursionLimit": { 
+        type: "number", 
+        description: "Maximum depth of recursive reasoning for agent chains (1-100)", 
+        label: "Recursion Limit",
+        placeholder: "25",
+        min: 1,
+        max: 100,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
+      "endpoints.agents.maxRecursionLimit": { 
+        type: "number", 
+        description: "Maximum allowed recursion limit that can be set (1-200)", 
+        label: "Max Recursion Limit",
+        placeholder: "25",
+        min: 1,
+        max: 200,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
+      "endpoints.agents.disableBuilder": { 
+        type: "boolean", 
+        description: "Disable the built-in agent builder interface", 
+        label: "Disable Agent Builder",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
+      "endpoints.agents.maxCitations": { 
+        type: "number", 
+        description: "Maximum number of citations per agent response (1-100)", 
+        label: "Max Citations",
+        placeholder: "30",
+        min: 1,
+        max: 100,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
+      "endpoints.agents.maxCitationsPerFile": { 
+        type: "number", 
+        description: "Maximum citations allowed from a single file (1-20)", 
+        label: "Max Citations Per File",
+        placeholder: "7",
+        min: 1,
+        max: 20,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
+      "endpoints.agents.minRelevanceScore": { 
+        type: "number", 
+        description: "Minimum relevance score for including search results (0.0-1.0)", 
+        label: "Min Relevance Score",
+        placeholder: "0.45",
+        min: 0,
+        max: 1,
+        step: 0.01,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
+      "endpoints.agents.capabilities": { 
+        type: "array", 
+        description: "Array of capabilities available to agents", 
+        label: "Agent Capabilities",
+        options: [
+          { value: "execute_code", label: "Execute Code" },
+          { value: "file_search", label: "File Search" },
+          { value: "actions", label: "Actions" },
+          { value: "tools", label: "Tools" }
+        ],
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Agents Configuration"
+      },
       
       // Actions Configuration
       actionsAllowedDomains: { type: "array", description: "Allowed domains for actions", label: "Allowed Domains" },
