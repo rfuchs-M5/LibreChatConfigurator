@@ -28,7 +28,12 @@ import {
   Download,
   Plus,
   Trash2,
-  X
+  X,
+  Settings,
+  Mic,
+  Volume2,
+  Users,
+  Zap
 } from "lucide-react";
 
 interface ConfigurationTabsProps {
@@ -233,7 +238,7 @@ export function ConfigurationTabs({
       icon: Network,
       description: "Model Context Protocol",
       color: "from-rose-500 to-rose-600",
-      settings: ["mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
+      settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
     },
     {
       id: "users",
@@ -269,6 +274,69 @@ export function ConfigurationTabs({
     },
   ];
 
+  // Add new comprehensive tabs for missing functionality
+  const newTabs = [
+    {
+      id: "core-settings",
+      label: "Core Settings",
+      icon: Settings,
+      description: "Version, Cache, File Strategy",
+      color: "from-indigo-400 to-indigo-500",
+      settings: ["version", "cache", "fileStrategy", "secureImageLinks", "imageOutputType", "filteredTools", "includedTools", "temporaryChatRetention"],
+    },
+    {
+      id: "ocr",
+      label: "OCR",
+      icon: Camera,
+      description: "Optical Character Recognition",
+      color: "from-purple-400 to-purple-500",
+      settings: ["ocrApiKey", "ocrBaseURL", "ocrStrategy", "ocrMistralModel"],
+    },
+    {
+      id: "stt",
+      label: "Speech-to-Text",
+      icon: Mic,
+      description: "Speech Recognition",
+      color: "from-green-400 to-green-500",
+      settings: ["sttProvider", "sttModel", "sttApiKey", "sttBaseURL", "sttLanguage", "sttStreaming", "sttPunctuation", "sttProfanityFilter"],
+    },
+    {
+      id: "tts",
+      label: "Text-to-Speech",
+      icon: Volume2,
+      description: "Voice Synthesis",
+      color: "from-blue-400 to-blue-500",
+      settings: ["ttsProvider", "ttsModel", "ttsVoice", "ttsApiKey", "ttsBaseURL", "ttsSpeed", "ttsQuality", "ttsStreaming"],
+    },
+    {
+      id: "assistants",
+      label: "Assistants",
+      icon: Users,
+      description: "AI Assistants Configuration",
+      color: "from-cyan-400 to-cyan-500",
+      settings: ["assistantsDisableBuilder", "assistantsPollIntervalMs", "assistantsTimeoutMs", "assistantsSupportedIds", "assistantsExcludedIds", "assistantsPrivateAssistants", "assistantsRetrievalModels", "assistantsCapabilities"],
+    },
+    {
+      id: "agents",
+      label: "Agents",
+      icon: Bot,
+      description: "AI Agents Configuration",
+      color: "from-emerald-400 to-emerald-500",
+      settings: ["agentsRecursionLimit", "agentsMaxRecursionLimit", "agentsDisableBuilder", "agentsMaxCitations", "agentsMaxCitationsPerFile", "agentsMinRelevanceScore", "agentsCapabilities"],
+    },
+    {
+      id: "actions",
+      label: "Actions",
+      icon: Zap,
+      description: "Actions Configuration",
+      color: "from-yellow-400 to-yellow-500",
+      settings: ["actionsAllowedDomains"],
+    },
+  ];
+
+  // Combine original tabs with new tabs
+  const allTabs = [...tabs, ...newTabs];
+
   const getTabProgress = (tabSettings: string[]) => {
     if (tabSettings.length === 0) return 100;
     const validSettings = tabSettings.filter(setting => {
@@ -278,7 +346,7 @@ export function ConfigurationTabs({
     return Math.round((validSettings.length / tabSettings.length) * 100);
   };
 
-  const filteredTabs = tabs.filter(tab => 
+  const filteredTabs = allTabs.filter(tab => 
     searchQuery === "" || 
     tab.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tab.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -706,6 +774,67 @@ export function ConfigurationTabs({
       
       // Miscellaneous
       cdnProvider: { type: "text", description: "CDN provider", label: "CDN Provider" },
+      
+      // MCP Servers
+      mcpServers: { type: "object", description: "Model Context Protocol servers configuration", label: "MCP Servers" },
+      
+      // Core Settings
+      version: { type: "text", description: "LibreChat version", label: "Version" },
+      cache: { type: "boolean", description: "Enable caching", label: "Cache" },
+      fileStrategy: { type: "text", description: "File storage strategy", label: "File Strategy" },
+      secureImageLinks: { type: "boolean", description: "Use secure image links", label: "Secure Image Links" },
+      imageOutputType: { type: "select", description: "Image output format", label: "Image Output Type" },
+      filteredTools: { type: "array", description: "Filtered tools list", label: "Filtered Tools" },
+      includedTools: { type: "array", description: "Included tools list", label: "Included Tools" },
+      temporaryChatRetention: { type: "number", description: "Temporary chat retention hours", label: "Chat Retention Hours" },
+      
+      // OCR Configuration
+      ocrApiKey: { type: "password", description: "OCR API key", label: "OCR API Key" },
+      ocrBaseURL: { type: "text", description: "OCR base URL", label: "OCR Base URL" },
+      ocrStrategy: { type: "select", description: "OCR processing strategy", label: "OCR Strategy" },
+      ocrMistralModel: { type: "text", description: "OCR Mistral model", label: "OCR Mistral Model" },
+      
+      // Speech-to-Text Configuration
+      sttProvider: { type: "select", description: "STT service provider", label: "STT Provider" },
+      sttModel: { type: "text", description: "STT model name", label: "STT Model" },
+      sttApiKey: { type: "password", description: "STT API key", label: "STT API Key" },
+      sttBaseURL: { type: "text", description: "STT base URL", label: "STT Base URL" },
+      sttLanguage: { type: "text", description: "STT language", label: "STT Language" },
+      sttStreaming: { type: "boolean", description: "Enable STT streaming", label: "STT Streaming" },
+      sttPunctuation: { type: "boolean", description: "Enable STT punctuation", label: "STT Punctuation" },
+      sttProfanityFilter: { type: "boolean", description: "Enable STT profanity filter", label: "STT Profanity Filter" },
+      
+      // Text-to-Speech Configuration
+      ttsProvider: { type: "select", description: "TTS service provider", label: "TTS Provider" },
+      ttsModel: { type: "text", description: "TTS model name", label: "TTS Model" },
+      ttsVoice: { type: "text", description: "TTS voice", label: "TTS Voice" },
+      ttsApiKey: { type: "password", description: "TTS API key", label: "TTS API Key" },
+      ttsBaseURL: { type: "text", description: "TTS base URL", label: "TTS Base URL" },
+      ttsSpeed: { type: "number", description: "TTS speech speed", label: "TTS Speed" },
+      ttsQuality: { type: "select", description: "TTS audio quality", label: "TTS Quality" },
+      ttsStreaming: { type: "boolean", description: "Enable TTS streaming", label: "TTS Streaming" },
+      
+      // Assistants Configuration
+      assistantsDisableBuilder: { type: "boolean", description: "Disable assistant builder", label: "Disable Assistant Builder" },
+      assistantsPollIntervalMs: { type: "number", description: "Assistant polling interval in ms", label: "Poll Interval (ms)" },
+      assistantsTimeoutMs: { type: "number", description: "Assistant timeout in ms", label: "Timeout (ms)" },
+      assistantsSupportedIds: { type: "array", description: "Supported assistant IDs", label: "Supported IDs" },
+      assistantsExcludedIds: { type: "array", description: "Excluded assistant IDs", label: "Excluded IDs" },
+      assistantsPrivateAssistants: { type: "boolean", description: "Enable private assistants", label: "Private Assistants" },
+      assistantsRetrievalModels: { type: "array", description: "Assistant retrieval models", label: "Retrieval Models" },
+      assistantsCapabilities: { type: "array", description: "Assistant capabilities", label: "Capabilities" },
+      
+      // Agents Configuration
+      agentsRecursionLimit: { type: "number", description: "Agent recursion limit", label: "Recursion Limit" },
+      agentsMaxRecursionLimit: { type: "number", description: "Maximum agent recursion limit", label: "Max Recursion Limit" },
+      agentsDisableBuilder: { type: "boolean", description: "Disable agent builder", label: "Disable Agent Builder" },
+      agentsMaxCitations: { type: "number", description: "Maximum citations per agent", label: "Max Citations" },
+      agentsMaxCitationsPerFile: { type: "number", description: "Maximum citations per file", label: "Max Citations Per File" },
+      agentsMinRelevanceScore: { type: "number", description: "Minimum relevance score", label: "Min Relevance Score" },
+      agentsCapabilities: { type: "array", description: "Agent capabilities", label: "Capabilities" },
+      
+      // Actions Configuration
+      actionsAllowedDomains: { type: "array", description: "Allowed domains for actions", label: "Allowed Domains" },
     };
     
     return fieldMap[fieldName] || { type: "text", description: `Configuration for ${fieldName}`, label: fieldName };
@@ -768,7 +897,7 @@ export function ConfigurationTabs({
       <main className="flex-1 p-8 overflow-y-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           {/* Dynamic Tab Content Generation */}
-          {tabs.map((tab) => (
+          {allTabs.map((tab) => (
             <TabsContent key={tab.id} value={tab.id}>
               <div className="space-y-8">
                 <Card className="card-hover">
