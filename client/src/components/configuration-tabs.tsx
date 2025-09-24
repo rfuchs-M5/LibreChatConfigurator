@@ -303,7 +303,7 @@ export function ConfigurationTabs({
       icon: Mic,
       description: "Speech Recognition",
       color: "from-green-400 to-green-500",
-      settings: ["sttProvider", "sttModel", "sttApiKey", "sttBaseURL", "sttLanguage", "sttStreaming", "sttPunctuation", "sttProfanityFilter"],
+      settings: ["stt.provider", "stt.model", "stt.apiKey", "stt.baseURL", "stt.language", "stt.streaming", "stt.punctuation", "stt.profanityFilter"],
     },
     {
       id: "tts",
@@ -404,6 +404,8 @@ export function ConfigurationTabs({
       label: string;
       docUrl?: string;
       docSection?: string;
+      placeholder?: string;
+      options?: Array<{ value: string; label: string }> | string[];
     }> = {
       // App Settings
       appTitle: { 
@@ -874,15 +876,74 @@ export function ConfigurationTabs({
       includedTools: { type: "array", description: "Included tools list", label: "Included Tools" },
       temporaryChatRetention: { type: "number", description: "Temporary chat retention hours", label: "Chat Retention Hours" },
       
-      // Speech-to-Text Configuration
-      sttProvider: { type: "select", description: "STT service provider", label: "STT Provider" },
-      sttModel: { type: "text", description: "STT model name", label: "STT Model" },
-      sttApiKey: { type: "password", description: "STT API key", label: "STT API Key" },
-      sttBaseURL: { type: "text", description: "STT base URL", label: "STT Base URL" },
-      sttLanguage: { type: "text", description: "STT language", label: "STT Language" },
-      sttStreaming: { type: "boolean", description: "Enable STT streaming", label: "STT Streaming" },
-      sttPunctuation: { type: "boolean", description: "Enable STT punctuation", label: "STT Punctuation" },
-      sttProfanityFilter: { type: "boolean", description: "Enable STT profanity filter", label: "STT Profanity Filter" },
+      // Speech-to-Text Configuration  
+      "stt.provider": { 
+        type: "select", 
+        description: "STT service provider - OpenAI, Azure, Google, Deepgram, AssemblyAI, or Local", 
+        label: "STT Provider",
+        options: [
+          { value: "openai", label: "OpenAI" },
+          { value: "azure", label: "Azure" },
+          { value: "google", label: "Google" },
+          { value: "deepgram", label: "Deepgram" },
+          { value: "assemblyai", label: "AssemblyAI" },
+          { value: "local", label: "Local" }
+        ],
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.model": { 
+        type: "text", 
+        description: "STT model name to use with the selected provider", 
+        label: "STT Model",
+        placeholder: "whisper-1",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.apiKey": { 
+        type: "password", 
+        description: "API key for STT service", 
+        label: "STT API Key",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.baseURL": { 
+        type: "text", 
+        description: "Base URL for STT service API", 
+        label: "STT Base URL",
+        placeholder: "https://api.openai.com/v1",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.language": { 
+        type: "text", 
+        description: "Language for STT processing (e.g., en, es, fr, de)", 
+        label: "STT Language",
+        placeholder: "en",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.streaming": { 
+        type: "boolean", 
+        description: "Enable real-time STT streaming processing", 
+        label: "STT Streaming",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.punctuation": { 
+        type: "boolean", 
+        description: "Enable automatic punctuation in STT output", 
+        label: "STT Punctuation",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
+      "stt.profanityFilter": { 
+        type: "boolean", 
+        description: "Enable profanity filtering in STT output", 
+        label: "STT Profanity Filter",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/stt",
+        docSection: "STT Configuration"
+      },
       
       // Text-to-Speech Configuration
       ttsProvider: { type: "select", description: "TTS service provider", label: "TTS Provider" },
@@ -1096,7 +1157,7 @@ export function ConfigurationTabs({
                             return ['development', 'production'];
                           case 'ocrStrategy':
                             return ['mistral_ocr', 'custom_ocr'];
-                          case 'sttProvider':
+                          case 'stt.provider':
                             return ['openai', 'azure', 'google', 'deepgram', 'assemblyai', 'local'];
                           case 'ttsProvider':
                             return ['openai', 'azure', 'google', 'elevenlabs', 'aws', 'local'];
