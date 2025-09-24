@@ -658,9 +658,6 @@ ${config.consoleJSON !== undefined ? `CONSOLE_JSON=${config.consoleJSON}` : '# C
 # Miscellaneous Configuration
 # =============================================================================
 ${config.cdnProvider ? `CDN_PROVIDER=${config.cdnProvider}` : '# CDN_PROVIDER='}
-${config.googleApiKey ? `GOOGLE_API_KEY=${config.googleApiKey}` : '# GOOGLE_API_KEY=your_google_api_key_here'}
-${config.groqApiKey ? `GROQ_API_KEY=${config.groqApiKey}` : '# GROQ_API_KEY=your_groq_api_key_here'}
-${config.mistralApiKey ? `MISTRAL_API_KEY=${config.mistralApiKey}` : '# MISTRAL_API_KEY=your_mistral_api_key_here'}
 
 # Search Service API Keys
 ${config.serperApiKey ? `SERPER_API_KEY=${config.serperApiKey}` : '# SERPER_API_KEY=your_serper_api_key_here'}
@@ -678,10 +675,9 @@ ${config.ocrApiKey ? `OCR_API_KEY=${config.ocrApiKey}` : '# OCR_API_KEY=your_ocr
 ${config.ocrApiBase ? `OCR_BASEURL=${config.ocrApiBase}` : '# OCR_BASEURL=https://api.mistral.ai/v1'}
 
 # =============================================================================
-# Database Configuration
+# Advanced Database Configuration
 # =============================================================================
-${config.mongoUri ? `MONGODB_URI=${config.mongoUri}` : '# MONGODB_URI=your_mongodb_connection_string'}
-${config.redisUri ? `REDIS_URI=${config.redisUri}` : '# REDIS_URI=your_redis_connection_string'}
+# Note: Primary database URIs are configured in the main Database Configuration section above
 
 # Advanced Configuration
 # =============================================================================
@@ -694,11 +690,9 @@ ${config.basePath ? `BASE_PATH=${config.basePath}` : '# BASE_PATH=/subdirectory'
 ${config.appUrl ? `APP_URL=${config.appUrl}` : '# APP_URL=https://yourdomain.com'}
 ${config.publicSubPath ? `PUBLIC_SUB_PATH=${config.publicSubPath}` : '# PUBLIC_SUB_PATH=/public'}
 
-# Optional Configuration
+# Additional Features Configuration
 # =============================================================================
-${config.cdnProvider ? `CDN_PROVIDER=${config.cdnProvider}` : '# CDN_PROVIDER='}
-${config.customFooter ? `CUSTOM_FOOTER=${config.customFooter}` : '# CUSTOM_FOOTER='}
-${config.customWelcome ? `CUSTOM_WELCOME=${config.customWelcome}` : '# CUSTOM_WELCOME='}
+# Note: App customization fields (CUSTOM_FOOTER, CUSTOM_WELCOME) are configured in the App Configuration section above
 `;
 }
 
