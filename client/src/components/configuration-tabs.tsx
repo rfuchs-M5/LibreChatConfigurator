@@ -781,7 +781,13 @@ export function ConfigurationTabs({
       cdnProvider: { type: "text", description: "CDN provider", label: "CDN Provider" },
       
       // MCP Servers
-      mcpServers: { type: "object", description: "Model Context Protocol servers configuration", label: "MCP Servers" },
+      mcpServers: { 
+        type: "object", 
+        description: "MCP servers configuration. Can be object with server names as keys, or array of server objects. Each server supports: type (stdio/websocket/sse/streamable-http), command, args, url, timeout, headers, serverInstructions, iconPath, chatMenu, customUserVars.", 
+        label: "MCP Servers",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/mcp",
+        docSection: "MCP Configuration"
+      },
       
       // Core Settings
       version: { type: "text", description: "LibreChat version", label: "Version" },
