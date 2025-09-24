@@ -295,7 +295,7 @@ export function ConfigurationTabs({
       icon: Camera,
       description: "Optical Character Recognition",
       color: "from-purple-400 to-purple-500",
-      settings: ["ocrApiKey", "ocrBaseURL", "ocrStrategy", "ocrMistralModel"],
+      settings: ["ocr.apiKey", "ocr.baseURL", "ocr.strategy", "ocr.mistralModel"],
     },
     {
       id: "stt",
@@ -342,10 +342,49 @@ export function ConfigurationTabs({
   // Combine original tabs with new tabs
   const allTabs = [...tabs, ...newTabs];
 
+  // Helper function to get nested value using dotted path
+  const getNestedValue = (obj: any, path: string): any => {
+    if (!path.includes('.')) {
+      return obj[path as keyof Configuration];
+    }
+    return path.split('.').reduce((current, key) => {
+      if (current == null || typeof current !== 'object') {
+        return undefined;
+      }
+      return current[key];
+    }, obj);
+  };
+
+  // Helper function to set nested value using dotted path
+  const setNestedValue = (obj: any, path: string, value: any): any => {
+    if (!path.includes('.')) {
+      return { ...obj, [path]: value };
+    }
+    
+    const keys = path.split('.');
+    const result = { ...obj };
+    let current = result;
+    
+    // Navigate to the parent object, creating nested objects as needed
+    for (let i = 0; i < keys.length - 1; i++) {
+      const key = keys[i];
+      if (!(key in current) || current[key] === null || typeof current[key] !== 'object') {
+        current[key] = {};
+      } else {
+        current[key] = { ...current[key] };
+      }
+      current = current[key];
+    }
+    
+    // Set the final value
+    current[keys[keys.length - 1]] = value;
+    return result;
+  };
+
   const getTabProgress = (tabSettings: string[]) => {
     if (tabSettings.length === 0) return 100;
     const validSettings = tabSettings.filter(setting => {
-      const value = configuration[setting as keyof Configuration];
+      const value = getNestedValue(configuration, setting);
       return value !== undefined && value !== null && value !== "";
     });
     return Math.round((validSettings.length / tabSettings.length) * 100);
@@ -788,6 +827,42 @@ export function ConfigurationTabs({
         docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/mcp",
         docSection: "MCP Configuration"
       },
+
+      // OCR Configuration
+      "ocr.apiKey": { 
+        type: "password", 
+        description: "API key for OCR service", 
+        label: "OCR API Key",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/ocr",
+        docSection: "OCR Configuration" 
+      },
+      "ocr.baseURL": { 
+        type: "text", 
+        description: "Base URL for OCR service API", 
+        label: "OCR Base URL",
+        placeholder: "https://api.ocr-service.com/v1",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/ocr",
+        docSection: "OCR Configuration" 
+      },
+      "ocr.strategy": { 
+        type: "select", 
+        description: "OCR processing strategy - Mistral OCR or custom OCR service", 
+        label: "OCR Strategy",
+        options: [
+          { value: "mistral_ocr", label: "Mistral OCR" },
+          { value: "custom_ocr", label: "Custom OCR" }
+        ],
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/ocr",
+        docSection: "OCR Configuration" 
+      },
+      "ocr.mistralModel": { 
+        type: "text", 
+        description: "Mistral model to use for OCR processing", 
+        label: "OCR Mistral Model",
+        placeholder: "mistral-7b-instruct-v0.1",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/ocr",
+        docSection: "OCR Configuration" 
+      },
       
       // Core Settings
       version: { type: "text", description: "LibreChat version", label: "Version" },
@@ -798,12 +873,6 @@ export function ConfigurationTabs({
       filteredTools: { type: "array", description: "Filtered tools list", label: "Filtered Tools" },
       includedTools: { type: "array", description: "Included tools list", label: "Included Tools" },
       temporaryChatRetention: { type: "number", description: "Temporary chat retention hours", label: "Chat Retention Hours" },
-      
-      // OCR Configuration
-      ocrApiKey: { type: "password", description: "OCR API key", label: "OCR API Key" },
-      ocrBaseURL: { type: "text", description: "OCR base URL", label: "OCR Base URL" },
-      ocrStrategy: { type: "select", description: "OCR processing strategy", label: "OCR Strategy" },
-      ocrMistralModel: { type: "text", description: "OCR Mistral model", label: "OCR Mistral Model" },
       
       // Speech-to-Text Configuration
       sttProvider: { type: "select", description: "STT service provider", label: "STT Provider" },
@@ -1056,8 +1125,8 @@ export function ConfigurationTabs({
                           docUrl={fieldInfo.docUrl}
                           docSection={fieldInfo.docSection}
                           type={fieldInfo.type}
-                          value={configuration[setting as keyof Configuration] || ""}
-                          onChange={(value) => onConfigurationChange({ [setting]: value })}
+                          value={getNestedValue(configuration, setting) || ""}
+                          onChange={(value) => onConfigurationChange(setNestedValue(configuration, setting, value))}
                           options={fieldInfo.type === 'select' ? getSelectOptions(setting) : undefined}
                           data-testid={`input-${setting}`}
                         />
