@@ -286,7 +286,13 @@ export function ConfigurationTabs({
 
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
-    const fieldMap: Record<string, { type: string; description: string; label: string }> = {
+    const fieldMap: Record<string, { 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object"; 
+      description: string; 
+      label: string;
+      docUrl?: string;
+      docSection?: string;
+    }> = {
       // App Settings
       appTitle: { type: "text", description: "Custom application title (APP_TITLE)", label: "App Title" },
       customWelcome: { type: "textarea", description: "Custom welcome message", label: "Welcome Message" },
@@ -587,6 +593,8 @@ export function ConfigurationTabs({
                           key={setting}
                           label={fieldInfo.label}
                           description={fieldInfo.description}
+                          docUrl={fieldInfo.docUrl}
+                          docSection={fieldInfo.docSection}
                           type={fieldInfo.type}
                           value={configuration[setting as keyof Configuration] || ""}
                           onChange={(value) => onConfigurationChange({ [setting]: value })}

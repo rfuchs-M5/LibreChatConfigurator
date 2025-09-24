@@ -5,13 +5,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Info, Eye, EyeOff, Plus, X } from "lucide-react";
+import { Info, Eye, EyeOff, Plus, X, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SettingInputProps {
   label: string;
   description?: string;
+  docUrl?: string;
+  docSection?: string;
   type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object";
   value: any;
   onChange: (value: any) => void;
@@ -26,6 +28,8 @@ interface SettingInputProps {
 export function SettingInput({
   label,
   description,
+  docUrl,
+  docSection,
   type,
   value,
   onChange,
@@ -218,8 +222,24 @@ export function SettingInput({
             <TooltipTrigger>
               <Info className="h-4 w-4 text-muted-foreground cursor-help" />
             </TooltipTrigger>
-            <TooltipContent>
-              <p className="max-w-xs">{description}</p>
+            <TooltipContent className="max-w-sm">
+              <div className="space-y-3">
+                <p className="text-sm">{description}</p>
+                {docUrl && (
+                  <div className="border-t pt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs gap-2"
+                      onClick={() => window.open(docUrl, '_blank')}
+                      data-testid={`${testId}-docs`}
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      {docSection ? `${docSection} Docs` : 'Learn More'}
+                    </Button>
+                  </div>
+                )}
+              </div>
             </TooltipContent>
           </Tooltip>
         )}
