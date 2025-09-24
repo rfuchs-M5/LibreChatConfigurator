@@ -171,7 +171,7 @@ export function ConfigurationTabs({
       icon: Search,
       description: "Web Search & External APIs",
       color: "from-violet-500 to-violet-600",
-      settings: ["googleSearchApiKey", "googleCSEId", "bingSearchApiKey", "openweatherApiKey", "librechatCodeApiKey", "webSearch.serperApiKey", "webSearch.searxngInstanceUrl", "webSearch.searxngApiKey", "webSearch.firecrawlApiKey", "webSearch.firecrawlApiUrl", "webSearch.jinaApiKey", "webSearch.cohereApiKey", "webSearch.braveApiKey", "webSearch.tavilyApiKey", "webSearch.searchProvider", "webSearch.scraperType", "webSearch.rerankerType", "webSearch.scraperTimeout", "webSearch.safeSearch"],
+      settings: ["googleSearchApiKey", "googleCSEId", "bingSearchApiKey", "openweatherApiKey", "librechatCodeApiKey", "webSearch"],
     },
     {
       id: "rag",
@@ -399,7 +399,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search"; 
       description: string; 
       label: string;
       docUrl?: string;
@@ -1191,21 +1191,14 @@ export function ConfigurationTabs({
       "fileConfig.clientImageResize.quality": { type: "number", description: "Image resize quality (0.1-1.0)", label: "Resize Quality" },
       "fileConfig.clientImageResize.compressFormat": { type: "select", description: "Image compression format", label: "Compress Format" },
       
-      // Web Search Nested Object Fields (path-based)
-      "webSearch.serperApiKey": { type: "password", description: "Serper API key for web search", label: "Serper API Key" },
-      "webSearch.searxngInstanceUrl": { type: "text", description: "SearXNG instance URL", label: "SearXNG URL" },
-      "webSearch.searxngApiKey": { type: "password", description: "SearXNG API key", label: "SearXNG API Key" },
-      "webSearch.firecrawlApiKey": { type: "password", description: "Firecrawl API key", label: "Firecrawl API Key" },
-      "webSearch.firecrawlApiUrl": { type: "text", description: "Firecrawl API URL", label: "Firecrawl API URL" },
-      "webSearch.jinaApiKey": { type: "password", description: "Jina API key for reranking", label: "Jina API Key" },
-      "webSearch.cohereApiKey": { type: "password", description: "Cohere API key for reranking", label: "Cohere API Key" },
-      "webSearch.braveApiKey": { type: "password", description: "Brave Search API key", label: "Brave API Key" },
-      "webSearch.tavilyApiKey": { type: "password", description: "Tavily Search API key", label: "Tavily API Key" },
-      "webSearch.searchProvider": { type: "select", description: "Web search provider", label: "Search Provider" },
-      "webSearch.scraperType": { type: "select", description: "Web scraper type", label: "Scraper Type" },
-      "webSearch.rerankerType": { type: "select", description: "Search reranker type", label: "Reranker Type" },
-      "webSearch.scraperTimeout": { type: "number", description: "Scraper timeout in milliseconds", label: "Scraper Timeout (ms)" },
-      "webSearch.safeSearch": { type: "boolean", description: "Enable safe search filtering", label: "Safe Search" },
+      // Web Search Configuration - Progressive Disclosure Interface
+      webSearch: { 
+        type: "web-search", 
+        description: "Web search configuration with smart progressive disclosure - choose providers and only see relevant API key fields", 
+        label: "Web Search Configuration",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/websearch",
+        docSection: "Web Search Configuration"
+      },
       
       // Rate Limits Nested Object Fields
       rateLimitsFileUploadsIpMax: { type: "number", description: "Max file uploads per IP", label: "File Uploads IP Max" },
@@ -1353,12 +1346,7 @@ export function ConfigurationTabs({
                             return ['openai', 'azure', 'google', 'elevenlabs', 'aws', 'local'];
                           case 'tts.quality':
                             return ['standard', 'hd'];
-                          case 'webSearch.searchProvider':
-                            return ['serper', 'searxng', 'brave', 'tavily'];
-                          case 'webSearch.scraperType':
-                            return ['firecrawl', 'serper', 'brave'];
-                          case 'webSearch.rerankerType':
-                            return ['jina', 'cohere'];
+                          // webSearch provider options now handled by specialized editor
                           // mcpServersType is now handled by specialized MCP editor
                           case 'fileConfig.clientImageResize.compressFormat':
                             return ['jpeg', 'webp'];
