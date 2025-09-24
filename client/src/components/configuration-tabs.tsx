@@ -243,7 +243,7 @@ export function ConfigurationTabs({
       icon: Network,
       description: "Model Context Protocol",
       color: "from-rose-500 to-rose-600",
-      settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout", "mcpServersType", "mcpServersCommand", "mcpServersArgs", "mcpServersUrl", "mcpServersTimeout", "mcpServersInitTimeout", "mcpServersHeaders", "mcpServersServerInstructions", "mcpServersIconPath", "mcpServersChatMenu", "mcpServersCustomUserVars"],
+      settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
     },
     {
       id: "users",
@@ -399,13 +399,16 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers"; 
       description: string; 
       label: string;
       docUrl?: string;
       docSection?: string;
       placeholder?: string;
       options?: Array<{ value: string; label: string }> | string[];
+      min?: number;
+      max?: number;
+      step?: number;
     }> = {
       // App Settings
       appTitle: { 
@@ -823,8 +826,8 @@ export function ConfigurationTabs({
       
       // MCP Servers
       mcpServers: { 
-        type: "object", 
-        description: "MCP servers configuration. Can be object with server names as keys, or array of server objects. Each server supports: type (stdio/websocket/sse/streamable-http), command, args, url, timeout, headers, serverInstructions, iconPath, chatMenu, customUserVars.", 
+        type: "mcp-servers", 
+        description: "MCP servers configuration. Each server supports: type (stdio/websocket/sse/streamable-http), command, args, url, timeout, headers, serverInstructions, iconPath, chatMenu, customUserVars.", 
         label: "MCP Servers",
         docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/mcp",
         docSection: "MCP Configuration"
@@ -1247,18 +1250,7 @@ export function ConfigurationTabs({
       "interface.marketplace.use": { type: "boolean", description: "Enable marketplace usage", label: "Marketplace" },
       "interface.fileCitations": { type: "boolean", description: "Show file citations", label: "File Citations" },
       
-      // MCP Servers Nested Object Fields
-      mcpServersType: { type: "select", description: "MCP server connection type", label: "Server Type" },
-      mcpServersCommand: { type: "text", description: "Command to execute MCP server", label: "Command" },
-      mcpServersArgs: { type: "array", description: "Command arguments for MCP server", label: "Arguments" },
-      mcpServersUrl: { type: "text", description: "MCP server URL", label: "Server URL" },
-      mcpServersTimeout: { type: "number", description: "MCP server timeout in ms", label: "Timeout (ms)" },
-      mcpServersInitTimeout: { type: "number", description: "MCP server init timeout in ms", label: "Init Timeout (ms)" },
-      mcpServersHeaders: { type: "object", description: "HTTP headers for MCP server", label: "Headers" },
-      mcpServersServerInstructions: { type: "textarea", description: "Instructions for MCP server", label: "Server Instructions" },
-      mcpServersIconPath: { type: "text", description: "Icon path for MCP server", label: "Icon Path" },
-      mcpServersChatMenu: { type: "boolean", description: "Show MCP server in chat menu", label: "Show in Chat Menu" },
-      mcpServersCustomUserVars: { type: "object", description: "Custom user variables for MCP server", label: "Custom User Variables" },
+      // MCP Servers - now handled by specialized editor, so no individual nested fields needed
     };
     
     return fieldMap[fieldName] || { type: "text", description: `Configuration for ${fieldName}`, label: fieldName };
@@ -1367,8 +1359,7 @@ export function ConfigurationTabs({
                             return ['firecrawl', 'serper', 'brave'];
                           case 'webSearch.rerankerType':
                             return ['jina', 'cohere'];
-                          case 'mcpServersType':
-                            return ['stdio', 'websocket', 'sse', 'streamable-http'];
+                          // mcpServersType is now handled by specialized MCP editor
                           case 'fileConfig.clientImageResize.compressFormat':
                             return ['jpeg', 'webp'];
                           default:
