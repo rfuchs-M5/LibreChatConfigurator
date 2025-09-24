@@ -335,7 +335,7 @@ export function ConfigurationTabs({
       icon: Zap,
       description: "Actions Configuration",
       color: "from-yellow-400 to-yellow-500",
-      settings: ["actionsAllowedDomains"],
+      settings: ["actions.allowedDomains"],
     },
   ];
 
@@ -1167,7 +1167,13 @@ export function ConfigurationTabs({
       },
       
       // Actions Configuration
-      actionsAllowedDomains: { type: "array", description: "Allowed domains for actions", label: "Allowed Domains" },
+      "actions.allowedDomains": { 
+        type: "array", 
+        description: "Array of allowed domains for action execution - domains not on this list will be blocked for security", 
+        label: "Allowed Domains",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/actions",
+        docSection: "Actions Configuration"
+      },
       
       // Registration Nested Object Fields (path-based)
       "registration.socialLogins": { type: "array", description: "Enabled social login providers", label: "Social Login Providers" },
