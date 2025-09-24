@@ -880,7 +880,7 @@ ${config.ocrProvider ? `ocr:
   baseURL: "\${OCR_BASEURL}"` : '# OCR is not configured'}
 
 # Actions Configuration
-${config.actionsAllowedDomains.length > 0 ? `actions:
+${config.actionsAllowedDomains && config.actionsAllowedDomains.length > 0 ? `actions:
   allowedDomains:
 ${config.actionsAllowedDomains.map((domain: string) => `    - "${domain}"`).join('\n')}` : '# Actions are not configured'}
 
@@ -1128,7 +1128,7 @@ ${config.memoryEnabled ? '- ✅ Memory System' : '- ❌ Memory System'}
 - **STT**: ${config.rateLimitsSTT} per window
 
 ### MCP Servers
-${config.mcpServers.length > 0 ? config.mcpServers.map((server: any) => `- **${server.name}**: ${server.type} (${server.url || 'stdio'})`).join('\n') : 'No MCP servers configured'}
+${config.mcpServers && config.mcpServers.length > 0 ? config.mcpServers.map((server: any) => `- **${server.name}**: ${server.type} (${server.url || 'stdio'})`).join('\n') : 'No MCP servers configured'}
 
 ## 🔧 Manual Configuration
 
