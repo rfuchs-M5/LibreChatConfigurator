@@ -106,14 +106,7 @@ export function ConfigurationTabs({
       icon: Key,
       description: "Social Login Configuration",
       color: "from-purple-500 to-purple-600",
-      settings: [
-        "googleClientId", "googleClientSecret", "googleCallbackURL",
-        "githubClientId", "githubClientSecret", "githubCallbackURL", 
-        "discordClientId", "discordClientSecret", "discordCallbackURL",
-        "facebookClientId", "facebookClientSecret", "facebookCallbackURL",
-        "appleClientId", "applePrivateKey", "appleKeyId", "appleTeamId", "appleCallbackURL",
-        "openidURL", "openidClientId", "openidClientSecret", "openidCallbackURL", "openidScope", "openidSessionSecret", "openidIssuer", "openidButtonLabel", "openidImageURL"
-      ],
+      settings: ["oauthProviders"],
     },
     {
       id: "ai-core",
@@ -399,7 +392,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers"; 
       description: string; 
       label: string;
       docUrl?: string;
@@ -668,33 +661,14 @@ export function ConfigurationTabs({
       mailgunDomain: { type: "text", description: "Mailgun domain", label: "Mailgun Domain" },
       mailgunHost: { type: "text", description: "Mailgun host URL", label: "Mailgun Host" },
       
-      // OAuth Providers
-      googleClientId: { type: "text", description: "Google OAuth client ID", label: "Google Client ID" },
-      googleClientSecret: { type: "password", description: "Google OAuth client secret", label: "Google Client Secret" },
-      googleCallbackURL: { type: "text", description: "Google OAuth callback URL", label: "Google Callback URL" },
-      githubClientId: { type: "text", description: "GitHub OAuth client ID", label: "GitHub Client ID" },
-      githubClientSecret: { type: "password", description: "GitHub OAuth client secret", label: "GitHub Client Secret" },
-      githubCallbackURL: { type: "text", description: "GitHub OAuth callback URL", label: "GitHub Callback URL" },
-      discordClientId: { type: "text", description: "Discord OAuth client ID", label: "Discord Client ID" },
-      discordClientSecret: { type: "password", description: "Discord OAuth client secret", label: "Discord Client Secret" },
-      discordCallbackURL: { type: "text", description: "Discord OAuth callback URL", label: "Discord Callback URL" },
-      facebookClientId: { type: "text", description: "Facebook OAuth client ID", label: "Facebook Client ID" },
-      facebookClientSecret: { type: "password", description: "Facebook OAuth client secret", label: "Facebook Client Secret" },
-      facebookCallbackURL: { type: "text", description: "Facebook OAuth callback URL", label: "Facebook Callback URL" },
-      appleClientId: { type: "text", description: "Apple OAuth client ID", label: "Apple Client ID" },
-      applePrivateKey: { type: "textarea", description: "Apple OAuth private key", label: "Apple Private Key" },
-      appleKeyId: { type: "text", description: "Apple OAuth key ID", label: "Apple Key ID" },
-      appleTeamId: { type: "text", description: "Apple OAuth team ID", label: "Apple Team ID" },
-      appleCallbackURL: { type: "text", description: "Apple OAuth callback URL", label: "Apple Callback URL" },
-      openidURL: { type: "text", description: "OpenID Connect URL", label: "OpenID URL" },
-      openidClientId: { type: "text", description: "OpenID Connect client ID", label: "OpenID Client ID" },
-      openidClientSecret: { type: "password", description: "OpenID Connect client secret", label: "OpenID Client Secret" },
-      openidCallbackURL: { type: "text", description: "OpenID Connect callback URL", label: "OpenID Callback URL" },
-      openidScope: { type: "text", description: "OpenID Connect scope", label: "OpenID Scope" },
-      openidSessionSecret: { type: "password", description: "OpenID Connect session secret", label: "OpenID Session Secret" },
-      openidIssuer: { type: "text", description: "OpenID Connect issuer", label: "OpenID Issuer" },
-      openidButtonLabel: { type: "text", description: "OpenID Connect button label", label: "OpenID Button Label" },
-      openidImageURL: { type: "text", description: "OpenID Connect button image URL", label: "OpenID Image URL" },
+      // OAuth Providers - Progressive Disclosure Interface
+      oauthProviders: { 
+        type: "oauth-providers", 
+        description: "OAuth social login providers with smart progressive disclosure. Enable only the providers you need and configure them individually. No more seeing irrelevant configuration fields!", 
+        label: "OAuth Providers",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#oauth",
+        docSection: "OAuth Configuration"
+      },
       
       // Core AI APIs
       openaiApiKey: { type: "password", description: "OpenAI API key", label: "OpenAI API Key" },

@@ -10,13 +10,14 @@ import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { MCPServersEditor } from "@/components/mcp-servers-editor";
 import { WebSearchEditor } from "@/components/web-search-editor";
+import { OAuthProvidersEditor } from "@/components/oauth-providers-editor";
 
 interface SettingInputProps {
   label: string;
   description?: string;
   docUrl?: string;
   docSection?: string;
-  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search";
+  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers";
   value: any;
   onChange: (value: any) => void;
   options?: string[];
@@ -200,6 +201,15 @@ export function SettingInput({
       case "web-search":
         return (
           <WebSearchEditor
+            value={value}
+            onChange={onChange}
+            data-testid={testId}
+          />
+        );
+
+      case "oauth-providers":
+        return (
+          <OAuthProvidersEditor
             value={value}
             onChange={onChange}
             data-testid={testId}
