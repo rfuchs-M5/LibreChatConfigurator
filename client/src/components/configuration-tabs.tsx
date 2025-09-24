@@ -786,9 +786,9 @@ export function ConfigurationTabs({
       // Core Settings
       version: { type: "text", description: "LibreChat version", label: "Version" },
       cache: { type: "boolean", description: "Enable caching", label: "Cache" },
-      fileStrategy: { type: "text", description: "File storage strategy", label: "File Strategy" },
+      fileStrategy: { type: "object", description: "File storage strategy. Can be 'local', 's3', 'firebase', 'azure_blob' as string, or object with per-type strategies: {avatar: 'local', image: 's3', document: 'local'}", label: "File Strategy" },
       secureImageLinks: { type: "boolean", description: "Use secure image links", label: "Secure Image Links" },
-      imageOutputType: { type: "select", description: "Image output format", label: "Image Output Type" },
+      imageOutputType: { type: "select", description: "Format for generated images. Choose quality vs compatibility vs size.", label: "Image Output Type" },
       filteredTools: { type: "array", description: "Filtered tools list", label: "Filtered Tools" },
       includedTools: { type: "array", description: "Included tools list", label: "Included Tools" },
       temporaryChatRetention: { type: "number", description: "Temporary chat retention hours", label: "Chat Retention Hours" },
@@ -1011,6 +1011,37 @@ export function ConfigurationTabs({
                   <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {tab.settings.map((setting) => {
                       const fieldInfo = getFieldInfo(setting);
+                      
+                      // Get options for select fields
+                      const getSelectOptions = (fieldName: string): string[] => {
+                        switch (fieldName) {
+                          case 'imageOutputType':
+                            return ['png', 'webp', 'jpeg', 'url'];
+                          case 'nodeEnv':
+                            return ['development', 'production'];
+                          case 'ocrStrategy':
+                            return ['mistral_ocr', 'custom_ocr'];
+                          case 'sttProvider':
+                            return ['openai', 'azure', 'google', 'deepgram', 'assemblyai', 'local'];
+                          case 'ttsProvider':
+                            return ['openai', 'azure', 'google', 'elevenlabs', 'aws', 'local'];
+                          case 'ttsQuality':
+                            return ['standard', 'hd'];
+                          case 'webSearch.searchProvider':
+                            return ['serper', 'searxng', 'brave', 'tavily'];
+                          case 'webSearch.scraperType':
+                            return ['firecrawl', 'serper', 'brave'];
+                          case 'webSearch.rerankerType':
+                            return ['jina', 'cohere'];
+                          case 'mcpServersType':
+                            return ['stdio', 'websocket', 'sse', 'streamable-http'];
+                          case 'fileConfig.clientImageResize.compressFormat':
+                            return ['jpeg', 'webp'];
+                          default:
+                            return [];
+                        }
+                      };
+                      
                       return (
                         <SettingInput
                           key={setting}
@@ -1021,6 +1052,7 @@ export function ConfigurationTabs({
                           type={fieldInfo.type}
                           value={configuration[setting as keyof Configuration] || ""}
                           onChange={(value) => onConfigurationChange({ [setting]: value })}
+                          options={fieldInfo.type === 'select' ? getSelectOptions(setting) : undefined}
                           data-testid={`input-${setting}`}
                         />
                       );

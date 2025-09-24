@@ -184,6 +184,33 @@ export function SettingInput({
           </div>
         );
 
+      case "object":
+        return (
+          <div className="space-y-3">
+            <Textarea
+              value={typeof value === 'object' && value !== null 
+                ? JSON.stringify(value, null, 2) 
+                : value || "{}"}
+              onChange={(e) => {
+                try {
+                  const parsed = JSON.parse(e.target.value);
+                  onChange(parsed);
+                } catch {
+                  // Keep the raw string if JSON is invalid
+                  onChange(e.target.value);
+                }
+              }}
+              placeholder={placeholder || '{"key": "value"}'}
+              rows={6}
+              className="font-mono text-sm"
+              data-testid={testId}
+            />
+            <p className="text-xs text-muted-foreground">
+              Enter valid JSON format. For fileStrategy, use: {`{"avatar": "local", "image": "s3", "document": "local"}`}
+            </p>
+          </div>
+        );
+
       case "number":
         return (
           <Input
