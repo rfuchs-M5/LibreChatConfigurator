@@ -8,7 +8,7 @@ import { Search, Globe, Zap, Shield, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface WebSearchConfig {
-  searchProvider?: "serper" | "searxng" | "brave" | "tavily";
+  searchProvider?: "serper" | "searxng" | "brave" | "tavily" | "google" | "bing";
   scraperType?: "firecrawl" | "serper" | "brave";
   rerankerType?: "jina" | "cohere";
   serperApiKey?: string;
@@ -16,6 +16,9 @@ interface WebSearchConfig {
   searxngApiKey?: string;
   braveApiKey?: string;
   tavilyApiKey?: string;
+  googleSearchApiKey?: string;
+  googleCSEId?: string;
+  bingSearchApiKey?: string;
   firecrawlApiKey?: string;
   firecrawlApiUrl?: string;
   jinaApiKey?: string;
@@ -134,6 +137,58 @@ export function WebSearchEditor({ value, onChange, "data-testid": testId }: WebS
               placeholder="Enter your Tavily API key"
               className="font-mono"
               data-testid="input-tavily-api-key"
+            />
+          </div>
+        );
+
+      case "google":
+        return (
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="google-search-api-key">
+                <Search className="h-3 w-3 inline mr-1" />
+                Google Search API Key *
+              </Label>
+              <Input
+                id="google-search-api-key"
+                type="password"
+                value={config.googleSearchApiKey || ""}
+                onChange={(e) => updateConfig({ googleSearchApiKey: e.target.value })}
+                placeholder="Enter your Google Search API key"
+                className="font-mono"
+                data-testid="input-google-search-api-key"
+              />
+            </div>
+            <div>
+              <Label htmlFor="google-cse-id">
+                Google Custom Search Engine ID *
+              </Label>
+              <Input
+                id="google-cse-id"
+                value={config.googleCSEId || ""}
+                onChange={(e) => updateConfig({ googleCSEId: e.target.value })}
+                placeholder="Enter your Google CSE ID"
+                data-testid="input-google-cse-id"
+              />
+            </div>
+          </div>
+        );
+
+      case "bing":
+        return (
+          <div>
+            <Label htmlFor="bing-search-api-key">
+              <Search className="h-3 w-3 inline mr-1" />
+              Bing Search API Key *
+            </Label>
+            <Input
+              id="bing-search-api-key"
+              type="password"
+              value={config.bingSearchApiKey || ""}
+              onChange={(e) => updateConfig({ bingSearchApiKey: e.target.value })}
+              placeholder="Enter your Bing Search API key"
+              className="font-mono"
+              data-testid="input-bing-search-api-key"
             />
           </div>
         );
@@ -264,6 +319,8 @@ export function WebSearchEditor({ value, onChange, "data-testid": testId }: WebS
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="serper">Serper (Google Search API)</SelectItem>
+                <SelectItem value="google">Google Custom Search</SelectItem>
+                <SelectItem value="bing">Bing Search API</SelectItem>
                 <SelectItem value="searxng">SearXNG (Self-hosted)</SelectItem>
                 <SelectItem value="brave">Brave Search</SelectItem>
                 <SelectItem value="tavily">Tavily Search</SelectItem>

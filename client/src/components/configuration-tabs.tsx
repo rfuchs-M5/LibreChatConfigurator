@@ -171,7 +171,7 @@ export function ConfigurationTabs({
       icon: Search,
       description: "Web Search & External APIs",
       color: "from-violet-500 to-violet-600",
-      settings: ["googleSearchApiKey", "googleCSEId", "bingSearchApiKey", "openweatherApiKey", "librechatCodeApiKey", "webSearch"],
+      settings: ["webSearch", "openweatherApiKey", "librechatCodeApiKey"],
     },
     {
       id: "rag",
@@ -747,12 +747,9 @@ export function ConfigurationTabs({
       azureStoragePublicAccess: { type: "boolean", description: "Azure storage public access", label: "Azure Storage Public Access" },
       azureContainerName: { type: "text", description: "Azure container name", label: "Azure Container Name" },
       
-      // Search & APIs
-      googleSearchApiKey: { type: "password", description: "Google Search API key", label: "Google Search API Key" },
-      googleCSEId: { type: "text", description: "Google Custom Search Engine ID", label: "Google CSE ID" },
-      bingSearchApiKey: { type: "password", description: "Bing Search API key", label: "Bing Search API Key" },
-      openweatherApiKey: { type: "password", description: "OpenWeather API key", label: "OpenWeather API Key" },
-      librechatCodeApiKey: { type: "password", description: "LibreChat Code API key", label: "LibreChat Code API Key" },
+      // External APIs
+      openweatherApiKey: { type: "password", description: "OpenWeather API key for weather information", label: "OpenWeather API Key" },
+      librechatCodeApiKey: { type: "password", description: "LibreChat Code API key for code execution", label: "LibreChat Code API Key" },
       
       // RAG API
       ragApiURL: { type: "text", description: "RAG API URL", label: "RAG API URL" },
