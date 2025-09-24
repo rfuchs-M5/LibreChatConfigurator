@@ -319,7 +319,7 @@ export function ConfigurationTabs({
       icon: Users,
       description: "AI Assistants Configuration",
       color: "from-cyan-400 to-cyan-500",
-      settings: ["assistantsDisableBuilder", "assistantsPollIntervalMs", "assistantsTimeoutMs", "assistantsSupportedIds", "assistantsExcludedIds", "assistantsPrivateAssistants", "assistantsRetrievalModels", "assistantsCapabilities"],
+      settings: ["endpoints.assistants.disableBuilder", "endpoints.assistants.pollIntervalMs", "endpoints.assistants.timeoutMs", "endpoints.assistants.supportedIds", "endpoints.assistants.excludedIds", "endpoints.assistants.privateAssistants", "endpoints.assistants.retrievalModels", "endpoints.assistants.capabilities"],
     },
     {
       id: "agents",
@@ -1023,14 +1023,75 @@ export function ConfigurationTabs({
       },
       
       // Assistants Configuration
-      assistantsDisableBuilder: { type: "boolean", description: "Disable assistant builder", label: "Disable Assistant Builder" },
-      assistantsPollIntervalMs: { type: "number", description: "Assistant polling interval in ms", label: "Poll Interval (ms)" },
-      assistantsTimeoutMs: { type: "number", description: "Assistant timeout in ms", label: "Timeout (ms)" },
-      assistantsSupportedIds: { type: "array", description: "Supported assistant IDs", label: "Supported IDs" },
-      assistantsExcludedIds: { type: "array", description: "Excluded assistant IDs", label: "Excluded IDs" },
-      assistantsPrivateAssistants: { type: "boolean", description: "Enable private assistants", label: "Private Assistants" },
-      assistantsRetrievalModels: { type: "array", description: "Assistant retrieval models", label: "Retrieval Models" },
-      assistantsCapabilities: { type: "array", description: "Assistant capabilities", label: "Capabilities" },
+      "endpoints.assistants.disableBuilder": { 
+        type: "boolean", 
+        description: "Disable the built-in assistant builder interface", 
+        label: "Disable Assistant Builder",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.pollIntervalMs": { 
+        type: "number", 
+        description: "Polling interval for assistant status checks in milliseconds (500-10000)", 
+        label: "Poll Interval (ms)",
+        placeholder: "3000",
+        min: 500,
+        max: 10000,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.timeoutMs": { 
+        type: "number", 
+        description: "Timeout for assistant requests in milliseconds (30000-600000)", 
+        label: "Timeout (ms)",
+        placeholder: "180000",
+        min: 30000,
+        max: 600000,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.supportedIds": { 
+        type: "array", 
+        description: "Array of supported assistant IDs - only these assistants will be available", 
+        label: "Supported Assistant IDs",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.excludedIds": { 
+        type: "array", 
+        description: "Array of assistant IDs to exclude from availability", 
+        label: "Excluded Assistant IDs",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.privateAssistants": { 
+        type: "boolean", 
+        description: "Enable private assistants that are only visible to their creators", 
+        label: "Private Assistants",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.retrievalModels": { 
+        type: "array", 
+        description: "Array of models available for retrieval operations", 
+        label: "Retrieval Models",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
+      "endpoints.assistants.capabilities": { 
+        type: "array", 
+        description: "Array of capabilities available to assistants", 
+        label: "Assistant Capabilities",
+        options: [
+          { value: "code_interpreter", label: "Code Interpreter" },
+          { value: "retrieval", label: "Retrieval" },
+          { value: "actions", label: "Actions" },
+          { value: "tools", label: "Tools" },
+          { value: "image_vision", label: "Image Vision" }
+        ],
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
+        docSection: "Assistants Configuration"
+      },
       
       // Agents Configuration
       agentsRecursionLimit: { type: "number", description: "Agent recursion limit", label: "Recursion Limit" },
