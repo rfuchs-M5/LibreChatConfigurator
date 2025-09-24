@@ -12,8 +12,22 @@ export function useConfiguration() {
   
   // Demo configuration with ALL 75+ fields populated for comprehensive testing
   const createDemoConfiguration = (): Configuration => ({
+    // REQUIRED RC4 CORE FIELDS
+    version: "1.2.8", // RC4 configuration version
+    cache: true, // Enable caching
+    fileStrategy: {
+      avatar: "local",
+      image: "s3", 
+      document: "local"
+    },
+    secureImageLinks: true, // RC4 security feature
+    imageOutputType: "webp", // Modern image format
+    temporaryChatRetention: 720, // 30 days in hours
+    filteredTools: ["dall-e"],
+    includedTools: ["calculator", "web-search", "stable-diffusion"],
+    
     // App Settings
-    appTitle: "LibreChat Demo Instance",
+    appTitle: "LibreChat Demo Instance", 
     customWelcome: "Welcome to our comprehensive LibreChat demo installation! This instance showcases all possible configuration options.",
     customFooter: "Demo Footer - LibreChat RC4 Configuration Manager - All Settings Enabled for Testing",
     helpAndFAQURL: "https://demo.librechat.ai/help",
@@ -29,8 +43,8 @@ export function useConfiguration() {
     // Security
     jwtSecret: "demo_jwt_secret_32_characters_long_abc123",
     jwtRefreshSecret: "demo_refresh_secret_32_chars_long_xyz789",
-    credsKey: "demo_credentials_key_32_chars_abc123",
-    credsIV: "demo_creds_iv_16c",
+    credsKey: "demo_credentials_key_32_chars_ab",
+    credsIV: "demo_creds_iv16_",
     minPasswordLength: 12,
     sessionExpiry: 900000,
     refreshTokenExpiry: 604800000,
@@ -145,12 +159,21 @@ export function useConfiguration() {
     azureStoragePublicAccess: false,
     azureContainerName: "demo-librechat-files",
     
-    // Search & APIs
+    // Search & APIs  
     googleSearchApiKey: "AIzaSyDemo_Search_Key_123456789abcdef123456789",
     googleCSEId: "demo123456789abcdef:demo123456789",
     bingSearchApiKey: "demo_bing_search_key_123456789abcdef123456789",
     openweatherApiKey: "demo_weather_key_123456789abcdef123456789abc",
     librechatCodeApiKey: "demo_code_api_key_123456789abcdef123456789",
+    
+    // RC4 Web Search Providers
+    braveApiKey: "BSA_demo_brave_search_key_123456789abcdef123456789",
+    tavilyApiKey: "tvly-demo_tavily_search_key_123456789abcdef123456",
+    serperApiKey: "demo_serper_api_key_123456789abcdef123456789abc",
+    searxngInstanceUrl: "https://demo-searxng.librechat.ai",
+    firecrawlApiKey: "fc-demo_firecrawl_key_123456789abcdef123456789",
+    jinaApiKey: "jina_demo_reranker_key_123456789abcdef123456789",
+    cohereApiKey: "demo_cohere_reranker_key_123456789abcdef123456",
     
     // RAG API
     ragApiURL: "https://demo-rag.librechat.ai/api",
@@ -220,7 +243,102 @@ export function useConfiguration() {
     consoleJSON: true,
     
     // Miscellaneous
-    cdnProvider: "cloudflare"
+    cdnProvider: "cloudflare",
+    
+    // RC4 INTERFACE CONFIGURATION 
+    interface: {
+      customWelcome: "Welcome to our comprehensive LibreChat demo installation! This instance showcases all possible configuration options.",
+      customFooter: "Demo Footer - LibreChat RC4 Configuration Manager - All Settings Enabled for Testing",
+      fileSearch: true, // RC4 file search capability
+      uploadAsText: true, // RC4 "Upload as Text" feature
+      privacyPolicy: {
+        externalUrl: "https://demo.librechat.ai/privacy",
+        openNewTab: true,
+      },
+      termsOfService: {
+        externalUrl: "https://demo.librechat.ai/terms",
+        openNewTab: true,
+        modalAcceptance: true,
+        modalTitle: "Terms of Service",
+        modalContent: "Please accept our terms to continue using LibreChat Demo."
+      },
+      endpointsMenu: true,
+      modelSelect: true,
+      parameters: true,
+      sidePanel: true,
+      presets: true,
+      prompts: true,
+      bookmarks: true,
+      multiConvo: true, // RC4 multi-conversation feature
+      agents: true,
+      peoplePicker: {
+        users: true,
+        groups: true,
+        roles: true,
+      },
+      marketplace: {
+        use: true, // RC4 marketplace integration
+      },
+      fileCitations: true,
+    },
+    
+    // RC4 RATE LIMITS CONFIGURATION
+    rateLimits: {
+      fileUploads: {
+        ipMax: 100,
+        ipWindowInMinutes: 60,
+        userMax: 50,
+        userWindowInMinutes: 60,
+      },
+      conversationsImport: {
+        ipMax: 100,
+        ipWindowInMinutes: 60,
+        userMax: 50,
+        userWindowInMinutes: 60,
+      },
+      stt: {
+        ipMax: 100,
+        ipWindowInMinutes: 1,
+        userMax: 50,
+        userWindowInMinutes: 1,
+      },
+      tts: {
+        ipMax: 100,
+        ipWindowInMinutes: 1,
+        userMax: 50,
+        userWindowInMinutes: 1,
+      },
+    },
+    
+    // RC4 FILE CONFIGURATION
+    fileConfig: {
+      endpoints: {
+        "openAI": {
+          fileLimit: 10,
+          fileSizeLimit: 20,
+          totalSizeLimit: 100,
+          supportedMimeTypes: [
+            "image/jpeg", "image/png", "image/webp", "image/gif",
+            "application/pdf", "text/plain", "text/markdown"
+          ],
+        },
+        "anthropic": {
+          fileLimit: 5,
+          fileSizeLimit: 10,
+          totalSizeLimit: 50,
+          supportedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+        },
+      },
+      serverFileSizeLimit: 25,
+      avatarSizeLimit: 5,
+      clientImageResize: {
+        enabled: true,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.8,
+        compressFormat: "webp",
+      },
+    },
   });
   
   // Get default configuration
