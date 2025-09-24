@@ -483,7 +483,7 @@ ${config.facebookClientId ? `FACEBOOK_CLIENT_ID=${config.facebookClientId}` : '#
 ${config.facebookClientSecret ? `FACEBOOK_CLIENT_SECRET=${config.facebookClientSecret}` : '# FACEBOOK_CLIENT_SECRET='}
 ${config.facebookCallbackURL ? `FACEBOOK_CALLBACK_URL=${config.facebookCallbackURL}` : '# FACEBOOK_CALLBACK_URL='}
 ${config.appleClientId ? `APPLE_CLIENT_ID=${config.appleClientId}` : '# APPLE_CLIENT_ID='}
-${config.applePrivateKey ? `APPLE_PRIVATE_KEY=${config.applePrivateKey}` : '# APPLE_PRIVATE_KEY='}
+${config.applePrivateKey ? `APPLE_PRIVATE_KEY=${config.applePrivateKey.replace(/\n/g, '')}` : '# APPLE_PRIVATE_KEY='}
 ${config.appleKeyId ? `APPLE_KEY_ID=${config.appleKeyId}` : '# APPLE_KEY_ID='}
 ${config.appleTeamId ? `APPLE_TEAM_ID=${config.appleTeamId}` : '# APPLE_TEAM_ID='}
 ${config.appleCallbackURL ? `APPLE_CALLBACK_URL=${config.appleCallbackURL}` : '# APPLE_CALLBACK_URL='}
