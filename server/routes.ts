@@ -1064,7 +1064,7 @@ echo "🎉 Docker installation complete! Enjoy using LibreChat!"
 function generateReadmeFile(config: any): string {
   return `# LibreChat Configuration
 
-This package contains a complete LibreChat v0.8.0-RC4 installation with your custom configuration (using configuration schema v${config.configVer}).
+This package contains a complete LibreChat v0.8.0-RC4 installation with your custom configuration (using configuration schema v${config.version}).
 
 ## 📋 Package Contents
 
@@ -1090,30 +1090,30 @@ This package contains a complete LibreChat v0.8.0-RC4 installation with your cus
 
 3. **Access**
    - Open your browser to: http://localhost:${config.port}
-   - Register an account (${config.enableRegistration ? 'enabled' : 'disabled'})
+   - Register an account (${config.allowRegistration ? 'enabled' : 'disabled'})
 
 ## ⚙️ Configuration Summary
 
 ### Core Settings
 - **LibreChat Version**: v0.8.0-RC4
-- **Configuration Schema**: v${config.configVer}
+- **Configuration Schema**: v${config.version}
 - **Host**: ${config.host}:${config.port}
-- **Registration**: ${config.enableRegistration ? 'Enabled' : 'Disabled'}
-- **Debug Logging**: ${config.debugLogging ? 'Enabled' : 'Disabled'}
+- **Registration**: ${config.allowRegistration ? 'Enabled' : 'Disabled'}
+- **Debug Logging**: ${config.debugLogging || config.debug ? 'Enabled' : 'Disabled'}
 
 ### AI Models
-- **Default Model**: ${config.defaultModel}
-- **Model Selection UI**: ${config.showModelSelect ? 'Visible' : 'Hidden'}
-- **Parameters UI**: ${config.showParameters ? 'Visible' : 'Hidden'}
+- **Default Model**: ${config.interface?.defaultModel || 'Not configured'}
+- **Model Selection UI**: ${config.interface?.modelSelect !== false ? 'Visible' : 'Hidden'}
+- **Parameters UI**: ${config.interface?.parameters !== false ? 'Visible' : 'Hidden'}
 
 ### Features Enabled
-${config.showAgents ? '- ✅ AI Agents' : '- ❌ AI Agents'}
-${config.showWebSearch ? '- ✅ Web Search' : '- ❌ Web Search'}
-${config.showFileSearch ? '- ✅ File Search' : '- ❌ File Search'}
-${config.showPresets ? '- ✅ Presets' : '- ❌ Presets'}
-${config.showPrompts ? '- ✅ Custom Prompts' : '- ❌ Custom Prompts'}
-${config.showBookmarks ? '- ✅ Bookmarks' : '- ❌ Bookmarks'}
-${config.memoryEnabled ? '- ✅ Memory System' : '- ❌ Memory System'}
+${config.interface?.agents !== false ? '- ✅ AI Agents' : '- ❌ AI Agents'}
+${config.interface?.webSearch !== false ? '- ✅ Web Search' : '- ❌ Web Search'}
+${config.interface?.fileSearch !== false ? '- ✅ File Search' : '- ❌ File Search'}
+${config.interface?.presets !== false ? '- ✅ Presets' : '- ❌ Presets'}
+${config.interface?.prompts !== false ? '- ✅ Custom Prompts' : '- ❌ Custom Prompts'}
+${config.interface?.bookmarks !== false ? '- ✅ Bookmarks' : '- ❌ Bookmarks'}
+${config.memoryEnabled !== false ? '- ✅ Memory System' : '- ❌ Memory System'}
 
 ### File Upload Settings
 - **Max File Size**: ${config.filesMaxSizeMB}MB
