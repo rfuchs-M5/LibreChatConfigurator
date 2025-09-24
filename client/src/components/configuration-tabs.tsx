@@ -311,7 +311,7 @@ export function ConfigurationTabs({
       icon: Volume2,
       description: "Voice Synthesis",
       color: "from-blue-400 to-blue-500",
-      settings: ["ttsProvider", "ttsModel", "ttsVoice", "ttsApiKey", "ttsBaseURL", "ttsSpeed", "ttsQuality", "ttsStreaming"],
+      settings: ["tts.provider", "tts.model", "tts.voice", "tts.apiKey", "tts.baseURL", "tts.speed", "tts.quality", "tts.streaming"],
     },
     {
       id: "assistants",
@@ -946,14 +946,81 @@ export function ConfigurationTabs({
       },
       
       // Text-to-Speech Configuration
-      ttsProvider: { type: "select", description: "TTS service provider", label: "TTS Provider" },
-      ttsModel: { type: "text", description: "TTS model name", label: "TTS Model" },
-      ttsVoice: { type: "text", description: "TTS voice", label: "TTS Voice" },
-      ttsApiKey: { type: "password", description: "TTS API key", label: "TTS API Key" },
-      ttsBaseURL: { type: "text", description: "TTS base URL", label: "TTS Base URL" },
-      ttsSpeed: { type: "number", description: "TTS speech speed", label: "TTS Speed" },
-      ttsQuality: { type: "select", description: "TTS audio quality", label: "TTS Quality" },
-      ttsStreaming: { type: "boolean", description: "Enable TTS streaming", label: "TTS Streaming" },
+      "tts.provider": { 
+        type: "select", 
+        description: "TTS service provider - OpenAI, Azure, Google, ElevenLabs, AWS, or Local", 
+        label: "TTS Provider",
+        options: [
+          { value: "openai", label: "OpenAI" },
+          { value: "azure", label: "Azure" },
+          { value: "google", label: "Google" },
+          { value: "elevenlabs", label: "ElevenLabs" },
+          { value: "aws", label: "AWS" },
+          { value: "local", label: "Local" }
+        ],
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.model": { 
+        type: "text", 
+        description: "TTS model name to use with the selected provider", 
+        label: "TTS Model",
+        placeholder: "tts-1",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.voice": { 
+        type: "text", 
+        description: "Voice to use for TTS synthesis (e.g., alloy, echo, fable, onyx, nova, shimmer)", 
+        label: "TTS Voice",
+        placeholder: "alloy",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.apiKey": { 
+        type: "password", 
+        description: "API key for TTS service", 
+        label: "TTS API Key",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.baseURL": { 
+        type: "text", 
+        description: "Base URL for TTS service API", 
+        label: "TTS Base URL",
+        placeholder: "https://api.openai.com/v1",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.speed": { 
+        type: "number", 
+        description: "Speech speed for TTS synthesis (0.25 to 4.0)", 
+        label: "TTS Speed",
+        placeholder: "1.0",
+        min: 0.25,
+        max: 4.0,
+        step: 0.25,
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.quality": { 
+        type: "select", 
+        description: "Audio quality for TTS output - Standard or HD", 
+        label: "TTS Quality",
+        options: [
+          { value: "standard", label: "Standard" },
+          { value: "hd", label: "HD" }
+        ],
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
+      "tts.streaming": { 
+        type: "boolean", 
+        description: "Enable real-time TTS streaming for faster response", 
+        label: "TTS Streaming",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/tts",
+        docSection: "TTS Configuration"
+      },
       
       // Assistants Configuration
       assistantsDisableBuilder: { type: "boolean", description: "Disable assistant builder", label: "Disable Assistant Builder" },
@@ -1159,9 +1226,9 @@ export function ConfigurationTabs({
                             return ['mistral_ocr', 'custom_ocr'];
                           case 'stt.provider':
                             return ['openai', 'azure', 'google', 'deepgram', 'assemblyai', 'local'];
-                          case 'ttsProvider':
+                          case 'tts.provider':
                             return ['openai', 'azure', 'google', 'elevenlabs', 'aws', 'local'];
-                          case 'ttsQuality':
+                          case 'tts.quality':
                             return ['standard', 'hd'];
                           case 'webSearch.searchProvider':
                             return ['serper', 'searxng', 'brave', 'tavily'];
