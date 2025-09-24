@@ -20,6 +20,7 @@ export default function Home() {
   const [showPreview, setShowPreview] = useState(false);
   const [configurationName, setConfigurationName] = useState("My LibreChat Configuration");
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
+  const [showSelfTestConfirmation, setShowSelfTestConfirmation] = useState(false);
   const { configuration, updateConfiguration, saveProfile, generatePackage, loadDemoConfiguration, verifyConfiguration } = useConfiguration();
   const { toast } = useToast();
 
@@ -395,7 +396,12 @@ export default function Home() {
     });
   };
 
-  const handleRunSelfTest = async () => {
+  const handleRunSelfTest = () => {
+    setShowSelfTestConfirmation(true);
+  };
+
+  const confirmRunSelfTest = async () => {
+    setShowSelfTestConfirmation(false);
     try {
       // Verify current configuration first
       const verification = verifyConfiguration();
@@ -778,6 +784,38 @@ export default function Home() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Yes, Reset Configuration
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Self-Test Confirmation Dialog */}
+      <AlertDialog open={showSelfTestConfirmation} onOpenChange={setShowSelfTestConfirmation}>
+        <AlertDialogContent data-testid="dialog-selftest-confirmation">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Run Comprehensive Self-Test</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to run the comprehensive self-test?
+              <br /><br />
+              <strong>This will:</strong>
+              <ul className="mt-2 space-y-1 text-sm">
+                <li>• Test JSON export validation with your current configuration</li>
+                <li>• Generate and validate ENV and YAML files</li>
+                <li>• Run extensive package generation tests</li>
+                <li>• <span className="text-amber-600 font-medium">Potentially generate large test files</span></li>
+              </ul>
+              <br />
+              The self-test is comprehensive and may take some time to complete.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-selftest">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmRunSelfTest}
+              data-testid="button-confirm-selftest"
+              className="bg-amber-600 text-white hover:bg-amber-700"
+            >
+              Yes, Run Self-Test
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
