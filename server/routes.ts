@@ -397,48 +397,267 @@ function generateEnvFile(config: any): string {
   const currentDate = new Date().toISOString().split('T')[0];
   
   return `# =============================================================================
-# LibreChat Environment Configuration
+# LibreChat Environment Configuration (RC4)
 # Generated on ${currentDate}
 # =============================================================================
 
 # =============================================================================
-# REQUIRED: Security Configuration
-# Generate secure random values for production use
+# App Configuration
 # =============================================================================
-JWT_SECRET=${config.jwtSecret || generateSecureSecret(32)}
-JWT_REFRESH_SECRET=${config.jwtRefreshSecret || generateSecureSecret(32)}
-CREDS_KEY=${config.credsKey || generateSecureSecret(32)}
-CREDS_IV=${config.credsIV || generateSecureSecret(16)}
+${config.appTitle ? `APP_TITLE=${config.appTitle}` : '# APP_TITLE=LibreChat'}
+${config.customWelcome ? `CUSTOM_WELCOME=${config.customWelcome}` : '# CUSTOM_WELCOME='}
+${config.customFooter ? `CUSTOM_FOOTER=${config.customFooter}` : '# CUSTOM_FOOTER='}
+${config.helpAndFAQURL ? `HELP_AND_FAQ_URL=${config.helpAndFAQURL}` : '# HELP_AND_FAQ_URL='}
 
 # =============================================================================
-# Application Configuration
+# Server Configuration
 # =============================================================================
-HOST=${config.host || '0.0.0.0'}
-PORT=${config.port || 3080}
-SESSION_EXPIRY=${config.sessionExpiry || '1000 * 60 * 15'}
-REFRESH_TOKEN_EXPIRY=${config.refreshTokenExpiry || '1000 * 60 * 60 * 24 * 7'}
-DEBUG_LOGGING=${config.debugLogging || false}
+${config.host ? `HOST=${config.host}` : 'HOST=0.0.0.0'}
+${config.port ? `PORT=${config.port}` : 'PORT=3080'}
+${config.nodeEnv ? `NODE_ENV=${config.nodeEnv}` : '# NODE_ENV=production'}
+${config.domainClient ? `DOMAIN_CLIENT=${config.domainClient}` : '# DOMAIN_CLIENT='}
+${config.domainServer ? `DOMAIN_SERVER=${config.domainServer}` : '# DOMAIN_SERVER='}
+${config.noIndex !== undefined ? `NO_INDEX=${config.noIndex}` : '# NO_INDEX=true'}
 
 # =============================================================================
-# Auth Configuration
+# Security Configuration
 # =============================================================================
-ALLOW_REGISTRATION=${config.enableRegistration !== undefined ? config.enableRegistration : true}
-ALLOW_EMAIL_LOGIN=${config.allowEmailLogin !== undefined ? config.allowEmailLogin : true}
-ALLOW_SOCIAL_LOGIN=${config.allowSocialLogin !== undefined ? config.allowSocialLogin : false}
-ALLOW_SOCIAL_REGISTRATION=${config.allowSocialRegistration !== undefined ? config.allowSocialRegistration : false}
+${config.jwtSecret ? `JWT_SECRET=${config.jwtSecret}` : `JWT_SECRET=${generateSecureSecret(32)}`}
+${config.jwtRefreshSecret ? `JWT_REFRESH_SECRET=${config.jwtRefreshSecret}` : `JWT_REFRESH_SECRET=${generateSecureSecret(32)}`}
+${config.credsKey ? `CREDS_KEY=${config.credsKey}` : `CREDS_KEY=${generateSecureSecret(32)}`}
+${config.credsIV ? `CREDS_IV=${config.credsIV}` : `CREDS_IV=${generateSecureSecret(16)}`}
+${config.minPasswordLength ? `MIN_PASSWORD_LENGTH=${config.minPasswordLength}` : '# MIN_PASSWORD_LENGTH=8'}
+${config.sessionExpiry ? `SESSION_EXPIRY=${config.sessionExpiry}` : 'SESSION_EXPIRY=1000 * 60 * 15'}
+${config.refreshTokenExpiry ? `REFRESH_TOKEN_EXPIRY=${config.refreshTokenExpiry}` : 'REFRESH_TOKEN_EXPIRY=1000 * 60 * 60 * 24 * 7'}
 
 # =============================================================================
 # Database Configuration
 # =============================================================================
-MONGO_ROOT_USERNAME=${config.mongoRootUsername || 'librechat_admin'}
-MONGO_ROOT_PASSWORD=${config.mongoRootPassword || 'librechat_password_change_this'}
-MONGO_DB_NAME=${config.mongoDbName || 'librechat'}
+${config.mongoUri ? `MONGO_URI=${config.mongoUri}` : '# MONGO_URI=mongodb://127.0.0.1:27017/LibreChat'}
+${config.mongoRootUsername ? `MONGO_ROOT_USERNAME=${config.mongoRootUsername}` : 'MONGO_ROOT_USERNAME=librechat_admin'}
+${config.mongoRootPassword ? `MONGO_ROOT_PASSWORD=${config.mongoRootPassword}` : 'MONGO_ROOT_PASSWORD=librechat_password_change_this'}
+${config.mongoDbName ? `MONGO_DB_NAME=${config.mongoDbName}` : 'MONGO_DB_NAME=librechat'}
+${config.redisUri ? `REDIS_URI=${config.redisUri}` : '# REDIS_URI=redis://localhost:6379'}
+${config.redisUsername ? `REDIS_USERNAME=${config.redisUsername}` : '# REDIS_USERNAME='}
+${config.redisPassword ? `REDIS_PASSWORD=${config.redisPassword}` : '# REDIS_PASSWORD='}
+${config.redisKeyPrefix ? `REDIS_KEY_PREFIX=${config.redisKeyPrefix}` : '# REDIS_KEY_PREFIX='}
+${config.redisKeyPrefixVar ? `REDIS_KEY_PREFIX_VAR=${config.redisKeyPrefixVar}` : '# REDIS_KEY_PREFIX_VAR='}
+${config.redisMaxListeners ? `REDIS_MAX_LISTENERS=${config.redisMaxListeners}` : '# REDIS_MAX_LISTENERS=10'}
+${config.redisPingInterval ? `REDIS_PING_INTERVAL=${config.redisPingInterval}` : '# REDIS_PING_INTERVAL=30000'}
+${config.redisUseAlternativeDNSLookup !== undefined ? `REDIS_USE_ALTERNATIVE_DNS_LOOKUP=${config.redisUseAlternativeDNSLookup}` : '# REDIS_USE_ALTERNATIVE_DNS_LOOKUP=false'}
 
 # =============================================================================
-# API Keys
+# Authentication Configuration
 # =============================================================================
-${config.openaiApiKey ? `OPENAI_API_KEY=${config.openaiApiKey}` : '# OPENAI_API_KEY=your_openai_api_key_here'}
-${config.anthropicApiKey ? `ANTHROPIC_API_KEY=${config.anthropicApiKey}` : '# ANTHROPIC_API_KEY=your_anthropic_api_key_here'}
+${config.allowRegistration !== undefined ? `ALLOW_REGISTRATION=${config.allowRegistration}` : 'ALLOW_REGISTRATION=true'}
+${config.allowEmailLogin !== undefined ? `ALLOW_EMAIL_LOGIN=${config.allowEmailLogin}` : 'ALLOW_EMAIL_LOGIN=true'}
+${config.allowSocialLogin !== undefined ? `ALLOW_SOCIAL_LOGIN=${config.allowSocialLogin}` : 'ALLOW_SOCIAL_LOGIN=false'}
+${config.allowSocialRegistration !== undefined ? `ALLOW_SOCIAL_REGISTRATION=${config.allowSocialRegistration}` : 'ALLOW_SOCIAL_REGISTRATION=false'}
+${config.allowPasswordReset !== undefined ? `ALLOW_PASSWORD_RESET=${config.allowPasswordReset}` : '# ALLOW_PASSWORD_RESET=false'}
+
+# =============================================================================
+# Email Configuration
+# =============================================================================
+${config.emailService ? `EMAIL_SERVICE=${config.emailService}` : '# EMAIL_SERVICE='}
+${config.emailUsername ? `EMAIL_USERNAME=${config.emailUsername}` : '# EMAIL_USERNAME='}
+${config.emailPassword ? `EMAIL_PASSWORD=${config.emailPassword}` : '# EMAIL_PASSWORD='}
+${config.emailFrom ? `EMAIL_FROM=${config.emailFrom}` : '# EMAIL_FROM='}
+${config.emailFromName ? `EMAIL_FROM_NAME=${config.emailFromName}` : '# EMAIL_FROM_NAME='}
+${config.mailgunApiKey ? `MAILGUN_API_KEY=${config.mailgunApiKey}` : '# MAILGUN_API_KEY='}
+${config.mailgunDomain ? `MAILGUN_DOMAIN=${config.mailgunDomain}` : '# MAILGUN_DOMAIN='}
+${config.mailgunHost ? `MAILGUN_HOST=${config.mailgunHost}` : '# MAILGUN_HOST='}
+
+# =============================================================================
+# OAuth Providers Configuration
+# =============================================================================
+${config.googleClientId ? `GOOGLE_CLIENT_ID=${config.googleClientId}` : '# GOOGLE_CLIENT_ID='}
+${config.googleClientSecret ? `GOOGLE_CLIENT_SECRET=${config.googleClientSecret}` : '# GOOGLE_CLIENT_SECRET='}
+${config.googleCallbackURL ? `GOOGLE_CALLBACK_URL=${config.googleCallbackURL}` : '# GOOGLE_CALLBACK_URL='}
+${config.githubClientId ? `GITHUB_CLIENT_ID=${config.githubClientId}` : '# GITHUB_CLIENT_ID='}
+${config.githubClientSecret ? `GITHUB_CLIENT_SECRET=${config.githubClientSecret}` : '# GITHUB_CLIENT_SECRET='}
+${config.githubCallbackURL ? `GITHUB_CALLBACK_URL=${config.githubCallbackURL}` : '# GITHUB_CALLBACK_URL='}
+${config.discordClientId ? `DISCORD_CLIENT_ID=${config.discordClientId}` : '# DISCORD_CLIENT_ID='}
+${config.discordClientSecret ? `DISCORD_CLIENT_SECRET=${config.discordClientSecret}` : '# DISCORD_CLIENT_SECRET='}
+${config.discordCallbackURL ? `DISCORD_CALLBACK_URL=${config.discordCallbackURL}` : '# DISCORD_CALLBACK_URL='}
+${config.facebookClientId ? `FACEBOOK_CLIENT_ID=${config.facebookClientId}` : '# FACEBOOK_CLIENT_ID='}
+${config.facebookClientSecret ? `FACEBOOK_CLIENT_SECRET=${config.facebookClientSecret}` : '# FACEBOOK_CLIENT_SECRET='}
+${config.facebookCallbackURL ? `FACEBOOK_CALLBACK_URL=${config.facebookCallbackURL}` : '# FACEBOOK_CALLBACK_URL='}
+${config.appleClientId ? `APPLE_CLIENT_ID=${config.appleClientId}` : '# APPLE_CLIENT_ID='}
+${config.applePrivateKey ? `APPLE_PRIVATE_KEY=${config.applePrivateKey}` : '# APPLE_PRIVATE_KEY='}
+${config.appleKeyId ? `APPLE_KEY_ID=${config.appleKeyId}` : '# APPLE_KEY_ID='}
+${config.appleTeamId ? `APPLE_TEAM_ID=${config.appleTeamId}` : '# APPLE_TEAM_ID='}
+${config.appleCallbackURL ? `APPLE_CALLBACK_URL=${config.appleCallbackURL}` : '# APPLE_CALLBACK_URL='}
+${config.openidURL ? `OPENID_URL=${config.openidURL}` : '# OPENID_URL='}
+${config.openidClientId ? `OPENID_CLIENT_ID=${config.openidClientId}` : '# OPENID_CLIENT_ID='}
+${config.openidClientSecret ? `OPENID_CLIENT_SECRET=${config.openidClientSecret}` : '# OPENID_CLIENT_SECRET='}
+${config.openidCallbackURL ? `OPENID_CALLBACK_URL=${config.openidCallbackURL}` : '# OPENID_CALLBACK_URL='}
+${config.openidScope ? `OPENID_SCOPE=${config.openidScope}` : '# OPENID_SCOPE='}
+${config.openidSessionSecret ? `OPENID_SESSION_SECRET=${config.openidSessionSecret}` : '# OPENID_SESSION_SECRET='}
+${config.openidIssuer ? `OPENID_ISSUER=${config.openidIssuer}` : '# OPENID_ISSUER='}
+${config.openidButtonLabel ? `OPENID_BUTTON_LABEL=${config.openidButtonLabel}` : '# OPENID_BUTTON_LABEL='}
+${config.openidImageURL ? `OPENID_IMAGE_URL=${config.openidImageURL}` : '# OPENID_IMAGE_URL='}
+
+# =============================================================================
+# Core AI API Keys
+# =============================================================================
+${config.openaiApiKey ? `OPENAI_API_KEY=${config.openaiApiKey}` : '# OPENAI_API_KEY='}
+${config.anthropicApiKey ? `ANTHROPIC_API_KEY=${config.anthropicApiKey}` : '# ANTHROPIC_API_KEY='}
+${config.googleApiKey ? `GOOGLE_API_KEY=${config.googleApiKey}` : '# GOOGLE_API_KEY='}
+${config.groqApiKey ? `GROQ_API_KEY=${config.groqApiKey}` : '# GROQ_API_KEY='}
+${config.mistralApiKey ? `MISTRAL_API_KEY=${config.mistralApiKey}` : '# MISTRAL_API_KEY='}
+
+# =============================================================================
+# Extended AI API Keys
+# =============================================================================
+${config.deepseekApiKey ? `DEEPSEEK_API_KEY=${config.deepseekApiKey}` : '# DEEPSEEK_API_KEY='}
+${config.perplexityApiKey ? `PERPLEXITY_API_KEY=${config.perplexityApiKey}` : '# PERPLEXITY_API_KEY='}
+${config.fireworksApiKey ? `FIREWORKS_API_KEY=${config.fireworksApiKey}` : '# FIREWORKS_API_KEY='}
+${config.togetheraiApiKey ? `TOGETHERAI_API_KEY=${config.togetheraiApiKey}` : '# TOGETHERAI_API_KEY='}
+${config.huggingfaceToken ? `HUGGINGFACE_TOKEN=${config.huggingfaceToken}` : '# HUGGINGFACE_TOKEN='}
+${config.xaiApiKey ? `XAI_API_KEY=${config.xaiApiKey}` : '# XAI_API_KEY='}
+${config.nvidiaApiKey ? `NVIDIA_API_KEY=${config.nvidiaApiKey}` : '# NVIDIA_API_KEY='}
+${config.sambaNovaApiKey ? `SAMBANOVA_API_KEY=${config.sambaNovaApiKey}` : '# SAMBANOVA_API_KEY='}
+${config.hyperbolicApiKey ? `HYPERBOLIC_API_KEY=${config.hyperbolicApiKey}` : '# HYPERBOLIC_API_KEY='}
+${config.klusterApiKey ? `KLUSTER_API_KEY=${config.klusterApiKey}` : '# KLUSTER_API_KEY='}
+${config.nanogptApiKey ? `NANOGPT_API_KEY=${config.nanogptApiKey}` : '# NANOGPT_API_KEY='}
+${config.glhfApiKey ? `GLHF_API_KEY=${config.glhfApiKey}` : '# GLHF_API_KEY='}
+${config.apipieApiKey ? `APIPIE_API_KEY=${config.apipieApiKey}` : '# APIPIE_API_KEY='}
+${config.unifyApiKey ? `UNIFY_API_KEY=${config.unifyApiKey}` : '# UNIFY_API_KEY='}
+${config.openrouterKey ? `OPENROUTER_KEY=${config.openrouterKey}` : '# OPENROUTER_KEY='}
+
+# =============================================================================
+# Azure OpenAI Configuration
+# =============================================================================
+${config.azureApiKey ? `AZURE_API_KEY=${config.azureApiKey}` : '# AZURE_API_KEY='}
+${config.azureOpenaiApiInstanceName ? `AZURE_OPENAI_API_INSTANCE_NAME=${config.azureOpenaiApiInstanceName}` : '# AZURE_OPENAI_API_INSTANCE_NAME='}
+${config.azureOpenaiApiDeploymentName ? `AZURE_OPENAI_API_DEPLOYMENT_NAME=${config.azureOpenaiApiDeploymentName}` : '# AZURE_OPENAI_API_DEPLOYMENT_NAME='}
+${config.azureOpenaiApiVersion ? `AZURE_OPENAI_API_VERSION=${config.azureOpenaiApiVersion}` : '# AZURE_OPENAI_API_VERSION='}
+${config.azureOpenaiModels ? `AZURE_OPENAI_MODELS=${config.azureOpenaiModels}` : '# AZURE_OPENAI_MODELS='}
+
+# =============================================================================
+# AWS Bedrock Configuration
+# =============================================================================
+${config.awsAccessKeyId ? `AWS_ACCESS_KEY_ID=${config.awsAccessKeyId}` : '# AWS_ACCESS_KEY_ID='}
+${config.awsSecretAccessKey ? `AWS_SECRET_ACCESS_KEY=${config.awsSecretAccessKey}` : '# AWS_SECRET_ACCESS_KEY='}
+${config.awsRegion ? `AWS_REGION=${config.awsRegion}` : '# AWS_REGION='}
+${config.awsBedrockRegion ? `AWS_BEDROCK_REGION=${config.awsBedrockRegion}` : '# AWS_BEDROCK_REGION='}
+${config.awsEndpointURL ? `AWS_ENDPOINT_URL=${config.awsEndpointURL}` : '# AWS_ENDPOINT_URL='}
+${config.awsBucketName ? `AWS_BUCKET_NAME=${config.awsBucketName}` : '# AWS_BUCKET_NAME='}
+
+# =============================================================================
+# File Storage Configuration
+# =============================================================================
+${config.fileUploadPath ? `FILE_UPLOAD_PATH=${config.fileUploadPath}` : '# FILE_UPLOAD_PATH='}
+${config.firebaseApiKey ? `FIREBASE_API_KEY=${config.firebaseApiKey}` : '# FIREBASE_API_KEY='}
+${config.firebaseAuthDomain ? `FIREBASE_AUTH_DOMAIN=${config.firebaseAuthDomain}` : '# FIREBASE_AUTH_DOMAIN='}
+${config.firebaseProjectId ? `FIREBASE_PROJECT_ID=${config.firebaseProjectId}` : '# FIREBASE_PROJECT_ID='}
+${config.firebaseStorageBucket ? `FIREBASE_STORAGE_BUCKET=${config.firebaseStorageBucket}` : '# FIREBASE_STORAGE_BUCKET='}
+${config.firebaseMessagingSenderId ? `FIREBASE_MESSAGING_SENDER_ID=${config.firebaseMessagingSenderId}` : '# FIREBASE_MESSAGING_SENDER_ID='}
+${config.firebaseAppId ? `FIREBASE_APP_ID=${config.firebaseAppId}` : '# FIREBASE_APP_ID='}
+${config.azureStorageConnectionString ? `AZURE_STORAGE_CONNECTION_STRING=${config.azureStorageConnectionString}` : '# AZURE_STORAGE_CONNECTION_STRING='}
+${config.azureStoragePublicAccess !== undefined ? `AZURE_STORAGE_PUBLIC_ACCESS=${config.azureStoragePublicAccess}` : '# AZURE_STORAGE_PUBLIC_ACCESS=false'}
+${config.azureContainerName ? `AZURE_CONTAINER_NAME=${config.azureContainerName}` : '# AZURE_CONTAINER_NAME='}
+
+# =============================================================================
+# Search & External APIs Configuration
+# =============================================================================
+${config.googleSearchApiKey ? `GOOGLE_SEARCH_API_KEY=${config.googleSearchApiKey}` : '# GOOGLE_SEARCH_API_KEY='}
+${config.googleCSEId ? `GOOGLE_CSE_ID=${config.googleCSEId}` : '# GOOGLE_CSE_ID='}
+${config.bingSearchApiKey ? `BING_SEARCH_API_KEY=${config.bingSearchApiKey}` : '# BING_SEARCH_API_KEY='}
+${config.openweatherApiKey ? `OPENWEATHER_API_KEY=${config.openweatherApiKey}` : '# OPENWEATHER_API_KEY='}
+${config.librechatCodeApiKey ? `LIBRECHAT_CODE_API_KEY=${config.librechatCodeApiKey}` : '# LIBRECHAT_CODE_API_KEY='}
+
+# =============================================================================
+# RAG API Configuration
+# =============================================================================
+${config.ragApiURL ? `RAG_API_URL=${config.ragApiURL}` : '# RAG_API_URL='}
+${config.ragOpenaiApiKey ? `RAG_OPENAI_API_KEY=${config.ragOpenaiApiKey}` : '# RAG_OPENAI_API_KEY='}
+${config.ragPort ? `RAG_PORT=${config.ragPort}` : '# RAG_PORT='}
+${config.ragHost ? `RAG_HOST=${config.ragHost}` : '# RAG_HOST='}
+${config.collectionName ? `COLLECTION_NAME=${config.collectionName}` : '# COLLECTION_NAME='}
+${config.chunkSize ? `CHUNK_SIZE=${config.chunkSize}` : '# CHUNK_SIZE='}
+${config.chunkOverlap ? `CHUNK_OVERLAP=${config.chunkOverlap}` : '# CHUNK_OVERLAP='}
+${config.embeddingsProvider ? `EMBEDDINGS_PROVIDER=${config.embeddingsProvider}` : '# EMBEDDINGS_PROVIDER='}
+
+# =============================================================================
+# MeiliSearch Configuration
+# =============================================================================
+${config.search !== undefined ? `SEARCH=${config.search}` : '# SEARCH=true'}
+${config.meilisearchURL ? `MEILISEARCH_URL=${config.meilisearchURL}` : '# MEILISEARCH_URL='}
+${config.meilisearchMasterKey ? `MEILISEARCH_MASTER_KEY=${config.meilisearchMasterKey}` : '# MEILISEARCH_MASTER_KEY='}
+${config.meiliNoAnalytics !== undefined ? `MEILI_NO_ANALYTICS=${config.meiliNoAnalytics}` : '# MEILI_NO_ANALYTICS=true'}
+
+# =============================================================================
+# Rate Limiting & Security Configuration
+# =============================================================================
+${config.limitConcurrentMessages !== undefined ? `LIMIT_CONCURRENT_MESSAGES=${config.limitConcurrentMessages}` : '# LIMIT_CONCURRENT_MESSAGES=true'}
+${config.concurrentMessageMax ? `CONCURRENT_MESSAGE_MAX=${config.concurrentMessageMax}` : '# CONCURRENT_MESSAGE_MAX=2'}
+${config.banViolations !== undefined ? `BAN_VIOLATIONS=${config.banViolations}` : '# BAN_VIOLATIONS=true'}
+${config.banDuration ? `BAN_DURATION=${config.banDuration}` : '# BAN_DURATION=7200000'}
+${config.banInterval ? `BAN_INTERVAL=${config.banInterval}` : '# BAN_INTERVAL=20'}
+${config.loginViolationScore ? `LOGIN_VIOLATION_SCORE=${config.loginViolationScore}` : '# LOGIN_VIOLATION_SCORE=1'}
+${config.registrationViolationScore ? `REGISTRATION_VIOLATION_SCORE=${config.registrationViolationScore}` : '# REGISTRATION_VIOLATION_SCORE=1'}
+${config.concurrentViolationScore ? `CONCURRENT_VIOLATION_SCORE=${config.concurrentViolationScore}` : '# CONCURRENT_VIOLATION_SCORE=1'}
+${config.messageViolationScore ? `MESSAGE_VIOLATION_SCORE=${config.messageViolationScore}` : '# MESSAGE_VIOLATION_SCORE=1'}
+${config.nonBrowserViolationScore ? `NON_BROWSER_VIOLATION_SCORE=${config.nonBrowserViolationScore}` : '# NON_BROWSER_VIOLATION_SCORE=20'}
+${config.loginMax ? `LOGIN_MAX=${config.loginMax}` : '# LOGIN_MAX=7'}
+${config.loginWindow ? `LOGIN_WINDOW=${config.loginWindow}` : '# LOGIN_WINDOW=5'}
+
+# =============================================================================
+# LDAP Configuration
+# =============================================================================
+${config.ldapURL ? `LDAP_URL=${config.ldapURL}` : '# LDAP_URL='}
+${config.ldapBindDN ? `LDAP_BIND_DN=${config.ldapBindDN}` : '# LDAP_BIND_DN='}
+${config.ldapBindCredentials ? `LDAP_BIND_CREDENTIALS=${config.ldapBindCredentials}` : '# LDAP_BIND_CREDENTIALS='}
+${config.ldapSearchBase ? `LDAP_SEARCH_BASE=${config.ldapSearchBase}` : '# LDAP_SEARCH_BASE='}
+${config.ldapSearchFilter ? `LDAP_SEARCH_FILTER=${config.ldapSearchFilter}` : '# LDAP_SEARCH_FILTER='}
+
+# =============================================================================
+# Turnstile Configuration
+# =============================================================================
+${config.turnstileSiteKey ? `TURNSTILE_SITE_KEY=${config.turnstileSiteKey}` : '# TURNSTILE_SITE_KEY='}
+${config.turnstileSecretKey ? `TURNSTILE_SECRET_KEY=${config.turnstileSecretKey}` : '# TURNSTILE_SECRET_KEY='}
+
+# =============================================================================
+# Features Configuration
+# =============================================================================
+${config.allowSharedLinks !== undefined ? `ALLOW_SHARED_LINKS=${config.allowSharedLinks}` : '# ALLOW_SHARED_LINKS=true'}
+${config.allowSharedLinksPublic !== undefined ? `ALLOW_SHARED_LINKS_PUBLIC=${config.allowSharedLinksPublic}` : '# ALLOW_SHARED_LINKS_PUBLIC=false'}
+${config.titleConvo !== undefined ? `TITLE_CONVO=${config.titleConvo}` : '# TITLE_CONVO=true'}
+${config.summaryConvo !== undefined ? `SUMMARY_CONVO=${config.summaryConvo}` : '# SUMMARY_CONVO=false'}
+
+# =============================================================================
+# Caching Configuration
+# =============================================================================
+${config.staticCacheMaxAge ? `STATIC_CACHE_MAX_AGE=${config.staticCacheMaxAge}` : '# STATIC_CACHE_MAX_AGE='}
+${config.staticCacheSMaxAge ? `STATIC_CACHE_S_MAX_AGE=${config.staticCacheSMaxAge}` : '# STATIC_CACHE_S_MAX_AGE='}
+${config.indexCacheControl ? `INDEX_CACHE_CONTROL=${config.indexCacheControl}` : '# INDEX_CACHE_CONTROL='}
+${config.indexPragma ? `INDEX_PRAGMA=${config.indexPragma}` : '# INDEX_PRAGMA='}
+${config.indexExpires ? `INDEX_EXPIRES=${config.indexExpires}` : '# INDEX_EXPIRES='}
+
+# =============================================================================
+# MCP Configuration
+# =============================================================================
+${config.mcpOauthOnAuthError ? `MCP_OAUTH_ON_AUTH_ERROR=${config.mcpOauthOnAuthError}` : '# MCP_OAUTH_ON_AUTH_ERROR='}
+${config.mcpOauthDetectionTimeout ? `MCP_OAUTH_DETECTION_TIMEOUT=${config.mcpOauthDetectionTimeout}` : '# MCP_OAUTH_DETECTION_TIMEOUT='}
+
+# =============================================================================
+# User Management Configuration
+# =============================================================================
+${config.uid ? `UID=${config.uid}` : '# UID='}
+${config.gid ? `GID=${config.gid}` : '# GID='}
+
+# =============================================================================
+# Debug Configuration
+# =============================================================================
+${config.debugLogging !== undefined ? `DEBUG_LOGGING=${config.debugLogging}` : '# DEBUG_LOGGING=false'}
+${config.debugConsole !== undefined ? `DEBUG_CONSOLE=${config.debugConsole}` : '# DEBUG_CONSOLE=false'}
+${config.consoleJSON !== undefined ? `CONSOLE_JSON=${config.consoleJSON}` : '# CONSOLE_JSON=false'}
+
+# =============================================================================
+# Miscellaneous Configuration
+# =============================================================================
+${config.cdnProvider ? `CDN_PROVIDER=${config.cdnProvider}` : '# CDN_PROVIDER='}
 ${config.googleApiKey ? `GOOGLE_API_KEY=${config.googleApiKey}` : '# GOOGLE_API_KEY=your_google_api_key_here'}
 ${config.groqApiKey ? `GROQ_API_KEY=${config.groqApiKey}` : '# GROQ_API_KEY=your_groq_api_key_here'}
 ${config.mistralApiKey ? `MISTRAL_API_KEY=${config.mistralApiKey}` : '# MISTRAL_API_KEY=your_mistral_api_key_here'}
