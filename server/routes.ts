@@ -773,7 +773,44 @@ endpoints:
       - "stop"
       - "user"
     titleConvo: ${config.endpoints?.openAI?.titleConvo ?? true}
-    titleModel: "${config.endpoints?.openAI?.titleModel ?? 'gpt-3.5-turbo'}"
+    titleModel: "${config.endpoints?.openAI?.titleModel ?? 'gpt-3.5-turbo'}"${config.anthropicApiKey ? `
+  anthropic:
+    title: "Anthropic"
+    apiKey: "\${ANTHROPIC_API_KEY}"
+    models:
+      fetch: true
+    dropParams:
+      - "frequency_penalty"
+      - "presence_penalty"
+    titleConvo: true
+    titleModel: "claude-3-haiku-20240307"` : ''}${config.googleApiKey ? `
+  google:
+    title: "Google AI"
+    apiKey: "\${GOOGLE_API_KEY}"
+    models:
+      fetch: true
+    dropParams:
+      - "frequency_penalty"
+      - "presence_penalty"
+      - "stop"
+    titleConvo: true
+    titleModel: "gemini-1.5-flash"` : ''}${config.groqApiKey ? `
+  groq:
+    title: "Groq"
+    apiKey: "\${GROQ_API_KEY}"
+    baseURL: "https://api.groq.com/openai/v1"
+    models:
+      fetch: true
+    titleConvo: true
+    titleModel: "llama-3.1-8b-instant"` : ''}${config.mistralApiKey ? `
+  mistral:
+    title: "Mistral AI"
+    apiKey: "\${MISTRAL_API_KEY}"
+    baseURL: "https://api.mistral.ai/v1"
+    models:
+      fetch: true
+    titleConvo: true
+    titleModel: "mistral-small-latest"` : ''}
 
 # Interface Configuration
 interface:
@@ -801,9 +838,21 @@ fileConfig:
       fileSizeLimit: ${config.fileConfig?.fileSizeLimit ?? 10}
       totalSizeLimit: ${(config.fileConfig?.fileSizeLimit ?? 10) * (config.fileConfig?.maxFiles ?? 5)}
       supportedMimeTypes:
-${(config.fileConfig?.supportedMimeTypes ?? ['text/plain', 'application/pdf']).map((type: string) => `        - "${type}"`).join('\n')}
-
-
+${(config.fileConfig?.supportedMimeTypes ?? ['text/plain', 'application/pdf']).map((type: string) => `        - "${type}"`).join('\n')}${config.anthropicApiKey ? `
+    anthropic:
+      disabled: false
+      fileLimit: ${config.fileConfig?.maxFiles ?? 5}
+      fileSizeLimit: ${config.fileConfig?.fileSizeLimit ?? 10}
+      totalSizeLimit: ${(config.fileConfig?.fileSizeLimit ?? 10) * (config.fileConfig?.maxFiles ?? 5)}
+      supportedMimeTypes:
+${(config.fileConfig?.supportedMimeTypes ?? ['text/plain', 'application/pdf']).map((type: string) => `        - "${type}"`).join('\n')}` : ''}${config.googleApiKey ? `
+    google:
+      disabled: false
+      fileLimit: ${config.fileConfig?.maxFiles ?? 5}
+      fileSizeLimit: ${config.fileConfig?.fileSizeLimit ?? 10}
+      totalSizeLimit: ${(config.fileConfig?.fileSizeLimit ?? 10) * (config.fileConfig?.maxFiles ?? 5)}
+      supportedMimeTypes:
+${(config.fileConfig?.supportedMimeTypes ?? ['text/plain', 'application/pdf']).map((type: string) => `        - "${type}"`).join('\n')}` : ''}
 
 # Rate Limits
 rateLimits:
