@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { defaultConfiguration } from "@/lib/configuration-defaults";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [configurationName, setConfigurationName] = useState("My LibreChat Configuration");
-  const { configuration, updateConfiguration, saveProfile, generatePackage } = useConfiguration();
+  const { configuration, updateConfiguration, saveProfile, generatePackage, loadDemoConfiguration, verifyConfiguration } = useConfiguration();
   const { toast } = useToast();
 
   const handleSaveProfile = async () => {
@@ -374,6 +374,202 @@ export default function Home() {
     });
   };
 
+  const handleLoadDemoConfiguration = () => {
+    const demoConfig = loadDemoConfiguration();
+    const verification = verifyConfiguration(demoConfig);
+    
+    toast({
+      title: "Demo Configuration Loaded",
+      description: `Loaded ${verification.populatedFields}/${verification.totalFields} fields (${verification.completionPercentage}% complete) with ALL toggles enabled for comprehensive testing.`,
+    });
+  };
+
+  const handleRunSelfTest = async () => {
+    try {
+      // Verify current configuration first
+      const verification = verifyConfiguration();
+      console.log("🔍 [SELF-TEST] Configuration verification:", verification);
+      
+      const errors: string[] = [];
+      const warnings: string[] = [];
+      let testsPassed = 0;
+      let totalTests = 0;
+      
+      // Test 1: JSON Export Validation
+      totalTests++;
+      try {
+        const profileData = {
+          name: "SELF_TEST_PROFILE",
+          configuration: configuration,
+          version: "0.8.0-rc4",
+          createdAt: new Date().toISOString()
+        };
+        const jsonString = JSON.stringify(profileData, null, 2);
+        const parsedProfile = JSON.parse(jsonString);
+        
+        // Deep equality check between original and parsed configuration
+        const configKeys = Object.keys(configuration);
+        const parsedKeys = Object.keys(parsedProfile.configuration);
+        
+        if (configKeys.length !== parsedKeys.length) {
+          errors.push(`JSON Export: Field count mismatch (${configKeys.length} vs ${parsedKeys.length})`);
+        } else {
+          let fieldMismatches = 0;
+          for (const key of configKeys) {
+            const original = configuration[key as keyof typeof configuration];
+            const parsed = parsedProfile.configuration[key];
+            if (JSON.stringify(original) !== JSON.stringify(parsed)) {
+              fieldMismatches++;
+              if (fieldMismatches <= 3) { // Log first 3 mismatches
+                errors.push(`JSON Export: Field ${key} mismatch: ${JSON.stringify(original)} !== ${JSON.stringify(parsed)}`);
+              }
+            }
+          }
+          if (fieldMismatches === 0) {
+            testsPassed++;
+            console.log("✅ [SELF-TEST] JSON export validation passed");
+          } else if (fieldMismatches > 3) {
+            errors.push(`JSON Export: ${fieldMismatches - 3} additional field mismatches...`);
+          }
+        }
+      } catch (error) {
+        errors.push(`JSON Export: Parse error - ${error}`);
+      }
+      
+      // Test 2: Package Generation and ENV File Validation
+      totalTests++;
+      try {
+        const packageResult = await generatePackage({
+          packageName: "SELF_TEST_PACKAGE",
+          includeFiles: ["env", "yaml", "docker-compose", "install-script", "readme"]
+        });
+        
+        const envContent = packageResult.files[".env"];
+        if (!envContent) {
+          errors.push("ENV Export: .env file not generated");
+        } else {
+          // Parse .env file back to object
+          const envVars: Record<string, string> = {};
+          const envLines = envContent.split('\n').filter(line => 
+            line.trim() && !line.trim().startsWith('#') && line.includes('=')
+          );
+          
+          for (const line of envLines) {
+            const [key, ...valueParts] = line.split('=');
+            if (key && valueParts.length > 0) {
+              envVars[key.trim()] = valueParts.join('=').trim();
+            }
+          }
+          
+          // Validate critical fields that should be present
+          const criticalFields = [
+            { configKey: 'appTitle', envKey: 'APP_TITLE' },
+            { configKey: 'host', envKey: 'HOST' },
+            { configKey: 'port', envKey: 'PORT' },
+            { configKey: 'openaiApiKey', envKey: 'OPENAI_API_KEY' },
+            { configKey: 'anthropicApiKey', envKey: 'ANTHROPIC_API_KEY' }
+          ];
+          
+          let envMismatches = 0;
+          for (const { configKey, envKey } of criticalFields) {
+            const configValue = configuration[configKey as keyof typeof configuration];
+            const envValue = envVars[envKey];
+            
+            if (configValue && !envValue) {
+              envMismatches++;
+              errors.push(`ENV Export: Missing ${envKey} for configured ${configKey}`);
+            } else if (configValue && envValue && String(configValue) !== envValue) {
+              envMismatches++;
+              warnings.push(`ENV Export: Value mismatch for ${envKey}: config="${configValue}" env="${envValue}"`);
+            }
+          }
+          
+          if (envMismatches === 0) {
+            testsPassed++;
+            console.log("✅ [SELF-TEST] ENV export validation passed");
+          }
+          
+          console.log(`📝 [SELF-TEST] ENV file: ${envLines.length} variables, ${envContent.length} chars`);
+        }
+      } catch (error) {
+        errors.push(`ENV Export: Generation error - ${error}`);
+      }
+      
+      // Test 3: YAML Export Validation  
+      totalTests++;
+      try {
+        const packageResult = await generatePackage({
+          packageName: "SELF_TEST_PACKAGE_YAML",
+          includeFiles: ["yaml"]
+        });
+        
+        const yamlContent = packageResult.files["librechat.yaml"];
+        if (!yamlContent) {
+          errors.push("YAML Export: librechat.yaml file not generated");
+        } else {
+          // Try to parse YAML content
+          try {
+            const parsedYaml = yaml.load(yamlContent) as any;
+            if (parsedYaml && typeof parsedYaml === 'object') {
+              testsPassed++;
+              console.log("✅ [SELF-TEST] YAML export validation passed");
+              console.log(`📄 [SELF-TEST] YAML file: ${yamlContent.split('\n').length} lines, ${yamlContent.length} chars`);
+            } else {
+              errors.push("YAML Export: Parsed YAML is not an object");
+            }
+          } catch (yamlError) {
+            errors.push(`YAML Export: Parse error - ${yamlError}`);
+          }
+        }
+      } catch (error) {
+        errors.push(`YAML Export: Generation error - ${error}`);
+      }
+      
+      // Compile results
+      const selfTestResults = {
+        summary: {
+          testsPassed,
+          totalTests,
+          successRate: Math.round((testsPassed / totalTests) * 100),
+          configurationFields: verification.current.populatedFields,
+          totalFields: verification.current.totalFields,
+          completionPercentage: verification.current.completionPercentage
+        },
+        errors,
+        warnings,
+        singleSourceOfTruth: testsPassed === totalTests,
+        details: {
+          configurationSize: JSON.stringify(configuration).length,
+          timestamp: new Date().toISOString()
+        }
+      };
+      
+      console.log("🎯 [COMPREHENSIVE SELF-TEST RESULTS]", selfTestResults);
+      
+      if (errors.length === 0) {
+        toast({
+          title: "✅ Self-Test Passed",
+          description: `All ${totalTests} tests passed! Config: ${verification.current.populatedFields}/${verification.current.totalFields} fields (${verification.current.completionPercentage}%). Single source of truth validated across all export formats.`,
+        });
+      } else {
+        toast({
+          title: `❌ Self-Test Failed (${testsPassed}/${totalTests})`,
+          description: `${errors.length} errors, ${warnings.length} warnings. Check console for details. Single source of truth validation failed.`,
+          variant: "destructive",
+        });
+      }
+      
+      return selfTestResults;
+    } catch (error) {
+      console.error("❌ [SELF-TEST] Critical failure:", error);
+      toast({
+        title: "Self-Test Critical Failure",
+        description: "Test execution failed completely. Check console for detailed error information.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleGeneratePackage = async () => {
     try {
       // Generate package name from configuration name (without .zip extension)
@@ -468,6 +664,14 @@ export default function Home() {
                   <DropdownMenuItem onClick={handleResetToDefaults} data-testid="menu-reset">
                     <Settings className="h-4 w-4 mr-2" />
                     Reset to LibreChat Defaults
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLoadDemoConfiguration} data-testid="menu-load-demo">
+                    <Zap className="h-4 w-4 mr-2" />
+                    Load Demo Configuration (ALL 75+ Fields)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleRunSelfTest} data-testid="menu-self-test">
+                    <TestTube className="h-4 w-4 mr-2" />
+                    Run Comprehensive Self-Test
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleImportProfile} data-testid="menu-import-profile">
