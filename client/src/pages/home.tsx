@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { defaultConfiguration } from "@/lib/configuration-defaults";
+import { createResetConfiguration } from "@/lib/librechat-defaults";
 import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
@@ -364,13 +365,15 @@ export default function Home() {
   };
 
   const handleResetToDefaults = () => {
+    // Create reset configuration that preserves user secrets but resets settings to LibreChat defaults
+    const resetConfig = createResetConfiguration(configuration);
     
-    // Reset configuration to LibreChat defaults (keep profile name unchanged)
-    updateConfiguration(defaultConfiguration);
+    // Update configuration with LibreChat defaults
+    updateConfiguration(resetConfig);
     
     toast({
-      title: "Reset Complete",
-      description: "Configuration reset to LibreChat v0.8.0-rc3 defaults.",
+      title: "Reset Complete", 
+      description: "Configuration reset to LibreChat RC4 defaults while preserving your API keys and secrets.",
     });
   };
 
