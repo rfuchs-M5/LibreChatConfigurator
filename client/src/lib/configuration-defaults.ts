@@ -55,4 +55,108 @@ export const defaultConfiguration: Configuration = {
   allowSharedLinks: false,
   allowSharedLinksPublic: false,
   summaryConvo: false,
+  
+  // Missing Server Fields
+  nodeEnv: "production" as const,
+  noIndex: true,
+  
+  // Missing Debug Fields  
+  debugConsole: false,
+  consoleJSON: false,
+  
+  // Proper nested objects for LibreChat compatibility
+  registration: {
+    socialLogins: [],
+    allowedDomains: []
+  },
+  
+  fileConfig: {
+    serverFileSizeLimit: 20,
+    avatarSizeLimit: 5,
+    clientImageResize: {
+      enabled: true,
+      maxWidth: 1920,
+      maxHeight: 1080,
+      quality: 0.8,
+      compressFormat: "jpeg"
+    }
+  },
+  
+  webSearch: {
+    serperApiKey: "",
+    searxngInstanceUrl: "",
+    searxngApiKey: "",
+    firecrawlApiKey: "",
+    firecrawlApiUrl: "",
+    jinaApiKey: "",
+    cohereApiKey: "",
+    braveApiKey: "",
+    tavilyApiKey: "",
+    searchProvider: "serper",
+    scraperType: "serper", 
+    rerankerType: "jina",
+    scraperTimeout: 10000,
+    safeSearch: true
+  },
+  
+  rateLimits: {
+    fileUploads: {
+      ipMax: 100,
+      ipWindowInMinutes: 60,
+      userMax: 50,
+      userWindowInMinutes: 60
+    },
+    conversationsImport: {
+      ipMax: 100,
+      ipWindowInMinutes: 60,
+      userMax: 50,
+      userWindowInMinutes: 60
+    },
+    stt: {
+      ipMax: 100,
+      ipWindowInMinutes: 1,
+      userMax: 50,
+      userWindowInMinutes: 1
+    },
+    tts: {
+      ipMax: 100,
+      ipWindowInMinutes: 1,
+      userMax: 50,
+      userWindowInMinutes: 1
+    }
+  },
+  
+  interface: {
+    fileSearch: true,
+    uploadAsText: false,
+    privacyPolicy: {
+      externalUrl: "",
+      openNewTab: true
+    },
+    termsOfService: {
+      externalUrl: "",
+      openNewTab: true,
+      modalAcceptance: false,
+      modalTitle: "",
+      modalContent: ""
+    },
+    endpointsMenu: true,
+    modelSelect: true,
+    parameters: true,
+    sidePanel: true,
+    presets: true,
+    prompts: true,
+    bookmarks: true,
+    multiConvo: false,
+    agents: true,
+    peoplePicker: {
+      users: true,
+      groups: true,
+      roles: true
+    },
+    marketplace: {
+      use: false
+    },
+    fileCitations: true
+  },
 };

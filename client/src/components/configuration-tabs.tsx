@@ -90,7 +90,7 @@ export function ConfigurationTabs({
       icon: Shield,
       description: "Login & Registration",
       color: "from-yellow-500 to-yellow-600",
-      settings: ["allowRegistration", "allowEmailLogin", "allowSocialLogin", "allowSocialRegistration", "allowPasswordReset"],
+      settings: ["allowRegistration", "allowEmailLogin", "allowSocialLogin", "allowSocialRegistration", "allowPasswordReset", "registration.socialLogins", "registration.allowedDomains"],
     },
     {
       id: "email",
@@ -161,7 +161,8 @@ export function ConfigurationTabs({
       settings: [
         "fileUploadPath", 
         "firebaseApiKey", "firebaseAuthDomain", "firebaseProjectId", "firebaseStorageBucket", "firebaseMessagingSenderId", "firebaseAppId",
-        "azureStorageConnectionString", "azureStoragePublicAccess", "azureContainerName"
+        "azureStorageConnectionString", "azureStoragePublicAccess", "azureContainerName",
+        "fileConfig.serverFileSizeLimit", "fileConfig.avatarSizeLimit", "fileConfig.clientImageResize.enabled", "fileConfig.clientImageResize.maxWidth", "fileConfig.clientImageResize.maxHeight", "fileConfig.clientImageResize.quality", "fileConfig.clientImageResize.compressFormat"
       ],
     },
     {
@@ -170,7 +171,7 @@ export function ConfigurationTabs({
       icon: Search,
       description: "Web Search & External APIs",
       color: "from-violet-500 to-violet-600",
-      settings: ["googleSearchApiKey", "googleCSEId", "bingSearchApiKey", "openweatherApiKey", "librechatCodeApiKey"],
+      settings: ["googleSearchApiKey", "googleCSEId", "bingSearchApiKey", "openweatherApiKey", "librechatCodeApiKey", "webSearch.serperApiKey", "webSearch.searxngInstanceUrl", "webSearch.searxngApiKey", "webSearch.firecrawlApiKey", "webSearch.firecrawlApiUrl", "webSearch.jinaApiKey", "webSearch.cohereApiKey", "webSearch.braveApiKey", "webSearch.tavilyApiKey", "webSearch.searchProvider", "webSearch.scraperType", "webSearch.rerankerType", "webSearch.scraperTimeout", "webSearch.safeSearch"],
     },
     {
       id: "rag",
@@ -197,7 +198,11 @@ export function ConfigurationTabs({
       settings: [
         "limitConcurrentMessages", "concurrentMessageMax", "banViolations", "banDuration", "banInterval",
         "loginViolationScore", "registrationViolationScore", "concurrentViolationScore", "messageViolationScore", 
-        "nonBrowserViolationScore", "loginMax", "loginWindow"
+        "nonBrowserViolationScore", "loginMax", "loginWindow",
+        "rateLimits.fileUploads.ipMax", "rateLimits.fileUploads.ipWindowInMinutes", "rateLimits.fileUploads.userMax", "rateLimits.fileUploads.userWindowInMinutes",
+        "rateLimits.conversationsImport.ipMax", "rateLimits.conversationsImport.ipWindowInMinutes", "rateLimits.conversationsImport.userMax", "rateLimits.conversationsImport.userWindowInMinutes",
+        "rateLimits.stt.ipMax", "rateLimits.stt.ipWindowInMinutes", "rateLimits.stt.userMax", "rateLimits.stt.userWindowInMinutes",
+        "rateLimits.tts.ipMax", "rateLimits.tts.ipWindowInMinutes", "rateLimits.tts.userMax", "rateLimits.tts.userWindowInMinutes"
       ],
     },
     {
@@ -222,7 +227,7 @@ export function ConfigurationTabs({
       icon: Eye,
       description: "Feature Toggles",
       color: "from-purple-500 to-purple-600",
-      settings: ["allowSharedLinks", "allowSharedLinksPublic", "titleConvo", "summaryConvo"],
+      settings: ["allowSharedLinks", "allowSharedLinksPublic", "titleConvo", "summaryConvo", "interface.fileSearch", "interface.uploadAsText", "interface.privacyPolicy.externalUrl", "interface.privacyPolicy.openNewTab", "interface.termsOfService.externalUrl", "interface.termsOfService.openNewTab", "interface.termsOfService.modalAcceptance", "interface.termsOfService.modalTitle", "interface.termsOfService.modalContent", "interface.endpointsMenu", "interface.modelSelect", "interface.parameters", "interface.sidePanel", "interface.presets", "interface.prompts", "interface.bookmarks", "interface.multiConvo", "interface.agents", "interface.peoplePicker.users", "interface.peoplePicker.groups", "interface.peoplePicker.roles", "interface.marketplace.use", "interface.fileCitations"],
     },
     {
       id: "caching",
@@ -238,7 +243,7 @@ export function ConfigurationTabs({
       icon: Network,
       description: "Model Context Protocol",
       color: "from-rose-500 to-rose-600",
-      settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
+      settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout", "mcpServersType", "mcpServersCommand", "mcpServersArgs", "mcpServersUrl", "mcpServersTimeout", "mcpServersInitTimeout", "mcpServersHeaders", "mcpServersServerInstructions", "mcpServersIconPath", "mcpServersChatMenu", "mcpServersCustomUserVars"],
     },
     {
       id: "users",
@@ -835,6 +840,91 @@ export function ConfigurationTabs({
       
       // Actions Configuration
       actionsAllowedDomains: { type: "array", description: "Allowed domains for actions", label: "Allowed Domains" },
+      
+      // Registration Nested Object Fields (path-based)
+      "registration.socialLogins": { type: "array", description: "Enabled social login providers", label: "Social Login Providers" },
+      "registration.allowedDomains": { type: "array", description: "Allowed domains for registration", label: "Allowed Domains" },
+      
+      // File Config Nested Object Fields (path-based)
+      "fileConfig.serverFileSizeLimit": { type: "number", description: "Server file size limit in MB", label: "Server File Size Limit (MB)" },
+      "fileConfig.avatarSizeLimit": { type: "number", description: "Avatar size limit in MB", label: "Avatar Size Limit (MB)" },
+      "fileConfig.clientImageResize.enabled": { type: "boolean", description: "Enable client-side image resize", label: "Client Image Resize" },
+      "fileConfig.clientImageResize.maxWidth": { type: "number", description: "Max width for image resize", label: "Max Resize Width" },
+      "fileConfig.clientImageResize.maxHeight": { type: "number", description: "Max height for image resize", label: "Max Resize Height" },
+      "fileConfig.clientImageResize.quality": { type: "number", description: "Image resize quality (0.1-1.0)", label: "Resize Quality" },
+      "fileConfig.clientImageResize.compressFormat": { type: "select", description: "Image compression format", label: "Compress Format" },
+      
+      // Web Search Nested Object Fields (path-based)
+      "webSearch.serperApiKey": { type: "password", description: "Serper API key for web search", label: "Serper API Key" },
+      "webSearch.searxngInstanceUrl": { type: "text", description: "SearXNG instance URL", label: "SearXNG URL" },
+      "webSearch.searxngApiKey": { type: "password", description: "SearXNG API key", label: "SearXNG API Key" },
+      "webSearch.firecrawlApiKey": { type: "password", description: "Firecrawl API key", label: "Firecrawl API Key" },
+      "webSearch.firecrawlApiUrl": { type: "text", description: "Firecrawl API URL", label: "Firecrawl API URL" },
+      "webSearch.jinaApiKey": { type: "password", description: "Jina API key for reranking", label: "Jina API Key" },
+      "webSearch.cohereApiKey": { type: "password", description: "Cohere API key for reranking", label: "Cohere API Key" },
+      "webSearch.braveApiKey": { type: "password", description: "Brave Search API key", label: "Brave API Key" },
+      "webSearch.tavilyApiKey": { type: "password", description: "Tavily Search API key", label: "Tavily API Key" },
+      "webSearch.searchProvider": { type: "select", description: "Web search provider", label: "Search Provider" },
+      "webSearch.scraperType": { type: "select", description: "Web scraper type", label: "Scraper Type" },
+      "webSearch.rerankerType": { type: "select", description: "Search reranker type", label: "Reranker Type" },
+      "webSearch.scraperTimeout": { type: "number", description: "Scraper timeout in milliseconds", label: "Scraper Timeout (ms)" },
+      "webSearch.safeSearch": { type: "boolean", description: "Enable safe search filtering", label: "Safe Search" },
+      
+      // Rate Limits Nested Object Fields
+      rateLimitsFileUploadsIpMax: { type: "number", description: "Max file uploads per IP", label: "File Uploads IP Max" },
+      rateLimitsFileUploadsIpWindowInMinutes: { type: "number", description: "File uploads IP window (minutes)", label: "File Uploads IP Window" },
+      rateLimitsFileUploadsUserMax: { type: "number", description: "Max file uploads per user", label: "File Uploads User Max" },
+      rateLimitsFileUploadsUserWindowInMinutes: { type: "number", description: "File uploads user window (minutes)", label: "File Uploads User Window" },
+      rateLimitsConversationsImportIpMax: { type: "number", description: "Max conversation imports per IP", label: "Conv Import IP Max" },
+      rateLimitsConversationsImportIpWindowInMinutes: { type: "number", description: "Conversation import IP window (minutes)", label: "Conv Import IP Window" },
+      rateLimitsConversationsImportUserMax: { type: "number", description: "Max conversation imports per user", label: "Conv Import User Max" },
+      rateLimitsConversationsImportUserWindowInMinutes: { type: "number", description: "Conversation import user window (minutes)", label: "Conv Import User Window" },
+      rateLimitsSttIpMax: { type: "number", description: "Max STT requests per IP", label: "STT IP Max" },
+      rateLimitsSttIpWindowInMinutes: { type: "number", description: "STT IP window (minutes)", label: "STT IP Window" },
+      rateLimitsSttUserMax: { type: "number", description: "Max STT requests per user", label: "STT User Max" },
+      rateLimitsSttUserWindowInMinutes: { type: "number", description: "STT user window (minutes)", label: "STT User Window" },
+      rateLimitsTtsIpMax: { type: "number", description: "Max TTS requests per IP", label: "TTS IP Max" },
+      rateLimitsTtsIpWindowInMinutes: { type: "number", description: "TTS IP window (minutes)", label: "TTS IP Window" },
+      rateLimitsTtsUserMax: { type: "number", description: "Max TTS requests per user", label: "TTS User Max" },
+      rateLimitsTtsUserWindowInMinutes: { type: "number", description: "TTS user window (minutes)", label: "TTS User Window" },
+      
+      // Interface Nested Object Fields (path-based)
+      "interface.fileSearch": { type: "boolean", description: "Enable file search in interface", label: "File Search" },
+      "interface.uploadAsText": { type: "boolean", description: "Enable upload as text feature", label: "Upload as Text" },
+      "interface.privacyPolicy.externalUrl": { type: "text", description: "External privacy policy URL", label: "Privacy Policy URL" },
+      "interface.privacyPolicy.openNewTab": { type: "boolean", description: "Open privacy policy in new tab", label: "Privacy Policy New Tab" },
+      "interface.termsOfService.externalUrl": { type: "text", description: "External terms of service URL", label: "Terms of Service URL" },
+      "interface.termsOfService.openNewTab": { type: "boolean", description: "Open terms in new tab", label: "Terms New Tab" },
+      "interface.termsOfService.modalAcceptance": { type: "boolean", description: "Require modal acceptance of terms", label: "Terms Modal Acceptance" },
+      "interface.termsOfService.modalTitle": { type: "text", description: "Terms modal title", label: "Terms Modal Title" },
+      "interface.termsOfService.modalContent": { type: "textarea", description: "Terms modal content", label: "Terms Modal Content" },
+      "interface.endpointsMenu": { type: "boolean", description: "Show endpoints menu", label: "Endpoints Menu" },
+      "interface.modelSelect": { type: "boolean", description: "Show model selection", label: "Model Select" },
+      "interface.parameters": { type: "boolean", description: "Show parameters panel", label: "Parameters Panel" },
+      "interface.sidePanel": { type: "boolean", description: "Show side panel", label: "Side Panel" },
+      "interface.presets": { type: "boolean", description: "Show presets", label: "Presets" },
+      "interface.prompts": { type: "boolean", description: "Show prompts", label: "Prompts" },
+      "interface.bookmarks": { type: "boolean", description: "Show bookmarks", label: "Bookmarks" },
+      "interface.multiConvo": { type: "boolean", description: "Enable multiple conversations", label: "Multi Conversation" },
+      "interface.agents": { type: "boolean", description: "Show agents", label: "Agents" },
+      "interface.peoplePicker.users": { type: "boolean", description: "Show users in people picker", label: "People Picker Users" },
+      "interface.peoplePicker.groups": { type: "boolean", description: "Show groups in people picker", label: "People Picker Groups" },
+      "interface.peoplePicker.roles": { type: "boolean", description: "Show roles in people picker", label: "People Picker Roles" },
+      "interface.marketplace.use": { type: "boolean", description: "Enable marketplace usage", label: "Marketplace" },
+      "interface.fileCitations": { type: "boolean", description: "Show file citations", label: "File Citations" },
+      
+      // MCP Servers Nested Object Fields
+      mcpServersType: { type: "select", description: "MCP server connection type", label: "Server Type" },
+      mcpServersCommand: { type: "text", description: "Command to execute MCP server", label: "Command" },
+      mcpServersArgs: { type: "array", description: "Command arguments for MCP server", label: "Arguments" },
+      mcpServersUrl: { type: "text", description: "MCP server URL", label: "Server URL" },
+      mcpServersTimeout: { type: "number", description: "MCP server timeout in ms", label: "Timeout (ms)" },
+      mcpServersInitTimeout: { type: "number", description: "MCP server init timeout in ms", label: "Init Timeout (ms)" },
+      mcpServersHeaders: { type: "object", description: "HTTP headers for MCP server", label: "Headers" },
+      mcpServersServerInstructions: { type: "textarea", description: "Instructions for MCP server", label: "Server Instructions" },
+      mcpServersIconPath: { type: "text", description: "Icon path for MCP server", label: "Icon Path" },
+      mcpServersChatMenu: { type: "boolean", description: "Show MCP server in chat menu", label: "Show in Chat Menu" },
+      mcpServersCustomUserVars: { type: "object", description: "Custom user variables for MCP server", label: "Custom User Variables" },
     };
     
     return fieldMap[fieldName] || { type: "text", description: `Configuration for ${fieldName}`, label: fieldName };
