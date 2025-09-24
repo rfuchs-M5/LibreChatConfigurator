@@ -9,6 +9,7 @@ import { defaultConfiguration } from "@/lib/configuration-defaults";
 import { createResetConfiguration } from "@/lib/librechat-defaults";
 import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
 import { Label } from "@/components/ui/label";
 import { ConfigurationHistory } from "@/components/ConfigurationHistory";
@@ -18,6 +19,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [configurationName, setConfigurationName] = useState("My LibreChat Configuration");
+  const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const { configuration, updateConfiguration, saveProfile, generatePackage, loadDemoConfiguration, verifyConfiguration } = useConfiguration();
   const { toast } = useToast();
 
@@ -365,6 +367,10 @@ export default function Home() {
   };
 
   const handleResetToDefaults = () => {
+    setShowResetConfirmation(true);
+  };
+
+  const confirmResetToDefaults = () => {
     // Create reset configuration that preserves user secrets but resets settings to LibreChat defaults
     const resetConfig = createResetConfiguration(configuration);
     
@@ -375,6 +381,8 @@ export default function Home() {
       title: "Reset Complete", 
       description: "Configuration reset to LibreChat RC4 defaults while preserving your API keys and secrets.",
     });
+    
+    setShowResetConfirmation(false);
   };
 
   const handleLoadDemoConfiguration = () => {
@@ -383,7 +391,7 @@ export default function Home() {
     
     toast({
       title: "Demo Configuration Loaded",
-      description: `Loaded ${verification.populatedFields}/${verification.totalFields} fields (${verification.completionPercentage}% complete) with ALL toggles enabled for comprehensive testing.`,
+      description: `Loaded ${verification.current.populatedFields}/${verification.current.totalFields} fields (${verification.current.completionPercentage}% complete) with ALL toggles enabled for comprehensive testing.`,
     });
   };
 
@@ -453,7 +461,7 @@ export default function Home() {
         } else {
           // Parse .env file back to object
           const envVars: Record<string, string> = {};
-          const envLines = envContent.split('\n').filter(line => 
+          const envLines = envContent.split('\n').filter((line: string) => 
             line.trim() && !line.trim().startsWith('#') && line.includes('=')
           );
           
@@ -743,6 +751,37 @@ export default function Home() {
           onGenerate={handleGeneratePackage}
         />
       )}
+
+      {/* Reset Confirmation Dialog */}
+      <AlertDialog open={showResetConfirmation} onOpenChange={setShowResetConfirmation}>
+        <AlertDialogContent data-testid="dialog-reset-confirmation">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset to LibreChat Defaults</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to reset your configuration to LibreChat RC4 defaults?
+              <br /><br />
+              <strong>This will:</strong>
+              <ul className="mt-2 space-y-1 text-sm">
+                <li>• Reset all settings to official LibreChat defaults</li>
+                <li>• <span className="text-green-600 font-medium">Preserve your API keys and secrets</span></li>
+                <li>• Clear custom configurations, integrations, and preferences</li>
+              </ul>
+              <br />
+              This action cannot be undone without re-importing your configuration.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-reset">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmResetToDefaults}
+              data-testid="button-confirm-reset"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Yes, Reset Configuration
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       
     </div>
   );
