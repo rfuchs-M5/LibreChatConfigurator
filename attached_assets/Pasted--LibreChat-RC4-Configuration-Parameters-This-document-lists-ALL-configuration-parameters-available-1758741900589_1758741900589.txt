@@ -94,11 +94,11 @@ This document lists ALL configuration parameters available in LibreChat v0.8.0-R
 | `allowSocialRegistration` | boolean | Allow social registration | ✅ | Authentication |
 | `allowPasswordReset` | boolean | Allow password reset | ✅ | Authentication |
 
-### Registration Object (IMPLEMENTED)
+### Registration Object (MISSING)
 | Parameter | Type | Description | UI Status | Tab Location |
 |-----------|------|-------------|-----------|--------------|
-| `registration.socialLogins` | array | Enabled social providers | ✅ | Authentication |
-| `registration.allowedDomains` | array | Domain whitelist | ✅ | Authentication |
+| `registration.socialLogins` | array | Enabled social providers | ❌ | Authentication |
+| `registration.allowedDomains` | array | Domain whitelist | ❌ | Authentication |
 
 ---
 
@@ -224,17 +224,17 @@ This document lists ALL configuration parameters available in LibreChat v0.8.0-R
 | `azureStoragePublicAccess` | boolean | Azure storage public access | ✅ | File Storage |
 | `azureContainerName` | string | Azure container name | ✅ | File Storage |
 
-### File Config Object (IMPLEMENTED)
+### File Config Object (MISSING)
 | Parameter | Type | Description | UI Status | Tab Location |
 |-----------|------|-------------|-----------|--------------|
-| `fileConfig.endpoints` | object | Per-endpoint file limits | ⚠️ | File Storage (Complex object needs specialized handling) |
-| `fileConfig.serverFileSizeLimit` | number | Server file size limit | ✅ | File Storage |
-| `fileConfig.avatarSizeLimit` | number | Avatar size limit | ✅ | File Storage |
-| `fileConfig.clientImageResize.enabled` | boolean | Enable client image resize | ✅ | File Storage |
-| `fileConfig.clientImageResize.maxWidth` | number | Max width for resize | ✅ | File Storage |
-| `fileConfig.clientImageResize.maxHeight` | number | Max height for resize | ✅ | File Storage |
-| `fileConfig.clientImageResize.quality` | number | Resize quality | ✅ | File Storage |
-| `fileConfig.clientImageResize.compressFormat` | enum | Compression format | ✅ | File Storage |
+| `fileConfig.endpoints` | object | Per-endpoint file limits | ❌ | File Storage |
+| `fileConfig.serverFileSizeLimit` | number | Server file size limit | ❌ | File Storage |
+| `fileConfig.avatarSizeLimit` | number | Avatar size limit | ❌ | File Storage |
+| `fileConfig.clientImageResize.enabled` | boolean | Enable client image resize | ❌ | File Storage |
+| `fileConfig.clientImageResize.maxWidth` | number | Max width for resize | ❌ | File Storage |
+| `fileConfig.clientImageResize.maxHeight` | number | Max height for resize | ❌ | File Storage |
+| `fileConfig.clientImageResize.quality` | number | Resize quality | ❌ | File Storage |
+| `fileConfig.clientImageResize.compressFormat` | enum | Compression format | ❌ | File Storage |
 
 ---
 
@@ -248,23 +248,23 @@ This document lists ALL configuration parameters available in LibreChat v0.8.0-R
 | `openweatherApiKey` | string | OpenWeather API key | ✅ | Search & APIs |
 | `librechatCodeApiKey` | string | LibreChat Code API key | ✅ | Search & APIs |
 
-### Web Search Object (IMPLEMENTED)
+### Web Search Object (MOSTLY MISSING)
 | Parameter | Type | Description | UI Status | Tab Location |
 |-----------|------|-------------|-----------|--------------|
-| `webSearch.serperApiKey` | string | Serper API key | ✅ | Search & APIs |
-| `webSearch.searxngInstanceUrl` | string | SearXNG instance URL | ✅ | Search & APIs |
-| `webSearch.searxngApiKey` | string | SearXNG API key | ✅ | Search & APIs |
-| `webSearch.firecrawlApiKey` | string | Firecrawl API key | ✅ | Search & APIs |
-| `webSearch.firecrawlApiUrl` | string | Firecrawl API URL | ✅ | Search & APIs |
-| `webSearch.jinaApiKey` | string | Jina API key | ✅ | Search & APIs |
-| `webSearch.cohereApiKey` | string | Cohere API key | ✅ | Search & APIs |
-| `webSearch.braveApiKey` | string | Brave API key | ✅ | Search & APIs |
-| `webSearch.tavilyApiKey` | string | Tavily API key | ✅ | Search & APIs |
-| `webSearch.searchProvider` | enum | Search provider | ✅ | Search & APIs |
-| `webSearch.scraperType` | enum | Scraper type | ✅ | Search & APIs |
-| `webSearch.rerankerType` | enum | Reranker type | ✅ | Search & APIs |
-| `webSearch.scraperTimeout` | number | Scraper timeout | ✅ | Search & APIs |
-| `webSearch.safeSearch` | boolean | Safe search | ✅ | Search & APIs |
+| `webSearch.serperApiKey` | string | Serper API key | ❌ | Search & APIs |
+| `webSearch.searxngInstanceUrl` | string | SearXNG instance URL | ❌ | Search & APIs |
+| `webSearch.searxngApiKey` | string | SearXNG API key | ❌ | Search & APIs |
+| `webSearch.firecrawlApiKey` | string | Firecrawl API key | ❌ | Search & APIs |
+| `webSearch.firecrawlApiUrl` | string | Firecrawl API URL | ❌ | Search & APIs |
+| `webSearch.jinaApiKey` | string | Jina API key | ❌ | Search & APIs |
+| `webSearch.cohereApiKey` | string | Cohere API key | ❌ | Search & APIs |
+| `webSearch.braveApiKey` | string | Brave API key | ❌ | Search & APIs |
+| `webSearch.tavilyApiKey` | string | Tavily API key | ❌ | Search & APIs |
+| `webSearch.searchProvider` | enum | Search provider | ❌ | Search & APIs |
+| `webSearch.scraperType` | enum | Scraper type | ❌ | Search & APIs |
+| `webSearch.rerankerType` | enum | Reranker type | ❌ | Search & APIs |
+| `webSearch.scraperTimeout` | number | Scraper timeout | ❌ | Search & APIs |
+| `webSearch.safeSearch` | boolean | Safe search | ❌ | Search & APIs |
 
 ---
 
@@ -311,25 +311,25 @@ This document lists ALL configuration parameters available in LibreChat v0.8.0-R
 | `loginMax` | number | Login max attempts | ✅ | Rate & Security |
 | `loginWindow` | number | Login window | ✅ | Rate & Security |
 
-### Rate Limits Object (IMPLEMENTED)
+### Rate Limits Object (COMPLETELY MISSING)
 | Parameter | Type | Description | UI Status | Tab Location |
 |-----------|------|-------------|-----------|--------------|
-| `rateLimits.fileUploads.ipMax` | number | File upload IP max | ✅ | Rate & Security |
-| `rateLimits.fileUploads.ipWindowInMinutes` | number | File upload IP window | ✅ | Rate & Security |
-| `rateLimits.fileUploads.userMax` | number | File upload user max | ✅ | Rate & Security |
-| `rateLimits.fileUploads.userWindowInMinutes` | number | File upload user window | ✅ | Rate & Security |
-| `rateLimits.conversationsImport.ipMax` | number | Conversations import IP max | ✅ | Rate & Security |
-| `rateLimits.conversationsImport.ipWindowInMinutes` | number | Conversations import IP window | ✅ | Rate & Security |
-| `rateLimits.conversationsImport.userMax` | number | Conversations import user max | ✅ | Rate & Security |
-| `rateLimits.conversationsImport.userWindowInMinutes` | number | Conversations import user window | ✅ | Rate & Security |
-| `rateLimits.stt.ipMax` | number | STT IP max | ✅ | Rate & Security |
-| `rateLimits.stt.ipWindowInMinutes` | number | STT IP window | ✅ | Rate & Security |
-| `rateLimits.stt.userMax` | number | STT user max | ✅ | Rate & Security |
-| `rateLimits.stt.userWindowInMinutes` | number | STT user window | ✅ | Rate & Security |
-| `rateLimits.tts.ipMax` | number | TTS IP max | ✅ | Rate & Security |
-| `rateLimits.tts.ipWindowInMinutes` | number | TTS IP window | ✅ | Rate & Security |
-| `rateLimits.tts.userMax` | number | TTS user max | ✅ | Rate & Security |
-| `rateLimits.tts.userWindowInMinutes` | number | TTS user window | ✅ | Rate & Security |
+| `rateLimits.fileUploads.ipMax` | number | File upload IP max | ❌ | Rate & Security |
+| `rateLimits.fileUploads.ipWindowInMinutes` | number | File upload IP window | ❌ | Rate & Security |
+| `rateLimits.fileUploads.userMax` | number | File upload user max | ❌ | Rate & Security |
+| `rateLimits.fileUploads.userWindowInMinutes` | number | File upload user window | ❌ | Rate & Security |
+| `rateLimits.conversationsImport.ipMax` | number | Conversations import IP max | ❌ | Rate & Security |
+| `rateLimits.conversationsImport.ipWindowInMinutes` | number | Conversations import IP window | ❌ | Rate & Security |
+| `rateLimits.conversationsImport.userMax` | number | Conversations import user max | ❌ | Rate & Security |
+| `rateLimits.conversationsImport.userWindowInMinutes` | number | Conversations import user window | ❌ | Rate & Security |
+| `rateLimits.stt.ipMax` | number | STT IP max | ❌ | Rate & Security |
+| `rateLimits.stt.ipWindowInMinutes` | number | STT IP window | ❌ | Rate & Security |
+| `rateLimits.stt.userMax` | number | STT user max | ❌ | Rate & Security |
+| `rateLimits.stt.userWindowInMinutes` | number | STT user window | ❌ | Rate & Security |
+| `rateLimits.tts.ipMax` | number | TTS IP max | ❌ | Rate & Security |
+| `rateLimits.tts.ipWindowInMinutes` | number | TTS IP window | ❌ | Rate & Security |
+| `rateLimits.tts.userMax` | number | TTS user max | ❌ | Rate & Security |
+| `rateLimits.tts.userWindowInMinutes` | number | TTS user window | ❌ | Rate & Security |
 
 ---
 
@@ -363,32 +363,32 @@ This document lists ALL configuration parameters available in LibreChat v0.8.0-R
 | `titleConvo` | boolean | Generate titles | ✅ | Features |
 | `summaryConvo` | boolean | Generate summaries | ✅ | Features |
 
-### Interface Object (IMPLEMENTED)
+### Interface Object (MASSIVE MISSING SECTION)
 | Parameter | Type | Description | UI Status | Tab Location |
 |-----------|------|-------------|-----------|--------------|
-| `interface.fileSearch` | boolean | Enable file search | ✅ | Features |
-| `interface.uploadAsText` | boolean | Upload as text feature | ✅ | Features |
-| `interface.privacyPolicy.externalUrl` | string | Privacy policy URL | ✅ | Features |
-| `interface.privacyPolicy.openNewTab` | boolean | Open in new tab | ✅ | Features |
-| `interface.termsOfService.externalUrl` | string | Terms of service URL | ✅ | Features |
-| `interface.termsOfService.openNewTab` | boolean | Open in new tab | ✅ | Features |
-| `interface.termsOfService.modalAcceptance` | boolean | Modal acceptance | ✅ | Features |
-| `interface.termsOfService.modalTitle` | string | Modal title | ✅ | Features |
-| `interface.termsOfService.modalContent` | string | Modal content | ✅ | Features |
-| `interface.endpointsMenu` | boolean | Show endpoints menu | ✅ | Features |
-| `interface.modelSelect` | boolean | Show model select | ✅ | Features |
-| `interface.parameters` | boolean | Show parameters | ✅ | Features |
-| `interface.sidePanel` | boolean | Show side panel | ✅ | Features |
-| `interface.presets` | boolean | Show presets | ✅ | Features |
-| `interface.prompts` | boolean | Show prompts | ✅ | Features |
-| `interface.bookmarks` | boolean | Show bookmarks | ✅ | Features |
-| `interface.multiConvo` | boolean | Multi-conversation | ✅ | Features |
-| `interface.agents` | boolean | Show agents | ✅ | Features |
-| `interface.peoplePicker.users` | boolean | People picker users | ✅ | Features |
-| `interface.peoplePicker.groups` | boolean | People picker groups | ✅ | Features |
-| `interface.peoplePicker.roles` | boolean | People picker roles | ✅ | Features |
-| `interface.marketplace.use` | boolean | Use marketplace | ✅ | Features |
-| `interface.fileCitations` | boolean | File citations | ✅ | Features |
+| `interface.fileSearch` | boolean | Enable file search | ❌ | Features |
+| `interface.uploadAsText` | boolean | Upload as text feature | ❌ | Features |
+| `interface.privacyPolicy.externalUrl` | string | Privacy policy URL | ❌ | Features |
+| `interface.privacyPolicy.openNewTab` | boolean | Open in new tab | ❌ | Features |
+| `interface.termsOfService.externalUrl` | string | Terms of service URL | ❌ | Features |
+| `interface.termsOfService.openNewTab` | boolean | Open in new tab | ❌ | Features |
+| `interface.termsOfService.modalAcceptance` | boolean | Modal acceptance | ❌ | Features |
+| `interface.termsOfService.modalTitle` | string | Modal title | ❌ | Features |
+| `interface.termsOfService.modalContent` | string | Modal content | ❌ | Features |
+| `interface.endpointsMenu` | boolean | Show endpoints menu | ❌ | Features |
+| `interface.modelSelect` | boolean | Show model select | ❌ | Features |
+| `interface.parameters` | boolean | Show parameters | ❌ | Features |
+| `interface.sidePanel` | boolean | Show side panel | ❌ | Features |
+| `interface.presets` | boolean | Show presets | ❌ | Features |
+| `interface.prompts` | boolean | Show prompts | ❌ | Features |
+| `interface.bookmarks` | boolean | Show bookmarks | ❌ | Features |
+| `interface.multiConvo` | boolean | Multi-conversation | ❌ | Features |
+| `interface.agents` | boolean | Show agents | ❌ | Features |
+| `interface.peoplePicker.users` | boolean | People picker users | ❌ | Features |
+| `interface.peoplePicker.groups` | boolean | People picker groups | ❌ | Features |
+| `interface.peoplePicker.roles` | boolean | People picker roles | ❌ | Features |
+| `interface.marketplace.use` | boolean | Use marketplace | ❌ | Features |
+| `interface.fileCitations` | boolean | File citations | ❌ | Features |
 
 ---
 
@@ -532,27 +532,18 @@ This includes provider-specific configurations for:
 
 ## Summary
 
-### CRITICAL ARCHITECTURAL ACHIEVEMENT
-✅ **Fixed Major Schema Compatibility Issue**: Successfully converted from flattened field approach (e.g., `registrationSocialLogins`) to proper nested object paths (e.g., `registration.socialLogins`) maintaining full LibreChat RC4 configuration compatibility for exports and imports.
-
 ### Implementation Status
 - **Total Schema Parameters**: ~300+ parameters
-- **Currently Implemented in UI**: ~260 parameters (85%)
-- **Missing from UI**: ~40 parameters (15%)
+- **Currently Implemented in UI**: ~150 parameters (50%)
+- **Missing from UI**: ~150 parameters (50%)
 
-### Major Completed Areas:
-1. ✅ **Complex Objects**: registration, fileConfig, webSearch, rateLimits, interface objects fully implemented
-2. ✅ **Core Configuration**: Most essential LibreChat settings implemented
-3. ✅ **Nested Object Support**: Proper path-based nested object handling with export compatibility
-4. ✅ **UI Coverage**: All existing tabs have comprehensive field coverage
-
-### Remaining Missing Areas:
-1. **New Configuration Areas**: OCR, STT, TTS, Assistants, Agents, Actions (new RC4 tabs)
-2. **Advanced Object Fields**: Some complex nested objects like endpoints, mcpServers configurations
-3. **Specialized Fields**: Some provider-specific advanced configurations
+### Major Missing Areas:
+1. **Complex Objects**: fileConfig, rateLimits, interface, registration, webSearch, mcpServers, endpoints
+2. **New Configuration Areas**: OCR, STT, TTS, Assistants, Agents, Actions
+3. **Core Settings**: version, cache, fileStrategy, secureImageLinks, etc.
 
 ### Critical Action Items:
-1. ✅ Add missing fields to existing tabs (Authentication, File Storage, Search & APIs, Rate & Security, Features, MCP)
+1. ❌ Add missing fields to existing tabs (Authentication, File Storage, Search & APIs, Rate & Security, Features, MCP)
 2. ❌ Create completely missing tabs (Core Settings, OCR, STT, TTS, Assistants, Agents, Actions)
-3. ✅ Implement complex object handling (nested configurations)
-4. ✅ Add proper field definitions with types, descriptions, and validation
+3. ❌ Implement complex object handling (nested configurations)
+4. ❌ Add proper field definitions with types, descriptions, and validation
