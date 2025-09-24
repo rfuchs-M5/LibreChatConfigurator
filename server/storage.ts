@@ -208,129 +208,66 @@ export class FileStorage implements IStorage {
       customFooter: "",
       customWelcome: "",
 
-      // OCR Configuration
-      ocrProvider: "mistral",
-      ocrModel: "mistral-7b",
-
-      // Search Configuration
-      searchProvider: "Serper",
-      searchScraper: "Serper",
-      searchReranker: "Jina",
-      searchSafeSearch: true,
-      searchTimeout: 10000,
-
-      // MCP Servers
-      mcpServers: [],
-
-      // Security Configuration
-      host: "0.0.0.0",
-      port: 3080,
-      jwtSecret: "",
-      jwtRefreshSecret: "",
-      credsKey: "",
-      credsIV: "",
-
-      // Database Configuration
-      mongoRootUsername: "admin",
-      mongoRootPassword: "password123",
-      mongoDbName: "LibreChat",
-
-      // Session Configuration
+      // Required RC4 Fields
+      titleConvo: true,
+      redisPingInterval: 30000,
+      minPasswordLength: 8,
+      allowRegistration: true,
+      allowEmailLogin: true,
+      allowSocialLogin: false,
+      allowSocialRegistration: false,
+      allowPasswordReset: true,
       sessionExpiry: 900000,
       refreshTokenExpiry: 604800000,
-      debugLogging: false,
     };
   }
 
   private createDefaultTestConfiguration(): Configuration {
-    // Configuration with Frits Notes MCP server from provided YAML
+    // Simple RC4-compliant test configuration
     return {
       // LibreChat RC4 Core Settings
       version: "0.8.0-rc4",
       cache: true,
       fileStrategy: "local",
       secureImageLinks: false,
-      imageOutputType: "url",
-
-
-      // UI/Visibility Settings
-      showModelSelect: true,
-      showParameters: true,
-      showSidePanel: true,
-      showPresets: true,
-      showPrompts: true,
-      showBookmarks: true,
-      showMultiConvo: false,
-      showAgents: true,
-      showWebSearch: true,
-      showFileSearch: true,
-      showFileCitations: true,
-      showRunCode: true,
-
-      // Model Specifications
-      modelSpecs: false,
-      enforceModelSpecs: false,
-      defaultModel: "gpt-4o",
-      addedEndpoints: true,
-
-      // Endpoint Defaults
-      endpointDefaults: {
-        streaming: true,
-        titling: true,
-        titleModel: "gpt-4o-mini",
-      },
-
-      // Agent Configuration
-      agentDefaultRecursionLimit: 5,
-      agentMaxRecursionLimit: 10,
-      agentAllowedProviders: ["openAI"],
-      agentAllowedCapabilities: ["execute_code", "web_search", "file_search"],
-      agentCitationsTotalLimit: 10,
-      agentCitationsPerFileLimit: 3,
-      agentCitationsThreshold: 0.7,
-
-      // File Configuration
-      filesMaxSizeMB: 10,
-      filesAllowedMimeTypes: ["text/plain", "application/pdf", "image/jpeg", "image/png", "image/webp"],
-      filesMaxFilesPerRequest: 5,
-      filesClientResizeImages: true,
-
-      // Rate Limits
-      rateLimitsPerUser: 100,
-      rateLimitsPerIP: 500,
-      rateLimitsUploads: 50,
-      rateLimitsImports: 10,
-      rateLimitsTTS: 100,
-      rateLimitsSTT: 100,
-
-      // Authentication
-      authAllowedDomains: [],
-      authSocialLogins: [],
-      authLoginOrder: ["email"],
-
-      // Memory System
-      memoryEnabled: false,
-      memoryPersonalization: false,
-      memoryWindowSize: 4000,
-      memoryMaxTokens: 10000,
-      memoryAgent: "openAI",
-
-      // Actions/Tools
-      actionsAllowedDomains: [],
-
-      // Temporary Chats
-      temporaryChatsRetentionHours: 720,
-
-      // OCR Configuration
-      ocrProvider: "mistral",
-      ocrModel: "mistral-7b",
-
-      // Search Configuration
-      searchProvider: "Serper",
-      searchScraper: "Serper",
-      searchReranker: "Jina",
-      searchSafeSearch: true,
-      searchTimeout: 10000,
+      imageOutputType: "png",
+      temporaryChatRetention: 720,
+      
+      // Required RC4 Fields
+      titleConvo: true,
+      redisPingInterval: 30000,
+      minPasswordLength: 8,
+      allowRegistration: true,
+      allowEmailLogin: true,
+      allowSocialLogin: false,
+      allowSocialRegistration: false,
+      allowPasswordReset: true,
+      sessionExpiry: 900000,
+      refreshTokenExpiry: 604800000,
+      
+      // Basic Server Configuration
+      host: "0.0.0.0",
+      port: 3080,
+      debugLogging: false,
+      
+      // Security (empty for security)
+      jwtSecret: "",
+      jwtRefreshSecret: "",
+      credsKey: "",
+      credsIV: "",
+      
+      // Database (empty for security)
+      mongoUri: "",
+      redisUri: "",
+      mongoDbName: "LibreChat",
+      
+      // API Keys (empty for security) 
+      openaiApiKey: "",
+      
+      // UI Customization
+      appTitle: "LibreChat Test",
+      customFooter: "Test Configuration",
+      customWelcome: "Welcome to LibreChat Test",
 
       // MCP Servers (from provided Frits Notes configuration)
       mcpServers: [{

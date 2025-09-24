@@ -1,13 +1,23 @@
 import { type Configuration } from "@shared/schema";
 
 export const defaultConfiguration: Configuration = {
-  // LibreChat v0.8.0-RC4 Core Settings
+  // LibreChat RC4 Core Settings
   version: "0.8.0-rc4",
   cache: true,
   fileStrategy: "local",
   secureImageLinks: false,
   imageOutputType: "png",
-  temporaryChatRetention: 720, // 30 days
+  temporaryChatRetention: 720,
+  
+  // Required RC4 Fields
+  titleConvo: true,
+  redisPingInterval: 30000,
+  minPasswordLength: 8,
+  allowRegistration: true,
+  allowEmailLogin: true,
+  allowSocialLogin: false,
+  allowSocialRegistration: false,
+  allowPasswordReset: true,
   
   // Basic Server Configuration
   host: "0.0.0.0",
@@ -19,6 +29,8 @@ export const defaultConfiguration: Configuration = {
   jwtRefreshSecret: "",
   credsKey: "",
   credsIV: "",
+  sessionExpiry: 900000,
+  refreshTokenExpiry: 604800000,
   
   // Database (empty for security)
   mongoUri: "",
@@ -32,4 +44,15 @@ export const defaultConfiguration: Configuration = {
   appTitle: "",
   customFooter: "",
   customWelcome: "",
+  
+  // Additional Required RC4 Fields
+  azureStoragePublicAccess: false,
+  redisUseAlternativeDNSLookup: false,
+  search: false,
+  meiliNoAnalytics: true,
+  limitConcurrentMessages: false,
+  banViolations: false,
+  allowSharedLinks: false,
+  allowSharedLinksPublic: false,
+  summaryConvo: false,
 };
