@@ -2,6 +2,7 @@
 // Based on official LibreChat .env.example core settings
 
 import { Configuration } from "@shared/schema";
+import { defaultConfiguration } from "@/lib/configuration-defaults";
 
 /**
  * Core LibreChat defaults based on .env.example file.
@@ -35,39 +36,97 @@ export const essentialDefaults: Partial<Configuration> = {
   
   // Model configuration defaults  
   titleConvo: false, // Disable auto titles
-  openaiForcePrompt: true, // Force prompt format
 };
 
 /**
- * Create a minimal reset configuration that preserves user secrets but resets settings to defaults.
+ * Create a complete reset configuration that preserves user secrets but resets all settings to defaults.
+ * Uses the full default configuration as the base to ensure no fields are lost.
  */
 export function createResetConfiguration(currentConfig: Partial<Configuration> = {}): Configuration {
-  // Preserve critical security fields that users have configured
-  const preservedSecrets = {
-    jwtSecret: currentConfig.jwtSecret,
-    jwtRefreshSecret: currentConfig.jwtRefreshSecret,
-    credsKey: currentConfig.credsKey,
-    credsIV: currentConfig.credsIV,
+  
+  // Define top-level secret/credential fields that exist in Configuration schema
+  // This prevents data loss of user-configured API keys, passwords, and credentials
+  const secretFields: (keyof Configuration)[] = [
+    // Core Authentication & Security
+    'jwtSecret', 'jwtRefreshSecret', 'credsKey', 'credsIV',
     
-    // Preserve API keys that users have configured
-    openaiApiKey: currentConfig.openaiApiKey,
-    anthropicApiKey: currentConfig.anthropicApiKey,
-    googleApiKey: currentConfig.googleApiKey,
-  };
+    // Core AI Provider API Keys (top-level fields)
+    'openaiApiKey', 'anthropicApiKey', 'googleApiKey', 'groqApiKey', 'mistralApiKey',
+    
+    // Additional AI Provider API Keys (top-level fields)
+    'deepseekApiKey', 'perplexityApiKey', 'fireworksApiKey', 'togetheraiApiKey',
+    'huggingfaceToken', 'xaiApiKey', 'nvidiaApiKey', 'sambaNovaApiKey', 
+    'hyperbolicApiKey', 'klusterApiKey', 'nanogptApiKey', 'glhfApiKey',
+    'apipieApiKey', 'unifyApiKey', 'openrouterKey',
+    
+    // Cloud Provider Keys (top-level fields)
+    'azureApiKey', 'awsAccessKeyId', 'awsSecretAccessKey', 'firebaseApiKey',
+    
+    // OAuth Client Secrets (top-level fields)
+    'googleClientSecret', 'githubClientSecret', 'discordClientSecret', 
+    'facebookClientSecret', 'applePrivateKey', 'appleKeyId',
+    'openidClientSecret', 'openidSessionSecret',
+    
+    // Email & Communication (top-level fields)
+    'emailPassword', 'mailgunApiKey',
+    
+    // External Services (top-level fields)
+    'googleSearchApiKey', 'bingSearchApiKey', 'openweatherApiKey', 'librechatCodeApiKey',
+    
+    // Database & Storage (top-level fields)
+    'redisPassword', 'redisKeyPrefix', 'redisKeyPrefixVar', 
+    'meilisearchMasterKey', 'mongoRootPassword',
+    
+    // LDAP & Security Services (top-level fields)
+    'ldapBindCredentials', 'turnstileSiteKey', 'turnstileSecretKey',
+    
+    // RAG & Specialized APIs (top-level fields)
+    'ragOpenaiApiKey'
+  ];
+  
+  // Define known placeholder values that should NOT be preserved
+  const placeholderValues = new Set([
+    'user_provided',
+    'your_api_key_here', 
+    'your_secret_here',
+    'your_token_here',
+    'your_password_here',
+    'your_key_here',
+    'replace_with_your_key',
+    'add_your_key_here',
+    'insert_your_api_key',
+    'example_key',
+    'test_key',
+    'placeholder'
+  ]);
+  
+  // Preserve all configured secrets/credentials from current configuration
+  const preservedSecrets: Partial<Configuration> = {};
+  
+  for (const field of secretFields) {
+    const value = currentConfig[field];
+    // Only preserve if the field has a non-empty value and isn't a known placeholder
+    if (value && 
+        typeof value === 'string' && 
+        value.trim() !== '' && 
+        !placeholderValues.has(value.toLowerCase()) &&
+        !value.toLowerCase().includes('placeholder') &&
+        !value.toLowerCase().includes('example')
+       ) {
+      (preservedSecrets as any)[field] = value;
+    }
+  }
 
-  // Create reset configuration with essentials + preserved secrets
+  // Start with complete default configuration to ensure all fields are present
   const resetConfig: Configuration = {
-    // Start with essential defaults
+    ...defaultConfiguration,
+    // Override with LibreChat essentials from .env.example
     ...essentialDefaults,
-    // Preserve user's secrets and API keys
+    // Preserve user's configured secrets and API keys
     ...preservedSecrets,
-    // Ensure required fields have values
+    // Ensure RC4 metadata is correct
     version: "1.2.8",
-    cache: true,
-    host: "localhost",
-    port: 3080,
-    debugLogging: false, // Safer default for reset
-  } as Configuration;
+  };
 
   return resetConfig;
 }
