@@ -28,9 +28,9 @@ export default function Home() {
       console.log("   - MCP servers count:", configuration.mcpServers?.length || 0);
       console.log("   - MCP servers:", configuration.mcpServers);
       console.log("   - UI settings:", {
-        showModelSelect: configuration.showModelSelect,
-        showAgents: configuration.showAgents,
-        defaultModel: configuration.defaultModel
+        appTitle: configuration.appTitle,
+        allowRegistration: configuration.allowRegistration,
+        debugLogging: configuration.debugLogging
       });
       
       // Create profile data with configuration and name
