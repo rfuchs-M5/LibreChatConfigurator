@@ -386,16 +386,224 @@ export const configurationSchema = z.object({
   // Minimum Password Length
   minPasswordLength: z.number().min(6).max(128).default(8),
   
-  // API Keys
-  openaiApiKey: z.string().optional(),
-  anthropicApiKey: z.string().optional(),
-  googleApiKey: z.string().optional(),
-  groqApiKey: z.string().optional(),
-  mistralApiKey: z.string().optional(),
+  // Core Application Settings
+  appTitle: z.string().optional(), // APP_TITLE
+  customWelcome: z.string().optional(), // CUSTOM_WELCOME  
+  customFooter: z.string().optional(), // CUSTOM_FOOTER
+  helpAndFAQURL: z.string().url().optional(), // HELP_AND_FAQ_URL
+  
+  // Registration & Authentication
+  allowRegistration: z.boolean().default(true), // ALLOW_REGISTRATION
+  allowEmailLogin: z.boolean().default(true), // ALLOW_EMAIL_LOGIN
+  allowSocialLogin: z.boolean().default(false), // ALLOW_SOCIAL_LOGIN
+  allowSocialRegistration: z.boolean().default(false), // ALLOW_SOCIAL_REGISTRATION
+  allowPasswordReset: z.boolean().default(true), // ALLOW_PASSWORD_RESET
+  
+  // Email Configuration
+  emailService: z.string().optional(), // EMAIL_SERVICE
+  emailUsername: z.string().optional(), // EMAIL_USERNAME
+  emailPassword: z.string().optional(), // EMAIL_PASSWORD
+  emailFrom: z.string().email().optional(), // EMAIL_FROM
+  emailFromName: z.string().optional(), // EMAIL_FROM_NAME
+  
+  // Mailgun Configuration
+  mailgunApiKey: z.string().optional(), // MAILGUN_API_KEY
+  mailgunDomain: z.string().optional(), // MAILGUN_DOMAIN
+  mailgunHost: z.string().optional(), // MAILGUN_HOST
+  
+  // OAuth Providers Configuration
+  googleClientId: z.string().optional(), // GOOGLE_CLIENT_ID
+  googleClientSecret: z.string().optional(), // GOOGLE_CLIENT_SECRET
+  googleCallbackURL: z.string().optional(), // GOOGLE_CALLBACK_URL
+  
+  githubClientId: z.string().optional(), // GITHUB_CLIENT_ID
+  githubClientSecret: z.string().optional(), // GITHUB_CLIENT_SECRET
+  githubCallbackURL: z.string().optional(), // GITHUB_CALLBACK_URL
+  
+  discordClientId: z.string().optional(), // DISCORD_CLIENT_ID
+  discordClientSecret: z.string().optional(), // DISCORD_CLIENT_SECRET
+  discordCallbackURL: z.string().optional(), // DISCORD_CALLBACK_URL
+  
+  facebookClientId: z.string().optional(), // FACEBOOK_CLIENT_ID
+  facebookClientSecret: z.string().optional(), // FACEBOOK_CLIENT_SECRET
+  facebookCallbackURL: z.string().optional(), // FACEBOOK_CALLBACK_URL
+  
+  appleClientId: z.string().optional(), // APPLE_CLIENT_ID
+  applePrivateKey: z.string().optional(), // APPLE_PRIVATE_KEY
+  appleKeyId: z.string().optional(), // APPLE_KEY_ID
+  appleTeamId: z.string().optional(), // APPLE_TEAM_ID
+  appleCallbackURL: z.string().optional(), // APPLE_CALLBACK_URL
+  
+  // OpenID Connect
+  openidURL: z.string().optional(), // OPENID_URL
+  openidClientId: z.string().optional(), // OPENID_CLIENT_ID
+  openidClientSecret: z.string().optional(), // OPENID_CLIENT_SECRET
+  openidCallbackURL: z.string().optional(), // OPENID_CALLBACK_URL
+  openidScope: z.string().optional(), // OPENID_SCOPE
+  openidSessionSecret: z.string().optional(), // OPENID_SESSION_SECRET
+  openidIssuer: z.string().optional(), // OPENID_ISSUER
+  openidButtonLabel: z.string().optional(), // OPENID_BUTTON_LABEL
+  openidImageURL: z.string().optional(), // OPENID_IMAGE_URL
+  
+  // API Keys - Core Providers
+  openaiApiKey: z.string().optional(), // OPENAI_API_KEY
+  anthropicApiKey: z.string().optional(), // ANTHROPIC_API_KEY
+  googleApiKey: z.string().optional(), // GOOGLE_KEY
+  groqApiKey: z.string().optional(), // GROQ_API_KEY
+  mistralApiKey: z.string().optional(), // MISTRAL_API_KEY
+  
+  // API Keys - Additional Providers
+  deepseekApiKey: z.string().optional(), // DEEPSEEK_API_KEY
+  perplexityApiKey: z.string().optional(), // PERPLEXITY_API_KEY
+  fireworksApiKey: z.string().optional(), // FIREWORKS_API_KEY
+  togetheraiApiKey: z.string().optional(), // TOGETHERAI_API_KEY
+  huggingfaceToken: z.string().optional(), // HUGGINGFACE_TOKEN
+  xaiApiKey: z.string().optional(), // XAI_API_KEY
+  nvidiaApiKey: z.string().optional(), // NVIDIA_API_KEY
+  sambaNovaApiKey: z.string().optional(), // SAMBANOVA_API_KEY
+  hyperbolicApiKey: z.string().optional(), // HYPERBOLIC_API_KEY
+  klusterApiKey: z.string().optional(), // KLUSTER_API_KEY
+  nanogptApiKey: z.string().optional(), // NANOGPT_API_KEY
+  glhfApiKey: z.string().optional(), // GLHF_API_KEY
+  apipieApiKey: z.string().optional(), // APIPIE_API_KEY
+  unifyApiKey: z.string().optional(), // UNIFY_API_KEY
+  openrouterKey: z.string().optional(), // OPENROUTER_KEY
+  
+  // Azure OpenAI Configuration
+  azureApiKey: z.string().optional(), // AZURE_API_KEY
+  azureOpenaiApiInstanceName: z.string().optional(), // AZURE_OPENAI_API_INSTANCE_NAME
+  azureOpenaiApiDeploymentName: z.string().optional(), // AZURE_OPENAI_API_DEPLOYMENT_NAME
+  azureOpenaiApiVersion: z.string().optional(), // AZURE_OPENAI_API_VERSION
+  azureOpenaiModels: z.string().optional(), // AZURE_OPENAI_MODELS
+  
+  // AWS Bedrock Configuration
+  awsAccessKeyId: z.string().optional(), // AWS_ACCESS_KEY_ID
+  awsSecretAccessKey: z.string().optional(), // AWS_SECRET_ACCESS_KEY
+  awsRegion: z.string().optional(), // AWS_REGION
+  awsBedrockRegion: z.string().optional(), // AWS_BEDROCK_REGION
+  awsEndpointURL: z.string().optional(), // AWS_ENDPOINT_URL
+  awsBucketName: z.string().optional(), // AWS_BUCKET_NAME
+  
+  // File Storage - Firebase
+  firebaseApiKey: z.string().optional(), // FIREBASE_API_KEY
+  firebaseAuthDomain: z.string().optional(), // FIREBASE_AUTH_DOMAIN
+  firebaseProjectId: z.string().optional(), // FIREBASE_PROJECT_ID
+  firebaseStorageBucket: z.string().optional(), // FIREBASE_STORAGE_BUCKET
+  firebaseMessagingSenderId: z.string().optional(), // FIREBASE_MESSAGING_SENDER_ID
+  firebaseAppId: z.string().optional(), // FIREBASE_APP_ID
+  
+  // File Storage - Azure Blob
+  azureStorageConnectionString: z.string().optional(), // AZURE_STORAGE_CONNECTION_STRING
+  azureStoragePublicAccess: z.boolean().default(false), // AZURE_STORAGE_PUBLIC_ACCESS
+  azureContainerName: z.string().optional(), // AZURE_CONTAINER_NAME
+  
+  // File Storage - Local
+  fileUploadPath: z.string().optional(), // FILE_UPLOAD_PATH
+  
+  // Search Configuration
+  googleSearchApiKey: z.string().optional(), // GOOGLE_SEARCH_API_KEY
+  googleCSEId: z.string().optional(), // GOOGLE_CSE_ID
+  bingSearchApiKey: z.string().optional(), // BING_SEARCH_API_KEY
+  
+  // Weather & External APIs
+  openweatherApiKey: z.string().optional(), // OPENWEATHER_API_KEY
+  librechatCodeApiKey: z.string().optional(), // LIBRECHAT_CODE_API_KEY
+  
+  // RAG API Configuration
+  ragApiURL: z.string().optional(), // RAG_API_URL
+  ragOpenaiApiKey: z.string().optional(), // RAG_OPENAI_API_KEY
+  ragPort: z.number().optional(), // RAG_PORT
+  ragHost: z.string().optional(), // RAG_HOST
+  collectionName: z.string().optional(), // COLLECTION_NAME
+  chunkSize: z.number().optional(), // CHUNK_SIZE
+  chunkOverlap: z.number().optional(), // CHUNK_OVERLAP
+  embeddingsProvider: z.string().optional(), // EMBEDDINGS_PROVIDER
+  
+  // Redis Configuration (Extended)
+  redisUsername: z.string().optional(), // REDIS_USERNAME
+  redisPassword: z.string().optional(), // REDIS_PASSWORD
+  redisKeyPrefix: z.string().optional(), // REDIS_KEY_PREFIX
+  redisKeyPrefixVar: z.string().optional(), // REDIS_KEY_PREFIX_VAR
+  redisMaxListeners: z.number().optional(), // REDIS_MAX_LISTENERS
+  redisUseAlternativeDNSLookup: z.boolean().default(false), // REDIS_USE_ALTERNATIVE_DNS_LOOKUP
+  
+  // Search Configuration (MeiliSearch)
+  search: z.boolean().default(false), // SEARCH
+  meilisearchURL: z.string().optional(), // MEILISEARCH_URL
+  meilisearchMasterKey: z.string().optional(), // MEILISEARCH_MASTER_KEY
+  meiliNoAnalytics: z.boolean().default(true), // MEILI_NO_ANALYTICS
+  
+  // Security & Rate Limiting
+  limitConcurrentMessages: z.boolean().default(false), // LIMIT_CONCURRENT_MESSAGES
+  concurrentMessageMax: z.number().optional(), // CONCURRENT_MESSAGE_MAX
+  banViolations: z.boolean().default(false), // BAN_VIOLATIONS
+  banDuration: z.number().optional(), // BAN_DURATION
+  banInterval: z.number().optional(), // BAN_INTERVAL
+  loginViolationScore: z.number().optional(), // LOGIN_VIOLATION_SCORE
+  registrationViolationScore: z.number().optional(), // REGISTRATION_VIOLATION_SCORE
+  concurrentViolationScore: z.number().optional(), // CONCURRENT_VIOLATION_SCORE
+  messageViolationScore: z.number().optional(), // MESSAGE_VIOLATION_SCORE
+  nonBrowserViolationScore: z.number().optional(), // NON_BROWSER_VIOLATION_SCORE
+  loginMax: z.number().optional(), // LOGIN_MAX
+  loginWindow: z.number().optional(), // LOGIN_WINDOW
+  
+  // LDAP Configuration
+  ldapURL: z.string().optional(), // LDAP_URL
+  ldapBindDN: z.string().optional(), // LDAP_BIND_DN
+  ldapBindCredentials: z.string().optional(), // LDAP_BIND_CREDENTIALS
+  ldapSearchBase: z.string().optional(), // LDAP_SEARCH_BASE
+  ldapSearchFilter: z.string().optional(), // LDAP_SEARCH_FILTER
+  
+  // Turnstile (Cloudflare)
+  turnstileSiteKey: z.string().optional(), // TURNSTILE_SITE_KEY
+  turnstileSecretKey: z.string().optional(), // TURNSTILE_SECRET_KEY
+  
+  // Shared Links
+  allowSharedLinks: z.boolean().default(false), // ALLOW_SHARED_LINKS
+  allowSharedLinksPublic: z.boolean().default(false), // ALLOW_SHARED_LINKS_PUBLIC
+  
+  // Conversation Settings
+  titleConvo: z.boolean().default(true), // TITLE_CONVO
+  summaryConvo: z.boolean().default(false), // SUMMARY_CONVO
+  
+  // Static File Caching
+  staticCacheMaxAge: z.number().optional(), // STATIC_CACHE_MAX_AGE
+  staticCacheSMaxAge: z.number().optional(), // STATIC_CACHE_S_MAX_AGE
+  indexCacheControl: z.string().optional(), // INDEX_CACHE_CONTROL
+  indexPragma: z.string().optional(), // INDEX_PRAGMA
+  indexExpires: z.string().optional(), // INDEX_EXPIRES
+  
+  // MCP Configuration
+  mcpOauthOnAuthError: z.string().optional(), // MCP_OAUTH_ON_AUTH_ERROR
+  mcpOauthDetectionTimeout: z.number().optional(), // MCP_OAUTH_DETECTION_TIMEOUT
+  
+  // Environment
+  nodeEnv: z.enum(["development", "production", "test"]).default("production"), // NODE_ENV
+  domainClient: z.string().optional(), // DOMAIN_CLIENT
+  domainServer: z.string().optional(), // DOMAIN_SERVER
+  noIndex: z.boolean().default(true), // NO_INDEX
+  
+  // Session Configuration (Extended)
+  sessionExpiry: z.number().optional(), // SESSION_EXPIRY
+  refreshTokenExpiry: z.number().optional(), // REFRESH_TOKEN_EXPIRY
+  
+  // User Management
+  uid: z.number().optional(), // UID
+  gid: z.number().optional(), // GID
+  
+  // Debug & Logging (Extended)
+  debugConsole: z.boolean().default(false), // DEBUG_CONSOLE
+  consoleJSON: z.boolean().default(false), // CONSOLE_JSON
+  
+  // CDN Configuration
+  cdnProvider: z.string().optional(), // CDN_PROVIDER
   
   // Database Configuration
-  mongoUri: z.string().optional(),
-  redisUri: z.string().optional(),
+  mongoUri: z.string().optional(), // MONGO_URI
+  redisUri: z.string().optional(), // REDIS_URI
+  mongoRootUsername: z.string().optional(), // MONGO_ROOT_USERNAME
+  mongoRootPassword: z.string().optional(), // MONGO_ROOT_PASSWORD
+  mongoDbName: z.string().optional(), // MONGO_DB_NAME
   
   // Server Configuration
   host: z.string().default("0.0.0.0"),
