@@ -8,13 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { Info, Eye, EyeOff, Plus, X, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { MCPServersEditor } from "@/components/mcp-servers-editor";
 
 interface SettingInputProps {
   label: string;
   description?: string;
   docUrl?: string;
   docSection?: string;
-  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object";
+  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers";
   value: any;
   onChange: (value: any) => void;
   options?: string[];
@@ -22,6 +23,7 @@ interface SettingInputProps {
   min?: number;
   max?: number;
   step?: number;
+  fieldName?: string;
   "data-testid"?: string;
 }
 
@@ -38,6 +40,7 @@ export function SettingInput({
   min,
   max,
   step,
+  fieldName,
   "data-testid": testId,
 }: SettingInputProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -182,6 +185,15 @@ export function SettingInput({
               </Button>
             </div>
           </div>
+        );
+
+      case "mcp-servers":
+        return (
+          <MCPServersEditor
+            value={value}
+            onChange={onChange}
+            data-testid={testId}
+          />
         );
 
       case "object":
