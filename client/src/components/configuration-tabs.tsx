@@ -1295,8 +1295,6 @@ export function ConfigurationTabs({
             <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
           </div>
           
-          <h2 className="text-lg font-semibold text-foreground mb-4">Configuration Categories</h2>
-          
           <nav className="space-y-1">
             {/* Render grouped tabs with headers */}
             {tabGroups.map((group, groupIndex) => {
