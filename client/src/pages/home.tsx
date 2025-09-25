@@ -26,16 +26,6 @@ export default function Home() {
 
   const handleSaveProfile = async () => {
     try {
-      console.log("💾 [PROFILE DEBUG] Saving profile with configuration:");
-      console.log("   - Name:", configurationName);
-      console.log("   - Config keys:", Object.keys(configuration));
-      console.log("   - MCP servers count:", configuration.mcpServers?.length || 0);
-      console.log("   - MCP servers:", configuration.mcpServers);
-      console.log("   - UI settings:", {
-        appTitle: configuration.appTitle,
-        allowRegistration: configuration.allowRegistration,
-        debugLogging: configuration.debugLogging
-      });
       
       // Create profile data with configuration and name
       const profileData = {

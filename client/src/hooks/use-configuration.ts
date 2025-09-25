@@ -386,15 +386,7 @@ export function useConfiguration() {
   });
 
   const updateConfiguration = (updates: Partial<Configuration>) => {
-    console.log("🔄 [CONFIG DEBUG] updateConfiguration called with:", Object.keys(updates));
-    if (updates.customFooter !== undefined) {
-      console.log("🔄 [CONFIG DEBUG] customFooter update:", JSON.stringify(updates.customFooter));
-    }
-    setConfiguration(prev => {
-      const newConfig = { ...prev, ...updates };
-      console.log("🔄 [CONFIG DEBUG] Final config has customFooter:", JSON.stringify(newConfig.customFooter));
-      return newConfig;
-    });
+    setConfiguration(prev => ({ ...prev, ...updates }));
   };
 
   const saveProfile = async (profileData: Omit<InsertConfigurationProfile, "configuration">) => {
@@ -405,8 +397,6 @@ export function useConfiguration() {
   };
 
   const generatePackage = async (request: Omit<PackageGenerationRequest, "configuration">) => {
-    console.log("📦 [GENERATE DEBUG] Sending configuration with customFooter:", JSON.stringify(configuration.customFooter));
-    console.log("📦 [GENERATE DEBUG] Full configuration keys:", Object.keys(configuration));
     return generatePackageMutation.mutateAsync({
       ...request,
       configuration,
