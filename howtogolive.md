@@ -1,7 +1,7 @@
 # How to Go Live: LibreChat Configuration Tool Public Release
 
 ## Project Vision
-Transform the LibreChat Configuration Tool into a **community-driven, open-source project** that serves as the definitive configuration management solution for LibreChat deployments. This tool generates complete setup files and deployment packages from comprehensive LibreChat configuration knowledge.
+Transform the LibreChat Configuration Tool into a **community-driven, MIT-licensed open-source project** that serves as the definitive configuration management solution for LibreChat deployments. This tool generates complete setup files and deployment packages from comprehensive LibreChat configuration knowledge.
 
 ## Current Status Assessment
 
@@ -23,11 +23,12 @@ Transform the LibreChat Configuration Tool into a **community-driven, open-sourc
 
 ## Phase 1: Core Preparation (Pre-Launch)
 
-### 1.1 Legal & Licensing
-- [ ] **Add MIT License file** (`LICENSE`)
-- [ ] **Add copyright notices** to all source files
-- [ ] **Update package.json** with license and repository information
-- [ ] **Create NOTICE file** acknowledging third-party dependencies
+### 1.1 Legal & Licensing (MIT License)
+- [ ] **Add MIT License file** (`LICENSE`) with standard MIT license text
+- [ ] **Add copyright notices** to all source files with MIT license headers
+- [ ] **Update package.json** with `"license": "MIT"` and repository information
+- [ ] **Create NOTICE file** acknowledging third-party dependencies and their licenses
+- [ ] **Ensure all dependencies are MIT-compatible** (no GPL or restrictive licenses)
 
 ### 1.2 Code Cleanup & Organization
 - [ ] **Remove debugging code** and console.log statements
