@@ -164,7 +164,7 @@ export class FileStorage implements IStorage {
     if (!existingDefault) {
       const defaultProfile = await this.createProfile({
         name: "Default test",
-        description: "Default LibreChat configuration with Frits Notes MCP integration",
+        description: "Default LibreChat configuration",
         configuration: this.createDefaultTestConfiguration()
       });
       this.defaultProfileId = defaultProfile.id;
@@ -269,71 +269,12 @@ export class FileStorage implements IStorage {
       customFooter: "Test Configuration",
       customWelcome: "Welcome to LibreChat Test",
 
-      // MCP Servers (from provided Frits Notes configuration)
-      mcpServers: [{
-        name: "frits_notes",
-        type: "streamable-http",
-        url: "https://7bec216a-1f3e-49b7-af7b-a730d84de27f-00-1b28s6q3zwadm.janeway.replit.dev",
-        timeout: 30000,
-        headers: {
-          "Authorization": "Token dev-api-key-12345; userId={{LIBRECHAT_USER_ID}}"
-        },
-        customUserVars: {},
-        instructions: `This is Frits Notes - a shared knowledge system for the organization.
+      // MCP Servers - No default servers configured
+      mcpServers: [],
 
-🔧 PROACTIVE BEHAVIOR: Check for notifications naturally in conversations!
-- When users ask work-related questions, proactively check get_user_notifications for updates
-- Mention relevant updates from followed topics contextually
-- Offer to show Frits Notes updates when appropriate
-- Be helpful and naturally informative about company knowledge
-
-Available capabilities:
-- Create announcements and topics for company-wide information sharing
-- Search existing company knowledge and announcements  
-- Reply to and interact with existing discussions
-- Like and edit posts (users can only edit their own content)
-- Follow topics to get updates on new replies (NEW!)
-- Get notifications about followed topics (NEW!)
-- Organize content using tags (announcements, general, etc.)
-
-🎯 FOLLOW SYSTEM:
-- Use follow_topic when users want to stay updated on discussions
-- Use get_user_notifications to check for updates in followed topics
-- Use list_following to show what they're currently following
-- Use unfollow_topic to stop following topics
-- Topics can be found by title, keywords, or semantic search
-
-Always refer to this as "Frits Notes" (never as "forum" or "discussion board").
-Users share information here that should be accessible to all team members.
-
-When someone asks about company information, search Frits Notes first.
-When someone wants to share information company-wide, create a topic in Frits Notes.
-
-🌟 NATURAL CONVERSATION FLOW:
-- "Good morning! I see there are 2 updates in topics you're following..."
-- "That reminds me, there was a new reply in the Marketing Strategy discussion you follow"
-- "Would you like to follow this discussion to stay updated?"
-- "Let me check if there's anything new in Frits Notes for you..."`
-      }],
-
-      // Security Configuration
-      host: "0.0.0.0",
-      port: 3080,
-      jwtSecret: "",
-      jwtRefreshSecret: "",
-      credsKey: "",
-      credsIV: "",
-      openaiApiKey: "",
-
-      // Database Configuration
+      // Additional Database Configuration
       mongoRootUsername: "admin",
       mongoRootPassword: "password123",
-      mongoDbName: "LibreChat",
-
-      // Session Configuration
-      sessionExpiry: 900000,
-      refreshTokenExpiry: 604800000,
-      debugLogging: false,
     };
   }
 
