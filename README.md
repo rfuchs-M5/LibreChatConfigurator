@@ -38,46 +38,25 @@ npm --version   # Should work without errors
 
 ## Quick Start
 
-### Windows Users
+### All Platforms (Universal)
 
-**Option A: PowerShell (Recommended)**
-```powershell
+```bash
 git clone https://github.com/Frits1/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install
-npx cross-env NODE_ENV=development tsx server/index.ts
+node scripts/dev-launcher.mjs
 ```
-
-**Option B: Git Bash**
-```bash
-git clone https://github.com/Frits1/LibreChatConfigurator.git
-cd LibreChatConfigurator
-npm install && npm run dev
-```
-
-**Option C: WSL (If you prefer Linux environment)**
-```bash
-# Important: Copy to WSL filesystem to avoid permission issues
-git clone https://github.com/Frits1/LibreChatConfigurator.git
-cp -r LibreChatConfigurator ~/
-cd ~/LibreChatConfigurator
-npm install && npm run dev
-```
-
-### Mac/Linux Users
-
-```bash
-git clone https://github.com/Frits1/LibreChatConfigurator.git
-cd LibreChatConfigurator
-npm install && npm run dev
-```
-
-### All Platforms
 
 **Open in browser:**
 ```
 http://localhost:5000
 ```
+
+The launcher automatically handles:
+- ✅ Environment variables (NODE_ENV)
+- ✅ Platform differences (Windows/Mac/Linux)  
+- ✅ WSL detection and guidance
+- ✅ Process management and cleanup
 
 4. **Configure your settings**
    - Use the clean tabbed interface with progressive disclosure
@@ -242,58 +221,13 @@ Feel free to modify and improve! The codebase uses modern patterns and is design
 
 ## Troubleshooting
 
-### Common Issues
+**If the launcher detects WSL on Windows mount:**
+- Follow the automatic guidance to copy the project to WSL home directory
+- Or use PowerShell/Git Bash instead of WSL
 
-**❌ "Permission denied" error (Windows WSL)**
-```bash
-# Solution: Copy project to WSL home directory
-cp -r /mnt/c/path/to/LibreChatConfigurator ~/
-cd ~/LibreChatConfigurator
-npm install && npm run dev
-```
-
-**❌ "node: command not found"**
-- Install Node.js from [nodejs.org](https://nodejs.org/)
-- Restart your terminal/command prompt after installation
-- Verify with `node --version`
-
-**❌ "The token '&&' is not a valid statement separator" (PowerShell)**
-```powershell
-# Use semicolon instead of && in PowerShell
-npm install; npm run dev
-```
-
-**❌ "'NODE_ENV' is not recognized" (PowerShell)**
-```powershell
-# npm scripts don't work with PowerShell - use direct command instead
-npx cross-env NODE_ENV=development tsx server/index.ts
-```
-
-**❌ "npm install" fails with permission errors**
-- **Windows**: Run PowerShell as Administrator
-- **Mac/Linux**: Don't use `sudo` with npm. Fix npm permissions or use [nvm](https://github.com/nvm-sh/nvm)
-
-**❌ Port 5000 already in use**
-```bash
-# Kill process using port 5000
-# Windows:
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
-
-# Mac/Linux:
-lsof -ti:5000 | xargs kill
-```
-
-**❌ Build fails or missing dependencies**
-```bash
-# Clean install
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### Still having issues?
-1. Check you have Node.js 20+ installed: `node --version`
-2. Try the alternative installation method for your platform above
+**Still having issues?**
+1. Verify Node.js 20+ is installed: `node --version`  
+2. Check the automatic platform detection in the launcher output
 3. Open an issue on GitHub with your error message and platform details
 
 ## License
