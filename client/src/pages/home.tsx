@@ -641,8 +641,8 @@ export default function Home() {
                   <i className="fas fa-cog text-white text-lg"></i>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-foreground">LibreChat Configuration</h1>
-                  <p className="text-sm text-muted-foreground">v0.8.0-RC4 Enterprise Setup</p>
+                  <h1 className="text-xl font-bold text-foreground">LibreChat Configuration Tool</h1>
+                  <p className="text-sm text-muted-foreground">Currently supporting: v0.8.0-RC4</p>
                 </div>
                 
                 {/* Profile Name Input */}
