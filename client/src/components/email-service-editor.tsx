@@ -50,11 +50,37 @@ export function EmailServiceEditor({ value, onChange, "data-testid": testId }: E
   };
 
   const handleServiceTypeChange = (serviceType: EmailConfig["serviceType"]) => {
-    updateConfig({ serviceType });
+    // Clear fields from the opposite provider when switching
+    const clearedConfig: Partial<EmailConfig> = { serviceType };
+    
+    if (serviceType === "smtp") {
+      // Clear Mailgun fields when switching to SMTP
+      clearedConfig.mailgunApiKey = undefined;
+      clearedConfig.mailgunDomain = undefined;
+      clearedConfig.mailgunHost = undefined;
+    } else if (serviceType === "mailgun") {
+      // Clear SMTP fields when switching to Mailgun
+      clearedConfig.emailService = undefined;
+      clearedConfig.emailUsername = undefined;
+      clearedConfig.emailPassword = undefined;
+      clearedConfig.emailFrom = undefined;
+      clearedConfig.emailFromName = undefined;
+    } else {
+      // Clear all fields when selecting placeholder/empty
+      clearedConfig.emailService = undefined;
+      clearedConfig.emailUsername = undefined;
+      clearedConfig.emailPassword = undefined;
+      clearedConfig.emailFrom = undefined;
+      clearedConfig.emailFromName = undefined;
+      clearedConfig.mailgunApiKey = undefined;
+      clearedConfig.mailgunDomain = undefined;
+      clearedConfig.mailgunHost = undefined;
+    }
+    
+    updateConfig(clearedConfig);
   };
 
   const serviceOptions = [
-    { value: "", label: "Select Email Service", disabled: true },
     { value: "smtp", label: "Standard SMTP", icon: Mail },
     { value: "mailgun", label: "Mailgun Service", icon: Send },
   ];
@@ -231,7 +257,7 @@ export function EmailServiceEditor({ value, onChange, "data-testid": testId }: E
             </SelectTrigger>
             <SelectContent>
               {serviceOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
+                <SelectItem key={option.value} value={option.value}>
                   <div className="flex items-center gap-2">
                     {option.icon && <option.icon className="h-4 w-4" />}
                     {option.label}

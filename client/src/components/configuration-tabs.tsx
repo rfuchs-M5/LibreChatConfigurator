@@ -162,7 +162,7 @@ export function ConfigurationTabs({
           icon: FileText,
           description: "Email Configuration",
           color: "from-blue-400 to-blue-500",
-          settings: ["emailService", "emailUsername", "emailPassword", "emailFrom", "emailFromName", "mailgunApiKey", "mailgunDomain", "mailgunHost"],
+          settings: ["emailComposite"],
         },
         {
           id: "file-storage",
@@ -677,15 +677,14 @@ export function ConfigurationTabs({
         docSection: "Authentication"
       },
       
-      // Email
-      emailService: { type: "text", description: "Email service provider", label: "Email Service" },
-      emailUsername: { type: "text", description: "Email username", label: "Email Username" },
-      emailPassword: { type: "password", description: "Email password", label: "Email Password" },
-      emailFrom: { type: "text", description: "Email from address", label: "Email From" },
-      emailFromName: { type: "text", description: "Email from name", label: "Email From Name" },
-      mailgunApiKey: { type: "password", description: "Mailgun API key", label: "Mailgun API Key" },
-      mailgunDomain: { type: "text", description: "Mailgun domain", label: "Mailgun Domain" },
-      mailgunHost: { type: "text", description: "Mailgun host URL", label: "Mailgun Host" },
+      // Email - Composite Progressive Disclosure
+      emailComposite: { 
+        type: "email-composite", 
+        description: "Email service configuration with progressive disclosure. Choose your email provider (SMTP or Mailgun) and configure only the relevant settings. Maintains backward compatibility with existing configurations.", 
+        label: "Email Service",
+        docUrl: "https://www.librechat.ai/docs/configuration/dotenv#email-configuration",
+        docSection: "Email Configuration"
+      },
       
       // OAuth Providers - Progressive Disclosure Interface
       oauthProviders: { 
@@ -1445,6 +1444,76 @@ export function ConfigurationTabs({
                             return [];
                         }
                       };
+                      
+                      // Special handling for emailComposite field
+                      if (setting === "emailComposite") {
+                        // Build composite value from individual email fields
+                        const emailCompositeValue = {
+                          serviceType: configuration.mailgunApiKey || configuration.mailgunDomain ? "mailgun" : 
+                                     configuration.emailService || configuration.emailUsername ? "smtp" : "",
+                          emailService: configuration.emailService,
+                          emailUsername: configuration.emailUsername,
+                          emailPassword: configuration.emailPassword,
+                          emailFrom: configuration.emailFrom,
+                          emailFromName: configuration.emailFromName,
+                          mailgunApiKey: configuration.mailgunApiKey,
+                          mailgunDomain: configuration.mailgunDomain,
+                          mailgunHost: configuration.mailgunHost,
+                        };
+                        
+                        return (
+                          <SettingInput
+                            key={setting}
+                            label={fieldInfo.label}
+                            description={fieldInfo.description}
+                            docUrl={fieldInfo.docUrl}
+                            docSection={fieldInfo.docSection}
+                            type={fieldInfo.type}
+                            value={emailCompositeValue}
+                            onChange={(emailData) => {
+                              // Spread composite object back into individual flat fields
+                              // Explicitly clear inactive provider fields based on serviceType from emailData
+                              const clearedConfig = { ...configuration };
+                              
+                              if (emailData.serviceType === "smtp") {
+                                // Clear Mailgun fields, keep SMTP fields
+                                clearedConfig.emailService = emailData.emailService ?? null;
+                                clearedConfig.emailUsername = emailData.emailUsername ?? null;
+                                clearedConfig.emailPassword = emailData.emailPassword ?? null;
+                                clearedConfig.emailFrom = emailData.emailFrom ?? null;
+                                clearedConfig.emailFromName = emailData.emailFromName ?? null;
+                                clearedConfig.mailgunApiKey = null;
+                                clearedConfig.mailgunDomain = null;
+                                clearedConfig.mailgunHost = null;
+                              } else if (emailData.serviceType === "mailgun") {
+                                // Clear SMTP fields, keep Mailgun fields
+                                clearedConfig.emailService = null;
+                                clearedConfig.emailUsername = null;
+                                clearedConfig.emailPassword = null;
+                                clearedConfig.emailFrom = null;
+                                clearedConfig.emailFromName = null;
+                                clearedConfig.mailgunApiKey = emailData.mailgunApiKey ?? null;
+                                clearedConfig.mailgunDomain = emailData.mailgunDomain ?? null;
+                                clearedConfig.mailgunHost = emailData.mailgunHost ?? null;
+                              } else {
+                                // Clear all fields when no provider selected
+                                clearedConfig.emailService = null;
+                                clearedConfig.emailUsername = null;
+                                clearedConfig.emailPassword = null;
+                                clearedConfig.emailFrom = null;
+                                clearedConfig.emailFromName = null;
+                                clearedConfig.mailgunApiKey = null;
+                                clearedConfig.mailgunDomain = null;
+                                clearedConfig.mailgunHost = null;
+                              }
+                              
+                              onConfigurationChange(clearedConfig);
+                            }}
+                            options={fieldInfo.type === 'select' ? getSelectOptions(setting) : undefined}
+                            data-testid={`input-${setting}`}
+                          />
+                        );
+                      }
                       
                       return (
                         <SettingInput

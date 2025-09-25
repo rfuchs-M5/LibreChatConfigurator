@@ -14,13 +14,14 @@ import { OAuthProvidersEditor } from "@/components/oauth-providers-editor";
 import { MeiliSearchIntegrationEditor } from "@/components/meilisearch-integration-editor";
 import { CachingIntegrationEditor } from "@/components/caching-integration-editor";
 import { FileStorageEditor } from "@/components/file-storage-editor-fixed";
+import { EmailServiceEditor } from "@/components/email-service-editor";
 
 interface SettingInputProps {
   label: string;
   description?: string;
   docUrl?: string;
   docSection?: string;
-  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration" | "file-storage";
+  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration" | "file-storage" | "email-composite";
   value: any;
   onChange: (value: any) => void;
   options?: string[];
@@ -245,6 +246,37 @@ export function SettingInput({
               const newConfig = { ...(value ?? {}) };
               newConfig[key] = val;
               onChange(newConfig);
+            }}
+            data-testid={testId}
+          />
+        );
+
+      case "email-composite":
+        // For the composite email field, we need to build the value from individual fields
+        // and update multiple fields when changed. The value should contain a map of all email fields.
+        
+        // Build composite value from individual email configuration fields
+        const emailCompositeValue = {
+          serviceType: value?.serviceType || 
+            (value?.mailgunApiKey || value?.mailgunDomain ? "mailgun" : 
+             value?.emailService || value?.emailUsername ? "smtp" : ""),
+          emailService: value?.emailService,
+          emailUsername: value?.emailUsername, 
+          emailPassword: value?.emailPassword,
+          emailFrom: value?.emailFrom,
+          emailFromName: value?.emailFromName,
+          mailgunApiKey: value?.mailgunApiKey,
+          mailgunDomain: value?.mailgunDomain,
+          mailgunHost: value?.mailgunHost,
+        };
+
+        return (
+          <EmailServiceEditor
+            value={emailCompositeValue}
+            onChange={(emailData) => {
+              // Pass the composite object to onChange
+              // The configuration-tabs.tsx will handle spreading this into individual fields
+              onChange(emailData);
             }}
             data-testid={testId}
           />
