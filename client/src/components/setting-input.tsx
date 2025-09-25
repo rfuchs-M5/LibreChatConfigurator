@@ -12,13 +12,14 @@ import { MCPServersEditor } from "@/components/mcp-servers-editor";
 import { WebSearchEditor } from "@/components/web-search-editor";
 import { OAuthProvidersEditor } from "@/components/oauth-providers-editor";
 import { MeiliSearchIntegrationEditor } from "@/components/meilisearch-integration-editor";
+import { CachingIntegrationEditor } from "@/components/caching-integration-editor";
 
 interface SettingInputProps {
   label: string;
   description?: string;
   docUrl?: string;
   docSection?: string;
-  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration";
+  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration";
   value: any;
   onChange: (value: any) => void;
   options?: string[];
@@ -220,6 +221,15 @@ export function SettingInput({
       case "meilisearch-integration":
         return (
           <MeiliSearchIntegrationEditor
+            value={value}
+            onChange={onChange}
+            data-testid={testId}
+          />
+        );
+
+      case "caching-integration":
+        return (
+          <CachingIntegrationEditor
             value={value}
             onChange={onChange}
             data-testid={testId}

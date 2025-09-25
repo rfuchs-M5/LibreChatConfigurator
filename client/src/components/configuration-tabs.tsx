@@ -33,7 +33,8 @@ import {
   Mic,
   Volume2,
   Users,
-  Zap
+  Zap,
+  HardDrive
 } from "lucide-react";
 
 interface ConfigurationTabsProps {
@@ -226,10 +227,10 @@ export function ConfigurationTabs({
     {
       id: "caching",
       label: "Caching",
-      icon: Clock,
-      description: "Cache & Static Files",
+      icon: HardDrive,
+      description: "Performance caching configuration with 1-click presets",
       color: "from-slate-500 to-slate-600",
-      settings: ["staticCacheMaxAge", "staticCacheSMaxAge", "indexCacheControl", "indexPragma", "indexExpires"],
+      settings: ["cachingIntegration"],
     },
     {
       id: "mcp",
@@ -393,7 +394,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration"; 
       description: string; 
       label: string;
       docUrl?: string;
@@ -776,12 +777,14 @@ export function ConfigurationTabs({
       titleConvo: { type: "boolean", description: "Generate conversation titles", label: "Title Conversations" },
       summaryConvo: { type: "boolean", description: "Generate conversation summaries", label: "Summary Conversations" },
       
-      // Caching
-      staticCacheMaxAge: { type: "number", description: "Static cache max age", label: "Static Cache Max Age" },
-      staticCacheSMaxAge: { type: "number", description: "Static cache s-max-age", label: "Static Cache S-Max-Age" },
-      indexCacheControl: { type: "text", description: "Index cache control", label: "Index Cache Control" },
-      indexPragma: { type: "text", description: "Index pragma", label: "Index Pragma" },
-      indexExpires: { type: "text", description: "Index expires", label: "Index Expires" },
+      // Caching - 1-Click Performance Presets
+      cachingIntegration: { 
+        type: "caching-integration", 
+        description: "1-click caching presets for optimal performance. Choose from Performance Optimized, Balanced, Development, or No Caching configurations based on your deployment needs.", 
+        label: "Caching Strategy",
+        docUrl: "https://www.librechat.ai/docs/deployment/caching",
+        docSection: "Caching Configuration"
+      },
       
       // MCP
       mcpOauthOnAuthError: { type: "text", description: "MCP OAuth on auth error", label: "MCP OAuth On Auth Error" },
