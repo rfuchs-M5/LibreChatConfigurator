@@ -260,7 +260,7 @@ export function ConfigurationTabs({
       id: "misc",
       label: "Miscellaneous",
       icon: Server,
-      description: "Other Settings",
+      description: "CDN & Additional Configuration",
       color: "from-gray-400 to-gray-500",
       settings: ["cdnProvider"],
     },
@@ -813,8 +813,15 @@ export function ConfigurationTabs({
       debugConsole: { type: "boolean", description: "Enable debug console", label: "Debug Console" },
       consoleJSON: { type: "boolean", description: "Console JSON format", label: "Console JSON" },
       
-      // Miscellaneous
-      cdnProvider: { type: "text", description: "CDN provider", label: "CDN Provider" },
+      // Miscellaneous - CDN & Static Asset Configuration
+      cdnProvider: { 
+        type: "text", 
+        description: "CDN Provider for static asset delivery. In LibreChat, this refers to the service used to host and deliver static assets (images, CSS, JavaScript files) via a Content Delivery Network rather than directly from your application server. DEFAULT: LibreChat uses a public CDN (hosted by CodeSandbox) for static assets, but you can override this with your own CDN provider. SUPPORTED STRATEGIES: 'local' (serve from your server), 's3' (Amazon S3 as CDN backend), 'azure_blob' (Azure Blob Storage for static assets), 'firebase' (Firebase Storage/CDN). Choose based on your infrastructure, performance needs, and cost requirements.", 
+        label: "CDN Provider Strategy",
+        placeholder: "local, s3, azure_blob, firebase",
+        docUrl: "https://www.librechat.ai/docs/deployment/file-handling",
+        docSection: "CDN Configuration"
+      },
       
       // MCP Servers
       mcpServers: { 
