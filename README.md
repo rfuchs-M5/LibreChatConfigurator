@@ -6,6 +6,23 @@
 
 A web-based interface to configure LibreChat v0.8.0 easily with progressive disclosure and comprehensive parameter coverage.
 
+## Why This Exists
+
+**LibreChat is incredibly powerful, but configuring it shouldn't require a PhD in YAML.** 
+
+Setting up LibreChat involves managing 100+ configuration options across environment variables, YAML files, OAuth providers, database connections, AI API keys, file storage backends, email services, and more. The official docs are comprehensive but scattered across dozens of pages, making it easy to miss critical settings or misconfigure complex integrations.
+
+**This tool solves that.** Instead of hunting through documentation and manually editing config files, you get:
+
+- **Progressive disclosure** - Pick your providers first, then see only the relevant fields
+- **Real-time validation** - Catch configuration errors before deployment  
+- **Complete packages** - Generate all files needed for deployment in one click
+- **Beginner-friendly** - No need to understand YAML syntax or environment variable conventions
+
+**Built by the community, for the community.** As LibreChat evolves and adds new features, this tool evolves with it. Missing a new provider or configuration option? The codebase is designed to make adding support straightforward - just update the schemas and the UI follows automatically.
+
+**Help make LibreChat accessible to everyone.** Whether you're fixing a bug, adding support for a new AI provider, or improving the user experience, your contributions help more people deploy and enjoy LibreChat without the configuration headaches.
+
 ## Requirements
 
 - **Node.js 20+** (tested with Node 20.16+)
