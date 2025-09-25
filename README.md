@@ -40,14 +40,21 @@ npm --version   # Should work without errors
 
 ### Windows Users
 
-**Option A: Git Bash or PowerShell (Recommended)**
+**Option A: PowerShell (Recommended)**
+```powershell
+git clone https://github.com/Frits1/LibreChatConfigurator.git
+cd LibreChatConfigurator
+npm install; npm run dev
+```
+
+**Option B: Git Bash**
 ```bash
 git clone https://github.com/Frits1/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install && npm run dev
 ```
 
-**Option B: WSL (If you prefer Linux environment)**
+**Option C: WSL (If you prefer Linux environment)**
 ```bash
 # Important: Copy to WSL filesystem to avoid permission issues
 git clone https://github.com/Frits1/LibreChatConfigurator.git
@@ -249,8 +256,14 @@ npm install && npm run dev
 - Restart your terminal/command prompt after installation
 - Verify with `node --version`
 
+**❌ "The token '&&' is not a valid statement separator" (PowerShell)**
+```powershell
+# Use semicolon instead of && in PowerShell
+npm install; npm run dev
+```
+
 **❌ "npm install" fails with permission errors**
-- **Windows**: Run as Administrator or use Git Bash
+- **Windows**: Run PowerShell as Administrator
 - **Mac/Linux**: Don't use `sudo` with npm. Fix npm permissions or use [nvm](https://github.com/nvm-sh/nvm)
 
 **❌ Port 5000 already in use**
