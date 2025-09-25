@@ -815,10 +815,16 @@ export function ConfigurationTabs({
       
       // Miscellaneous - CDN & Static Asset Configuration
       cdnProvider: { 
-        type: "text", 
-        description: "CDN Provider for static asset delivery. In LibreChat, this refers to the service used to host and deliver static assets (images, CSS, JavaScript files) via a Content Delivery Network rather than directly from your application server. DEFAULT: LibreChat uses a public CDN (hosted by CodeSandbox) for static assets, but you can override this with your own CDN provider. SUPPORTED STRATEGIES: 'local' (serve from your server), 's3' (Amazon S3 as CDN backend), 'azure_blob' (Azure Blob Storage for static assets), 'firebase' (Firebase Storage/CDN). Choose based on your infrastructure, performance needs, and cost requirements.", 
+        type: "select", 
+        description: "CDN Provider for static asset delivery. In LibreChat, this refers to the service used to host and deliver static assets (images, CSS, JavaScript files) via a Content Delivery Network rather than directly from your application server. DEFAULT: LibreChat uses a public CDN (hosted by CodeSandbox) for static assets, but you can override this with your own CDN provider. Choose based on your infrastructure, performance needs, and cost requirements.", 
         label: "CDN Provider Strategy",
-        placeholder: "local, s3, azure_blob, firebase",
+        options: [
+          { value: "", label: "Default (CodeSandbox CDN)" },
+          { value: "local", label: "Local Server - Serve from your application server" },
+          { value: "s3", label: "Amazon S3 - Use S3 as CDN backend" },
+          { value: "azure_blob", label: "Azure Blob Storage - Host static assets in Azure" },
+          { value: "firebase", label: "Firebase Storage - Use Firebase CDN features" }
+        ],
         docUrl: "https://www.librechat.ai/docs/deployment/file-handling",
         docSection: "CDN Configuration"
       },
