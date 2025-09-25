@@ -244,7 +244,7 @@ export function ConfigurationTabs({
       id: "users",
       label: "Users",
       icon: FileText,
-      description: "User Management",
+      description: "System User/Group IDs for Deployment Security",
       color: "from-green-400 to-green-500",
       settings: ["uid", "gid"],
     },
@@ -790,9 +790,23 @@ export function ConfigurationTabs({
       mcpOauthOnAuthError: { type: "text", description: "MCP OAuth on auth error", label: "MCP OAuth On Auth Error" },
       mcpOauthDetectionTimeout: { type: "number", description: "MCP OAuth detection timeout", label: "MCP OAuth Detection Timeout" },
       
-      // Users
-      uid: { type: "number", description: "User ID", label: "UID" },
-      gid: { type: "number", description: "Group ID", label: "GID" },
+      // Users - System-Level Deployment Configuration
+      uid: { 
+        type: "number", 
+        description: "System User ID for LibreChat processes. IMPORTANT: This controls what system user LibreChat runs as, NOT application users. Set this for Docker deployments (e.g., 1000 to match your host user), security hardening (avoid root/0), and file permission management. Essential for production deployments to prevent permission issues and follow security best practices.", 
+        label: "UID (System User ID)",
+        placeholder: "1000",
+        docUrl: "https://www.librechat.ai/docs/deployment/docker",
+        docSection: "Docker Security" 
+      },
+      gid: { 
+        type: "number", 
+        description: "System Group ID for LibreChat processes. Companion to UID for complete user/group context. Set to match your deployment environment (e.g., 1000 for typical non-root user). Ensures LibreChat files and directories have correct ownership for security isolation and preventing privilege escalation. Critical for multi-tenant servers and enterprise compliance.", 
+        label: "GID (System Group ID)",
+        placeholder: "1000",
+        docUrl: "https://www.librechat.ai/docs/deployment/docker",
+        docSection: "Docker Security" 
+      },
       
       // Debug
       debugLogging: { type: "boolean", description: "Enable debug logging", label: "Debug Logging" },
