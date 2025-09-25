@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -126,6 +127,19 @@ const PRESET_INFO = {
       "Immediate content updates", 
       "Debugging scenarios only"
     ]
+  },
+  custom: {
+    icon: <Settings className="h-4 w-4" />,
+    title: "User Defined",
+    description: "Configure individual caching settings manually",
+    badge: "Custom",
+    color: "bg-purple-500",
+    features: [
+      "Full control over settings",
+      "Custom cache durations",
+      "Advanced configuration",
+      "Expert users only"
+    ]
   }
 };
 
@@ -175,7 +189,11 @@ export function CachingIntegrationEditor({ value, onChange, "data-testid": testI
   };
 
   const applyPreset = (preset: CachingPreset) => {
-    if (preset === "custom") return;
+    if (preset === "custom") {
+      // Switch to custom mode but preserve current values
+      setConfig(prev => ({ ...prev, preset: "custom" }));
+      return;
+    }
     
     const presetConfig = CACHING_PRESETS[preset];
     setConfig({ ...presetConfig, preset });
@@ -326,16 +344,147 @@ export function CachingIntegrationEditor({ value, onChange, "data-testid": testI
         </Card>
       )}
 
-      {/* Custom Configuration Message */}
+      {/* Custom Configuration Interface */}
       {config.preset === "custom" && (
-        <Alert>
-          <Settings className="h-4 w-4" />
-          <AlertDescription className="text-sm">
-            <strong>Custom Configuration Detected</strong><br />
-            You have custom caching settings that don't match any preset. Your current configuration will be preserved. Select a preset above to use predefined optimized settings.
-          </AlertDescription>
-        </Alert>
+        <Card className="border-l-4 border-l-purple-500">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Settings className="h-4 w-4" />
+              User Defined Configuration
+              <Badge variant="secondary" className="text-white bg-purple-500">Custom</Badge>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Configure individual caching settings manually for advanced control.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Basic Cache Toggle */}
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="cache-enabled"
+                checked={config.cache || false}
+                onCheckedChange={(enabled) => updateConfig({ cache: enabled })}
+                data-testid="toggle-cache-enabled"
+              />
+              <Label htmlFor="cache-enabled">Enable Caching</Label>
+            </div>
+
+            <Separator />
+
+            {/* Static File Caching */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Static File Caching</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="static-cache-max-age">Static Cache Max Age (seconds)</Label>
+                  <Input
+                    id="static-cache-max-age"
+                    type="number"
+                    value={config.staticCacheMaxAge || 0}
+                    onChange={(e) => updateConfig({ staticCacheMaxAge: parseInt(e.target.value) || 0 })}
+                    placeholder="31536000"
+                    data-testid="input-static-cache-max-age"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    How long browsers cache static files (e.g., 31536000 = 1 year)
+                  </p>
+                </div>
+                <div>
+                  <Label htmlFor="static-cache-s-max-age">Static Cache S-Max-Age (seconds)</Label>
+                  <Input
+                    id="static-cache-s-max-age"
+                    type="number"
+                    value={config.staticCacheSMaxAge || 0}
+                    onChange={(e) => updateConfig({ staticCacheSMaxAge: parseInt(e.target.value) || 0 })}
+                    placeholder="31536000"
+                    data-testid="input-static-cache-s-max-age"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Shared cache (CDN) duration for static files
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Index/Page Caching */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Page Caching Headers</h4>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="index-cache-control">Cache-Control Header</Label>
+                  <Input
+                    id="index-cache-control"
+                    value={config.indexCacheControl || ""}
+                    onChange={(e) => updateConfig({ indexCacheControl: e.target.value })}
+                    placeholder="public, max-age=3600"
+                    data-testid="input-index-cache-control"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    HTTP Cache-Control header for pages
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="index-pragma">Pragma Header</Label>
+                    <Input
+                      id="index-pragma"
+                      value={config.indexPragma || ""}
+                      onChange={(e) => updateConfig({ indexPragma: e.target.value })}
+                      placeholder="cache"
+                      data-testid="input-index-pragma"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Legacy cache directive
+                    </p>
+                  </div>
+                  <div>
+                    <Label htmlFor="index-expires">Expires Header</Label>
+                    <Input
+                      id="index-expires"
+                      value={config.indexExpires || ""}
+                      onChange={(e) => updateConfig({ indexExpires: e.target.value })}
+                      placeholder="3600"
+                      data-testid="input-index-expires"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Expiration time in seconds
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Preset Buttons */}
+            <div className="mt-4">
+              <Label className="text-sm font-medium">Quick Fill from Preset:</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {Object.entries(CACHING_PRESETS).map(([presetKey, presetConfig]) => (
+                  <Button
+                    key={presetKey}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      updateConfig({
+                        ...presetConfig,
+                        preset: "custom" // Keep it as custom after filling
+                      });
+                    }}
+                    data-testid={`button-fill-${presetKey}`}
+                  >
+                    Fill from {presetKey.charAt(0).toUpperCase() + presetKey.slice(1)}
+                  </Button>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Use preset values as a starting point, then modify as needed.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       )}
+
     </div>
   );
 }
