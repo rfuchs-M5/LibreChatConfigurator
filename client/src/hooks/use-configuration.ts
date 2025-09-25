@@ -4,9 +4,9 @@ import { type Configuration, type InsertConfigurationProfile, type PackageGenera
 import { apiRequest } from "@/lib/queryClient";
 import { defaultConfiguration as fallbackConfiguration } from "@/lib/configuration-defaults";
 
-// CRITICAL: This configuration hook handles real API keys and secrets.
-// The system is designed to preserve all sensitive data exactly as entered by users.
-// DO NOT implement any redaction or censoring - this defeats the core purpose.
+// This configuration hook provides demo/placeholder values for LibreChat settings.
+// Real API keys should be stored in local files (data/secrets/) and never committed to git.
+// Users can replace demo values with real keys as needed for their deployments.
 export function useConfiguration() {
   const queryClient = useQueryClient();
   

@@ -5,6 +5,14 @@ server/public
 vite.config.ts.*
 *.tar.gz
 
+# Local secrets and API keys (NEVER COMMIT)
+/local-secrets/
+/data/secrets/
+*.env.local
+.env.local
+secrets.json
+api-keys.json
+
 # Planning documents (not for public repo)
 howtogolive.md
 planforcommunityrelease.md
