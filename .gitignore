@@ -16,3 +16,7 @@ api-keys.json
 # Planning documents (not for public repo)
 howtogolive.md
 planforcommunityrelease.md
+
+# Replit-specific files (keep local only)
+replit.md
+vite.config.replit.ts
