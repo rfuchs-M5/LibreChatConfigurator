@@ -25,7 +25,6 @@ import {
   Camera, 
   Wrench, 
   Clock, 
-  Download,
   Plus,
   Trash2,
   X,
@@ -263,14 +262,6 @@ export function ConfigurationTabs({
       description: "CDN & Additional Configuration",
       color: "from-gray-400 to-gray-500",
       settings: ["cdnProvider"],
-    },
-    {
-      id: "generate",
-      label: "Generate",
-      icon: Download,
-      description: "Create Package",
-      color: "from-emerald-600 to-green-700",
-      settings: [],
     },
   ];
 
