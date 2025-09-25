@@ -4,3 +4,6 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Planning documents (not for public repo)
+howtogolive.md
