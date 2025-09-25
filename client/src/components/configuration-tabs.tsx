@@ -181,7 +181,7 @@ export function ConfigurationTabs({
       icon: Search,
       description: "Search Engine Configuration",
       color: "from-gray-500 to-gray-600",
-      settings: ["search", "meilisearchURL", "meilisearchMasterKey", "meiliNoAnalytics"],
+      settings: ["meilisearchIntegration"],
     },
     {
       id: "rate-security",
@@ -393,7 +393,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration"; 
       description: string; 
       label: string;
       docUrl?: string;
@@ -736,11 +736,14 @@ export function ConfigurationTabs({
       chunkOverlap: { type: "number", description: "Chunk overlap", label: "Chunk Overlap" },
       embeddingsProvider: { type: "text", description: "Embeddings provider", label: "Embeddings Provider" },
       
-      // MeiliSearch
-      search: { type: "boolean", description: "Enable search", label: "Enable Search" },
-      meilisearchURL: { type: "text", description: "MeiliSearch URL", label: "MeiliSearch URL" },
-      meilisearchMasterKey: { type: "password", description: "MeiliSearch master key", label: "MeiliSearch Master Key" },
-      meiliNoAnalytics: { type: "boolean", description: "Disable MeiliSearch analytics", label: "No Analytics" },
+      // MeiliSearch - 1-Click Integration with Docker Support
+      meilisearchIntegration: { 
+        type: "meilisearch-integration", 
+        description: "1-click MeiliSearch integration with automatic Docker setup, secure key generation, and conversation search capabilities. Improves LibreChat with powerful search functionality.", 
+        label: "MeiliSearch Integration",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/search",
+        docSection: "Search Configuration"
+      },
       
       // Rate & Security
       limitConcurrentMessages: { type: "boolean", description: "Limit concurrent messages", label: "Limit Concurrent Messages" },

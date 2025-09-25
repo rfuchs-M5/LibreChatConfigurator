@@ -11,13 +11,14 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { MCPServersEditor } from "@/components/mcp-servers-editor";
 import { WebSearchEditor } from "@/components/web-search-editor";
 import { OAuthProvidersEditor } from "@/components/oauth-providers-editor";
+import { MeiliSearchIntegrationEditor } from "@/components/meilisearch-integration-editor";
 
 interface SettingInputProps {
   label: string;
   description?: string;
   docUrl?: string;
   docSection?: string;
-  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers";
+  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration";
   value: any;
   onChange: (value: any) => void;
   options?: string[];
@@ -210,6 +211,15 @@ export function SettingInput({
       case "oauth-providers":
         return (
           <OAuthProvidersEditor
+            value={value}
+            onChange={onChange}
+            data-testid={testId}
+          />
+        );
+
+      case "meilisearch-integration":
+        return (
+          <MeiliSearchIntegrationEditor
             value={value}
             onChange={onChange}
             data-testid={testId}
