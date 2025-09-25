@@ -44,7 +44,9 @@ npm --version   # Should work without errors
 ```powershell
 git clone https://github.com/Frits1/LibreChatConfigurator.git
 cd LibreChatConfigurator
-npm install; npm run dev
+npm install
+$env:NODE_ENV="development"
+npm run dev
 ```
 
 **Option B: Git Bash**
@@ -260,6 +262,13 @@ npm install && npm run dev
 ```powershell
 # Use semicolon instead of && in PowerShell
 npm install; npm run dev
+```
+
+**❌ "'NODE_ENV' is not recognized" (PowerShell)**
+```powershell
+# Set environment variable first, then run
+$env:NODE_ENV="development"
+npm run dev
 ```
 
 **❌ "npm install" fails with permission errors**
