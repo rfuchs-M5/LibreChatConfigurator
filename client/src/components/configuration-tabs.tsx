@@ -51,219 +51,258 @@ export function ConfigurationTabs({
 }: ConfigurationTabsProps) {
   const [activeTab, setActiveTab] = useState("server");
 
-  const tabs = [
+  // Define tab groups with logical organization
+  const tabGroups = [
     {
-      id: "app",
-      label: "App Settings",
-      icon: Server,
-      description: "Title, Welcome, Footer",
-      color: "from-blue-500 to-blue-600",
-      settings: ["appTitle", "customWelcome", "customFooter", "helpAndFAQURL"],
+      label: "CORE CONFIGURATION",
+      tabs: [
+        {
+          id: "app",
+          label: "App Settings",
+          icon: Settings,
+          description: "Title, Welcome, Footer",
+          color: "from-blue-500 to-blue-600",
+          settings: ["appTitle", "customWelcome", "customFooter", "helpAndFAQURL"],
+        },
+        {
+          id: "server",
+          label: "Server",
+          icon: Server,
+          description: "Host, Port, Environment",
+          color: "from-green-500 to-green-600",
+          settings: ["host", "port", "nodeEnv", "domainClient", "domainServer", "noIndex"],
+        },
+        {
+          id: "security",
+          label: "Security",
+          icon: Shield,
+          description: "JWT, Encryption, Passwords",
+          color: "from-red-500 to-red-600",
+          settings: ["jwtSecret", "jwtRefreshSecret", "credsKey", "credsIV", "minPasswordLength", "sessionExpiry", "refreshTokenExpiry"],
+        },
+      ]
     },
     {
-      id: "server",
-      label: "Server",
-      icon: Server,
-      description: "Host, Port, Environment",
-      color: "from-blue-500 to-blue-600",
-      settings: ["host", "port", "nodeEnv", "domainClient", "domainServer", "noIndex"],
+      label: "DATA & STORAGE",
+      tabs: [
+        {
+          id: "database",
+          label: "Database",
+          icon: Database,
+          description: "MongoDB, Redis",
+          color: "from-purple-500 to-purple-600",
+          settings: ["mongoUri", "mongoRootUsername", "mongoRootPassword", "mongoDbName", "redisUri", "redisUsername", "redisPassword", "redisKeyPrefix", "redisKeyPrefixVar", "redisMaxListeners", "redisPingInterval", "redisUseAlternativeDNSLookup"],
+        },
+      ]
     },
     {
-      id: "security",
-      label: "Security",
-      icon: Shield,
-      description: "JWT, Encryption, Passwords",
-      color: "from-red-500 to-red-600",
-      settings: ["jwtSecret", "jwtRefreshSecret", "credsKey", "credsIV", "minPasswordLength", "sessionExpiry", "refreshTokenExpiry"],
+      label: "AI PROVIDERS",
+      tabs: [
+        {
+          id: "ai-core",
+          label: "Core AI APIs",
+          icon: Brain,
+          description: "Primary AI Providers",
+          color: "from-indigo-500 to-indigo-600",
+          settings: ["openaiApiKey", "anthropicApiKey", "googleApiKey", "groqApiKey", "mistralApiKey"],
+        },
+        {
+          id: "ai-extended",
+          label: "Extended AI APIs",
+          icon: Key,
+          description: "Additional AI Providers",
+          color: "from-emerald-500 to-emerald-600",
+          settings: [
+            "deepseekApiKey", "perplexityApiKey", "fireworksApiKey", "togetheraiApiKey", 
+            "huggingfaceToken", "xaiApiKey", "nvidiaApiKey", "sambaNovaApiKey", 
+            "hyperbolicApiKey", "klusterApiKey", "nanogptApiKey", "glhfApiKey", 
+            "apipieApiKey", "unifyApiKey", "openrouterKey"
+          ],
+        },
+        {
+          id: "azure",
+          label: "Azure OpenAI",
+          icon: Plug,
+          description: "Azure Configuration",
+          color: "from-cyan-500 to-cyan-600",
+          settings: ["azureApiKey", "azureOpenaiApiInstanceName", "azureOpenaiApiDeploymentName", "azureOpenaiApiVersion", "azureOpenaiModels"],
+        },
+        {
+          id: "aws",
+          label: "AWS Bedrock",
+          icon: Database,
+          description: "AWS Configuration",
+          color: "from-orange-500 to-orange-600",
+          settings: ["awsAccessKeyId", "awsSecretAccessKey", "awsRegion", "awsBedrockRegion", "awsEndpointURL", "awsBucketName"],
+        },
+      ]
     },
     {
-      id: "database",
-      label: "Database",
-      icon: Database,
-      description: "MongoDB, Redis",
-      color: "from-green-500 to-green-600",
-      settings: ["mongoUri", "mongoRootUsername", "mongoRootPassword", "mongoDbName", "redisUri", "redisUsername", "redisPassword", "redisKeyPrefix", "redisKeyPrefixVar", "redisMaxListeners", "redisPingInterval", "redisUseAlternativeDNSLookup"],
+      label: "INTEGRATIONS & SERVICES",
+      tabs: [
+        {
+          id: "auth",
+          label: "Authentication",
+          icon: Shield,
+          description: "Login & Registration",
+          color: "from-yellow-500 to-yellow-600",
+          settings: ["allowRegistration", "allowEmailLogin", "allowSocialLogin", "allowSocialRegistration", "allowPasswordReset", "registration.socialLogins", "registration.allowedDomains"],
+        },
+        {
+          id: "oauth",
+          label: "OAuth Providers",
+          icon: Key,
+          description: "Social Login Configuration",
+          color: "from-purple-500 to-purple-600",
+          settings: ["oauthProviders"],
+        },
+        {
+          id: "email",
+          label: "Email",
+          icon: FileText,
+          description: "Email Configuration",
+          color: "from-blue-400 to-blue-500",
+          settings: ["emailService", "emailUsername", "emailPassword", "emailFrom", "emailFromName", "mailgunApiKey", "mailgunDomain", "mailgunHost"],
+        },
+        {
+          id: "file-storage",
+          label: "File Storage",
+          icon: FileText,
+          description: "File Upload & Storage",
+          color: "from-teal-500 to-teal-600",
+          settings: [
+            "fileStrategy",
+            "fileUploadPath", 
+            "firebaseApiKey", "firebaseAuthDomain", "firebaseProjectId", "firebaseStorageBucket", "firebaseMessagingSenderId", "firebaseAppId",
+            "azureStorageConnectionString", "azureStoragePublicAccess", "azureContainerName",
+            "fileConfig.serverFileSizeLimit", "fileConfig.avatarSizeLimit", "fileConfig.clientImageResize.enabled", "fileConfig.clientImageResize.maxWidth", "fileConfig.clientImageResize.maxHeight", "fileConfig.clientImageResize.quality", "fileConfig.clientImageResize.compressFormat"
+          ],
+        },
+        {
+          id: "search",
+          label: "Search & APIs",
+          icon: Search,
+          description: "Web Search & External APIs",
+          color: "from-violet-500 to-violet-600",
+          settings: ["webSearch", "openweatherApiKey", "librechatCodeApiKey"],
+        },
+        {
+          id: "meili",
+          label: "MeiliSearch",
+          icon: Search,
+          description: "Search Engine Configuration",
+          color: "from-gray-500 to-gray-600",
+          settings: ["meilisearchIntegration"],
+        },
+        {
+          id: "rag",
+          label: "RAG API",
+          icon: Database,
+          description: "Retrieval Augmented Generation",
+          color: "from-pink-500 to-pink-600",
+          settings: ["ragApiURL", "ragOpenaiApiKey", "ragPort", "ragHost", "collectionName", "chunkSize", "chunkOverlap", "embeddingsProvider"],
+        },
+        {
+          id: "caching",
+          label: "Caching",
+          icon: HardDrive,
+          description: "Performance caching configuration with 1-click presets",
+          color: "from-slate-500 to-slate-600",
+          settings: ["cachingIntegration"],
+        },
+      ]
     },
     {
-      id: "auth",
-      label: "Authentication",
-      icon: Shield,
-      description: "Login & Registration",
-      color: "from-yellow-500 to-yellow-600",
-      settings: ["allowRegistration", "allowEmailLogin", "allowSocialLogin", "allowSocialRegistration", "allowPasswordReset", "registration.socialLogins", "registration.allowedDomains"],
+      label: "FEATURES & INTERFACE",
+      tabs: [
+        {
+          id: "features",
+          label: "Features",
+          icon: Eye,
+          description: "Feature Toggles",
+          color: "from-purple-500 to-purple-600",
+          settings: ["allowSharedLinks", "allowSharedLinksPublic", "titleConvo", "summaryConvo", "interface.fileSearch", "interface.uploadAsText", "interface.privacyPolicy.externalUrl", "interface.privacyPolicy.openNewTab", "interface.termsOfService.externalUrl", "interface.termsOfService.openNewTab", "interface.termsOfService.modalAcceptance", "interface.termsOfService.modalTitle", "interface.termsOfService.modalContent", "interface.endpointsMenu", "interface.modelSelect", "interface.parameters", "interface.sidePanel", "interface.presets", "interface.prompts", "interface.bookmarks", "interface.multiConvo", "interface.agents", "interface.peoplePicker.users", "interface.peoplePicker.groups", "interface.peoplePicker.roles", "interface.marketplace.use", "interface.fileCitations"],
+        },
+      ]
     },
     {
-      id: "email",
-      label: "Email",
-      icon: FileText,
-      description: "Email Configuration",
-      color: "from-blue-400 to-blue-500",
-      settings: ["emailService", "emailUsername", "emailPassword", "emailFrom", "emailFromName", "mailgunApiKey", "mailgunDomain", "mailgunHost"],
+      label: "SECURITY & LIMITS",
+      tabs: [
+        {
+          id: "rate-security",
+          label: "Rate & Security",
+          icon: Gauge,
+          description: "Rate Limiting & Security",
+          color: "from-red-400 to-red-500",
+          settings: [
+            "limitConcurrentMessages", "concurrentMessageMax", "banViolations", "banDuration", "banInterval",
+            "loginViolationScore", "registrationViolationScore", "concurrentViolationScore", "messageViolationScore", 
+            "nonBrowserViolationScore", "loginMax", "loginWindow",
+            "rateLimits.fileUploads.ipMax", "rateLimits.fileUploads.ipWindowInMinutes", "rateLimits.fileUploads.userMax", "rateLimits.fileUploads.userWindowInMinutes",
+            "rateLimits.conversationsImport.ipMax", "rateLimits.conversationsImport.ipWindowInMinutes", "rateLimits.conversationsImport.userMax", "rateLimits.conversationsImport.userWindowInMinutes",
+            "rateLimits.stt.ipMax", "rateLimits.stt.ipWindowInMinutes", "rateLimits.stt.userMax", "rateLimits.stt.userWindowInMinutes",
+            "rateLimits.tts.ipMax", "rateLimits.tts.ipWindowInMinutes", "rateLimits.tts.userMax", "rateLimits.tts.userWindowInMinutes"
+          ],
+        },
+        {
+          id: "ldap",
+          label: "LDAP",
+          icon: Shield,
+          description: "LDAP Configuration",
+          color: "from-yellow-600 to-yellow-700",
+          settings: ["ldapURL", "ldapBindDN", "ldapBindCredentials", "ldapSearchBase", "ldapSearchFilter"],
+        },
+        {
+          id: "turnstile",
+          label: "Turnstile",
+          icon: Shield,
+          description: "Cloudflare Turnstile",
+          color: "from-orange-400 to-orange-500",
+          settings: ["turnstileSiteKey", "turnstileSecretKey"],
+        },
+      ]
     },
     {
-      id: "oauth",
-      label: "OAuth Providers",
-      icon: Key,
-      description: "Social Login Configuration",
-      color: "from-purple-500 to-purple-600",
-      settings: ["oauthProviders"],
-    },
-    {
-      id: "ai-core",
-      label: "Core AI APIs",
-      icon: Brain,
-      description: "Primary AI Providers",
-      color: "from-indigo-500 to-indigo-600",
-      settings: ["openaiApiKey", "anthropicApiKey", "googleApiKey", "groqApiKey", "mistralApiKey"],
-    },
-    {
-      id: "ai-extended",
-      label: "Extended AI APIs",
-      icon: Key,
-      description: "Additional AI Providers",
-      color: "from-emerald-500 to-emerald-600",
-      settings: [
-        "deepseekApiKey", "perplexityApiKey", "fireworksApiKey", "togetheraiApiKey", 
-        "huggingfaceToken", "xaiApiKey", "nvidiaApiKey", "sambaNovaApiKey", 
-        "hyperbolicApiKey", "klusterApiKey", "nanogptApiKey", "glhfApiKey", 
-        "apipieApiKey", "unifyApiKey", "openrouterKey"
-      ],
-    },
-    {
-      id: "azure",
-      label: "Azure OpenAI",
-      icon: Plug,
-      description: "Azure Configuration",
-      color: "from-cyan-500 to-cyan-600",
-      settings: ["azureApiKey", "azureOpenaiApiInstanceName", "azureOpenaiApiDeploymentName", "azureOpenaiApiVersion", "azureOpenaiModels"],
-    },
-    {
-      id: "aws",
-      label: "AWS Bedrock",
-      icon: Database,
-      description: "AWS Configuration",
-      color: "from-orange-500 to-orange-600",
-      settings: ["awsAccessKeyId", "awsSecretAccessKey", "awsRegion", "awsBedrockRegion", "awsEndpointURL", "awsBucketName"],
-    },
-    {
-      id: "file-storage",
-      label: "File Storage",
-      icon: FileText,
-      description: "File Upload & Storage",
-      color: "from-teal-500 to-teal-600",
-      settings: [
-        "fileStrategy",
-        "fileUploadPath", 
-        "firebaseApiKey", "firebaseAuthDomain", "firebaseProjectId", "firebaseStorageBucket", "firebaseMessagingSenderId", "firebaseAppId",
-        "azureStorageConnectionString", "azureStoragePublicAccess", "azureContainerName",
-        "fileConfig.serverFileSizeLimit", "fileConfig.avatarSizeLimit", "fileConfig.clientImageResize.enabled", "fileConfig.clientImageResize.maxWidth", "fileConfig.clientImageResize.maxHeight", "fileConfig.clientImageResize.quality", "fileConfig.clientImageResize.compressFormat"
-      ],
-    },
-    {
-      id: "search",
-      label: "Search & APIs",
-      icon: Search,
-      description: "Web Search & External APIs",
-      color: "from-violet-500 to-violet-600",
-      settings: ["webSearch", "openweatherApiKey", "librechatCodeApiKey"],
-    },
-    {
-      id: "rag",
-      label: "RAG API",
-      icon: Database,
-      description: "Retrieval Augmented Generation",
-      color: "from-pink-500 to-pink-600",
-      settings: ["ragApiURL", "ragOpenaiApiKey", "ragPort", "ragHost", "collectionName", "chunkSize", "chunkOverlap", "embeddingsProvider"],
-    },
-    {
-      id: "meili",
-      label: "MeiliSearch",
-      icon: Search,
-      description: "Search Engine Configuration",
-      color: "from-gray-500 to-gray-600",
-      settings: ["meilisearchIntegration"],
-    },
-    {
-      id: "rate-security",
-      label: "Rate & Security",
-      icon: Gauge,
-      description: "Rate Limiting & Security",
-      color: "from-red-400 to-red-500",
-      settings: [
-        "limitConcurrentMessages", "concurrentMessageMax", "banViolations", "banDuration", "banInterval",
-        "loginViolationScore", "registrationViolationScore", "concurrentViolationScore", "messageViolationScore", 
-        "nonBrowserViolationScore", "loginMax", "loginWindow",
-        "rateLimits.fileUploads.ipMax", "rateLimits.fileUploads.ipWindowInMinutes", "rateLimits.fileUploads.userMax", "rateLimits.fileUploads.userWindowInMinutes",
-        "rateLimits.conversationsImport.ipMax", "rateLimits.conversationsImport.ipWindowInMinutes", "rateLimits.conversationsImport.userMax", "rateLimits.conversationsImport.userWindowInMinutes",
-        "rateLimits.stt.ipMax", "rateLimits.stt.ipWindowInMinutes", "rateLimits.stt.userMax", "rateLimits.stt.userWindowInMinutes",
-        "rateLimits.tts.ipMax", "rateLimits.tts.ipWindowInMinutes", "rateLimits.tts.userMax", "rateLimits.tts.userWindowInMinutes"
-      ],
-    },
-    {
-      id: "ldap",
-      label: "LDAP",
-      icon: Shield,
-      description: "LDAP Configuration",
-      color: "from-yellow-600 to-yellow-700",
-      settings: ["ldapURL", "ldapBindDN", "ldapBindCredentials", "ldapSearchBase", "ldapSearchFilter"],
-    },
-    {
-      id: "turnstile",
-      label: "Turnstile",
-      icon: Shield,
-      description: "Cloudflare Turnstile",
-      color: "from-orange-400 to-orange-500",
-      settings: ["turnstileSiteKey", "turnstileSecretKey"],
-    },
-    {
-      id: "features",
-      label: "Features",
-      icon: Eye,
-      description: "Feature Toggles",
-      color: "from-purple-500 to-purple-600",
-      settings: ["allowSharedLinks", "allowSharedLinksPublic", "titleConvo", "summaryConvo", "interface.fileSearch", "interface.uploadAsText", "interface.privacyPolicy.externalUrl", "interface.privacyPolicy.openNewTab", "interface.termsOfService.externalUrl", "interface.termsOfService.openNewTab", "interface.termsOfService.modalAcceptance", "interface.termsOfService.modalTitle", "interface.termsOfService.modalContent", "interface.endpointsMenu", "interface.modelSelect", "interface.parameters", "interface.sidePanel", "interface.presets", "interface.prompts", "interface.bookmarks", "interface.multiConvo", "interface.agents", "interface.peoplePicker.users", "interface.peoplePicker.groups", "interface.peoplePicker.roles", "interface.marketplace.use", "interface.fileCitations"],
-    },
-    {
-      id: "caching",
-      label: "Caching",
-      icon: HardDrive,
-      description: "Performance caching configuration with 1-click presets",
-      color: "from-slate-500 to-slate-600",
-      settings: ["cachingIntegration"],
-    },
-    {
-      id: "mcp",
-      label: "MCP",
-      icon: Network,
-      description: "Model Context Protocol",
-      color: "from-rose-500 to-rose-600",
-      settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
-    },
-    {
-      id: "users",
-      label: "Users",
-      icon: FileText,
-      description: "System User/Group IDs for Deployment Security",
-      color: "from-green-400 to-green-500",
-      settings: ["uid", "gid"],
-    },
-    {
-      id: "debug",
-      label: "Debug",
-      icon: Wrench,
-      description: "Logging & Debug",
-      color: "from-amber-500 to-amber-600",
-      settings: ["debugLogging", "debugConsole", "consoleJSON"],
-    },
-    {
-      id: "misc",
-      label: "Miscellaneous",
-      icon: Server,
-      description: "CDN & Additional Configuration",
-      color: "from-gray-400 to-gray-500",
-      settings: ["cdnProvider"],
-    },
+      label: "ADVANCED & SYSTEM",
+      tabs: [
+        {
+          id: "mcp",
+          label: "MCP",
+          icon: Network,
+          description: "Model Context Protocol",
+          color: "from-rose-500 to-rose-600",
+          settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
+        },
+        {
+          id: "users",
+          label: "Users",
+          icon: FileText,
+          description: "System User/Group IDs for Deployment Security",
+          color: "from-green-400 to-green-500",
+          settings: ["uid", "gid"],
+        },
+        {
+          id: "debug",
+          label: "Debug",
+          icon: Wrench,
+          description: "Logging & Debug",
+          color: "from-amber-500 to-amber-600",
+          settings: ["debugLogging", "debugConsole", "consoleJSON"],
+        },
+        {
+          id: "misc",
+          label: "Miscellaneous",
+          icon: Server,
+          description: "CDN & Additional Configuration",
+          color: "from-gray-400 to-gray-500",
+          settings: ["cdnProvider"],
+        },
+      ]
+    }
   ];
+
+  // Flatten tabs from groups for compatibility with existing code
+  const tabs = tabGroups.flatMap(group => group.tabs);
 
   // Add new comprehensive tabs for missing functionality
   const newTabs = [
@@ -1258,8 +1297,68 @@ export function ConfigurationTabs({
           
           <h2 className="text-lg font-semibold text-foreground mb-4">Configuration Categories</h2>
           
-          <nav className="space-y-2">
-            {filteredTabs.map((tab) => {
+          <nav className="space-y-1">
+            {/* Render grouped tabs with headers */}
+            {tabGroups.map((group, groupIndex) => {
+              const groupTabs = group.tabs.filter(tab => 
+                searchQuery === "" || 
+                tab.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                tab.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                tab.settings.some(setting => 
+                  setting.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+              );
+              
+              if (groupTabs.length === 0) return null;
+              
+              return (
+                <div key={group.label}>
+                  {/* Group Header */}
+                  <div className="px-2 py-2 mt-4 first:mt-0">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      {group.label}
+                    </h3>
+                  </div>
+                  
+                  {/* Group Tabs */}
+                  <div className="space-y-1">
+                    {groupTabs.map((tab) => {
+                      const Icon = tab.icon;
+                      const progress = getTabProgress(tab.settings);
+                      const isActive = activeTab === tab.id;
+                      
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveTab(tab.id)}
+                          data-testid={`tab-${tab.id}`}
+                          className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg shadow-sm transition-all ${
+                            isActive 
+                              ? `bg-gradient-to-r ${tab.color} text-white` 
+                              : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <div className="text-left flex-1">
+                            <div className="font-medium">{tab.label}</div>
+                            <div className="text-xs opacity-90">{tab.description}</div>
+                          </div>
+                          <StatusIndicator 
+                            status={progress === 100 ? "valid" : progress > 50 ? "pending" : "invalid"}
+                            count={`${Math.floor((progress / 100) * tab.settings.length)}/${tab.settings.length}`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+            
+            {/* Render remaining ungrouped tabs if any */}
+            {filteredTabs.filter(tab => 
+              !tabGroups.some(group => group.tabs.some(groupTab => groupTab.id === tab.id))
+            ).map((tab) => {
               const Icon = tab.icon;
               const progress = getTabProgress(tab.settings);
               const isActive = activeTab === tab.id;
