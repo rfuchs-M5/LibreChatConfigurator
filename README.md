@@ -1,6 +1,10 @@
 # LibreChat Configuration Tool
 
-A web-based interface to configure LibreChat v0.8.0 easily with progressive disclosure and 100% parameter coverage.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
+
+A web-based interface to configure LibreChat v0.8.0 easily with progressive disclosure and comprehensive parameter coverage.
 
 ## Requirements
 
@@ -127,6 +131,55 @@ This tool aims to support all LibreChat v0.8.0 configuration options. Here's wha
 - [Quick Start](https://docs.librechat.ai/install/quickstart)
 - [Authentication Setup](https://docs.librechat.ai/install/configuration/authentication)
 - [RAG API](https://docs.librechat.ai/install/configuration/rag_api)
+
+## Architecture
+
+This project follows a modern full-stack TypeScript architecture with clear separation of concerns:
+
+```
+LibreChat Configuration Tool
+├── client/                 # React Frontend
+│   ├── src/
+│   │   ├── components/     # UI Components (Tabs, Forms, Inputs)
+│   │   ├── lib/           # Utilities & Defaults
+│   │   ├── hooks/         # React Hooks (useConfiguration)
+│   │   └── pages/         # Route Components
+│   └── index.html
+├── server/                 # Express Backend
+│   ├── routes.ts          # API Endpoints
+│   ├── storage.ts         # Data Layer (Memory/Database)
+│   └── vite.ts            # Development Server
+├── shared/                 # Shared Types & Schemas
+│   └── schema.ts          # Zod Validation Schemas
+└── scripts/               # Build & Release Scripts
+```
+
+### Data Flow
+
+```mermaid
+graph TD
+    A[React UI Components] --> B[Configuration Hook]
+    B --> C[TanStack Query]
+    C --> D[API Routes]
+    D --> E[Storage Interface]
+    E --> F[Memory Store]
+    
+    G[Zod Schemas] --> A
+    G --> D
+    G --> H[Package Generator]
+    
+    I[Configuration Tabs] --> J[Setting Inputs]
+    J --> K[Progressive Disclosure]
+    K --> L[Provider Selection]
+    L --> M[Dynamic Fields]
+```
+
+### Key Components
+
+- **Frontend**: React 18 + TypeScript, progressive disclosure UI, real-time validation
+- **Backend**: Express.js API, Zod validation, pluggable storage interface  
+- **Shared**: Type-safe schemas ensuring frontend/backend consistency
+- **Package Generation**: Server-side `.env`, `librechat.yaml`, and Docker file creation
 
 ## For Developers
 
