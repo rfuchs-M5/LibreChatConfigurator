@@ -45,8 +45,7 @@ npm --version   # Should work without errors
 git clone https://github.com/Frits1/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install
-$env:NODE_ENV="development"
-npm run dev
+npx cross-env NODE_ENV=development tsx server/index.ts
 ```
 
 **Option B: Git Bash**
@@ -266,9 +265,8 @@ npm install; npm run dev
 
 **❌ "'NODE_ENV' is not recognized" (PowerShell)**
 ```powershell
-# Set environment variable first, then run
-$env:NODE_ENV="development"
-npm run dev
+# npm scripts don't work with PowerShell - use direct command instead
+npx cross-env NODE_ENV=development tsx server/index.ts
 ```
 
 **❌ "npm install" fails with permission errors**
