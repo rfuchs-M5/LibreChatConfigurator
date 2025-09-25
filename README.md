@@ -2,12 +2,16 @@
 
 A web-based interface to configure LibreChat v0.8.0 easily with progressive disclosure and 100% parameter coverage.
 
+## Requirements
+
+- **Node.js 20+** (tested with Node 20.16+)
+
 ## Quick Start
 
 1. **Clone this repository**
    ```bash
-   git clone [this repo]
-   cd [repo-name]
+   git clone https://github.com/Frits1/LibreChatConfigurator.git
+   cd LibreChatConfigurator
    ```
 
 2. **Install and run**
@@ -29,6 +33,17 @@ A web-based interface to configure LibreChat v0.8.0 easily with progressive disc
    - Get your `.env` file with environment variables
    - Get your `librechat.yaml` configuration file  
    - Get complete deployment package with Docker setup
+
+## Production Build
+
+For production deployment:
+
+```bash
+npm run build
+npm start
+```
+
+The app will build and serve on port 5000 in production mode.
 
 ## Features
 
