@@ -13,13 +13,14 @@ import { WebSearchEditor } from "@/components/web-search-editor";
 import { OAuthProvidersEditor } from "@/components/oauth-providers-editor";
 import { MeiliSearchIntegrationEditor } from "@/components/meilisearch-integration-editor";
 import { CachingIntegrationEditor } from "@/components/caching-integration-editor";
+import { FileStorageEditor } from "@/components/file-storage-editor-fixed";
 
 interface SettingInputProps {
   label: string;
   description?: string;
   docUrl?: string;
   docSection?: string;
-  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration";
+  type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration" | "file-storage";
   value: any;
   onChange: (value: any) => void;
   options?: string[];
@@ -232,6 +233,19 @@ export function SettingInput({
           <CachingIntegrationEditor
             value={value}
             onChange={onChange}
+            data-testid={testId}
+          />
+        );
+
+      case "file-storage":
+        return (
+          <FileStorageEditor
+            configuration={value || {}}
+            onConfigChange={(key, val) => {
+              const newConfig = { ...(value ?? {}) };
+              newConfig[key] = val;
+              onChange(newConfig);
+            }}
             data-testid={testId}
           />
         );

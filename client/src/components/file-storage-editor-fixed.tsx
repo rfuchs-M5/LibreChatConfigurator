@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { HardDrive, Cloud, Database, FileText } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SettingInput } from "@/components/setting-input";
 
 interface FileStorageEditorProps {
@@ -29,6 +29,26 @@ export function FileStorageEditor({ configuration, onConfigChange, "data-testid"
     
     return "";
   });
+
+  // Sync internal state with incoming configuration changes
+  useEffect(() => {
+    const fileStrategy = configuration.fileStrategy;
+    if (typeof fileStrategy === "string") {
+      setSelectedStrategy(fileStrategy);
+      return;
+    }
+    
+    // Infer strategy from existing field values
+    if (configuration.fileUploadPath) {
+      setSelectedStrategy("local");
+    } else if (configuration.firebaseApiKey) {
+      setSelectedStrategy("firebase");
+    } else if (configuration.azureStorageConnectionString) {
+      setSelectedStrategy("azure_blob");
+    } else {
+      setSelectedStrategy("");
+    }
+  }, [configuration.fileStrategy, configuration.fileUploadPath, configuration.firebaseApiKey, configuration.azureStorageConnectionString]);
 
   const handleStrategyChange = (strategy: string) => {
     setSelectedStrategy(strategy);

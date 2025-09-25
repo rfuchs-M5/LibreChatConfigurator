@@ -170,13 +170,7 @@ export function ConfigurationTabs({
           icon: FileText,
           description: "File Upload & Storage",
           color: "from-teal-500 to-teal-600",
-          settings: [
-            "fileStrategy",
-            "fileUploadPath", 
-            "firebaseApiKey", "firebaseAuthDomain", "firebaseProjectId", "firebaseStorageBucket", "firebaseMessagingSenderId", "firebaseAppId",
-            "azureStorageConnectionString", "azureStoragePublicAccess", "azureContainerName",
-            "fileConfig.serverFileSizeLimit", "fileConfig.avatarSizeLimit", "fileConfig.clientImageResize.enabled", "fileConfig.clientImageResize.maxWidth", "fileConfig.clientImageResize.maxHeight", "fileConfig.clientImageResize.quality", "fileConfig.clientImageResize.compressFormat"
-          ],
+          settings: ["fileStorage"],
         },
         {
           id: "search",
@@ -424,7 +418,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration" | "file-storage"; 
       description: string; 
       label: string;
       docUrl?: string;
@@ -814,6 +808,15 @@ export function ConfigurationTabs({
         label: "Caching Strategy",
         docUrl: "https://www.librechat.ai/docs/deployment/caching",
         docSection: "Caching Configuration"
+      },
+      
+      // File Storage - Progressive Disclosure for Storage Strategy
+      fileStorage: { 
+        type: "file-storage", 
+        description: "File storage configuration with smart progressive disclosure. Choose your storage strategy first (Local, Firebase, Azure Blob, or S3), then configure only the relevant settings for your chosen provider.", 
+        label: "File Storage Configuration",
+        docUrl: "https://www.librechat.ai/docs/deployment/file-handling",
+        docSection: "File Storage Configuration"
       },
       
       // MCP
