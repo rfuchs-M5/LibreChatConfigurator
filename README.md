@@ -23,27 +23,53 @@ Setting up LibreChat involves managing 100+ configuration options across environ
 
 **Help make LibreChat accessible to everyone.** Whether you're fixing a bug, adding support for a new AI provider, or improving the user experience, your contributions help more people deploy and enjoy LibreChat without the configuration headaches.
 
-## Requirements
+## Prerequisites
 
-- **Node.js 20+** (tested with Node 20.16+)
+- **Node.js 20+** (required)
+  - **Windows**: Download from [nodejs.org](https://nodejs.org/) and install
+  - **Mac**: `brew install node` or download from [nodejs.org](https://nodejs.org/)
+  - **Linux**: Use your package manager or download from [nodejs.org](https://nodejs.org/)
+
+**Verify installation:**
+```bash
+node --version  # Should show v20.x.x or higher
+npm --version   # Should work without errors
+```
 
 ## Quick Start
 
-1. **Clone this repository**
-   ```bash
-   git clone https://github.com/Frits1/LibreChatConfigurator.git
-   cd LibreChatConfigurator
-   ```
+### Windows Users
 
-2. **Install and run**
-   ```bash
-   npm install && npm run dev
-   ```
+**Option A: Git Bash or PowerShell (Recommended)**
+```bash
+git clone https://github.com/Frits1/LibreChatConfigurator.git
+cd LibreChatConfigurator
+npm install && npm run dev
+```
 
-3. **Open in browser**
-   ```
-   http://localhost:5000
-   ```
+**Option B: WSL (If you prefer Linux environment)**
+```bash
+# Important: Copy to WSL filesystem to avoid permission issues
+git clone https://github.com/Frits1/LibreChatConfigurator.git
+cp -r LibreChatConfigurator ~/
+cd ~/LibreChatConfigurator
+npm install && npm run dev
+```
+
+### Mac/Linux Users
+
+```bash
+git clone https://github.com/Frits1/LibreChatConfigurator.git
+cd LibreChatConfigurator
+npm install && npm run dev
+```
+
+### All Platforms
+
+**Open in browser:**
+```
+http://localhost:5000
+```
 
 4. **Configure your settings**
    - Use the clean tabbed interface with progressive disclosure
@@ -205,6 +231,50 @@ graph TD
 - **Shared**: `/shared` - Common types and schemas
 
 Feel free to modify and improve! The codebase uses modern patterns and is designed to be easily extensible.
+
+## Troubleshooting
+
+### Common Issues
+
+**❌ "Permission denied" error (Windows WSL)**
+```bash
+# Solution: Copy project to WSL home directory
+cp -r /mnt/c/path/to/LibreChatConfigurator ~/
+cd ~/LibreChatConfigurator
+npm install && npm run dev
+```
+
+**❌ "node: command not found"**
+- Install Node.js from [nodejs.org](https://nodejs.org/)
+- Restart your terminal/command prompt after installation
+- Verify with `node --version`
+
+**❌ "npm install" fails with permission errors**
+- **Windows**: Run as Administrator or use Git Bash
+- **Mac/Linux**: Don't use `sudo` with npm. Fix npm permissions or use [nvm](https://github.com/nvm-sh/nvm)
+
+**❌ Port 5000 already in use**
+```bash
+# Kill process using port 5000
+# Windows:
+netstat -ano | findstr :5000
+taskkill /PID <PID> /F
+
+# Mac/Linux:
+lsof -ti:5000 | xargs kill
+```
+
+**❌ Build fails or missing dependencies**
+```bash
+# Clean install
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Still having issues?
+1. Check you have Node.js 20+ installed: `node --version`
+2. Try the alternative installation method for your platform above
+3. Open an issue on GitHub with your error message and platform details
 
 ## License
 
