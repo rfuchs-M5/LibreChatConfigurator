@@ -713,7 +713,7 @@ export default function Home() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem onClick={() => setShowPreview(true)} data-testid="menu-preview">
                     <Eye className="h-4 w-4 mr-2" />
-                    Preview Files...
+                    Individual files (Works when this app is hosted on Netlify)
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleGeneratePackage} data-testid="menu-generate">
                     <Download className="h-4 w-4 mr-2" />
