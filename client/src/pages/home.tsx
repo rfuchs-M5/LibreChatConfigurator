@@ -555,8 +555,8 @@ export default function Home() {
       
       if (errors.length === 0) {
         toast({
-          title: "✅ Self-Test Passed",
-          description: `All ${totalTests} tests passed! Config: ${verification.current.populatedFields}/${verification.current.totalFields} fields (${verification.current.completionPercentage}%). Single source of truth validated across all export formats.`,
+          title: "✅ Export Functions Verified",
+          description: `File generation working correctly! Current config: ${verification.current.populatedFields}/${verification.current.totalFields} fields (${verification.current.completionPercentage}%). All export formats (JSON, ENV, YAML) validated successfully.`,
         });
       } else {
         toast({
