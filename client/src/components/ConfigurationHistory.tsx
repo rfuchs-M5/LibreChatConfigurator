@@ -61,17 +61,17 @@ export function ConfigurationHistory({ onConfigurationLoad }: { onConfigurationL
           data-testid="button-configuration-history"
         >
           <Clock className="h-4 w-4" />
-          Configuration History
+          Package History
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[80vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
-            Configuration History
+            Package Download History
           </DialogTitle>
           <DialogDescription>
-            Load a previously generated configuration from the latest 10 packages
+            Track and reload configurations from recently downloaded packages
           </DialogDescription>
         </DialogHeader>
         
@@ -83,9 +83,9 @@ export function ConfigurationHistory({ onConfigurationLoad }: { onConfigurationL
           ) : !history || history.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-32 text-center">
               <Package className="h-8 w-8 text-muted-foreground mb-2" />
-              <div className="text-muted-foreground">No configuration history found</div>
+              <div className="text-muted-foreground">No packages downloaded yet</div>
               <div className="text-sm text-muted-foreground mt-1">
-                Generate your first package to see it here
+                Use "Package → Generate & Download" to create your first package
               </div>
             </div>
           ) : (
@@ -136,20 +136,20 @@ export function ConfigurationHistory({ onConfigurationLoad }: { onConfigurationL
                   <CardContent className="pt-0">
                     <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
                       <div>
-                        <div className="font-medium">Version</div>
-                        <div>{item.configuration.configVer || 'N/A'}</div>
+                        <div className="font-medium">Package Contents</div>
+                        <div>LibreChat deployment files</div>
                       </div>
                       <div>
-                        <div className="font-medium">Default Model</div>
-                        <div>{item.configuration.defaultModel || 'N/A'}</div>
+                        <div className="font-medium">Generated Files</div>
+                        <div>.env, librechat.yaml, Docker setup</div>
                       </div>
                       <div>
-                        <div className="font-medium">File Strategy</div>
-                        <div className="capitalize">{typeof item.configuration.fileStrategy === 'string' ? item.configuration.fileStrategy : 'local'}</div>
+                        <div className="font-medium">Configuration Fields</div>
+                        <div>{Object.keys(item.configuration || {}).length} fields configured</div>
                       </div>
                       <div>
-                        <div className="font-medium">MCP Servers</div>
-                        <div>{Array.isArray(item.configuration.mcpServers) ? item.configuration.mcpServers.length : 0} configured</div>
+                        <div className="font-medium">Package Type</div>
+                        <div>Complete deployment package</div>
                       </div>
                     </div>
                   </CardContent>
