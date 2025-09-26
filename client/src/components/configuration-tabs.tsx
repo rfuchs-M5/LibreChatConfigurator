@@ -63,6 +63,7 @@ export function ConfigurationTabs({
           description: "Title, Welcome, Footer",
           color: "from-blue-500 to-blue-600",
           settings: ["appTitle", "customWelcome", "customFooter", "helpAndFAQURL"],
+          docUrl: "https://www.librechat.ai/docs/configuration/dotenv",
         },
         {
           id: "server",
@@ -71,6 +72,7 @@ export function ConfigurationTabs({
           description: "Host, Port, Environment",
           color: "from-green-500 to-green-600",
           settings: ["host", "port", "nodeEnv", "domainClient", "domainServer", "noIndex"],
+          docUrl: "https://www.librechat.ai/docs/configuration/dotenv",
         },
         {
           id: "security",
@@ -79,6 +81,7 @@ export function ConfigurationTabs({
           description: "JWT, Encryption, Passwords",
           color: "from-red-500 to-red-600",
           settings: ["jwtSecret", "jwtRefreshSecret", "credsKey", "credsIV", "minPasswordLength", "sessionExpiry", "refreshTokenExpiry"],
+          docUrl: "https://www.librechat.ai/docs/configuration/dotenv",
         },
       ]
     },
@@ -92,6 +95,7 @@ export function ConfigurationTabs({
           description: "MongoDB, Redis",
           color: "from-purple-500 to-purple-600",
           settings: ["mongoUri", "mongoRootUsername", "mongoRootPassword", "mongoDbName", "redisUri", "redisUsername", "redisPassword", "redisKeyPrefix", "redisKeyPrefixVar", "redisMaxListeners", "redisPingInterval", "redisUseAlternativeDNSLookup"],
+          docUrl: "https://www.librechat.ai/docs/configuration/mongodb",
         },
       ]
     },
@@ -105,6 +109,7 @@ export function ConfigurationTabs({
           description: "Primary AI Providers",
           color: "from-indigo-500 to-indigo-600",
           settings: ["openaiApiKey", "anthropicApiKey", "googleApiKey", "groqApiKey", "mistralApiKey"],
+          docUrl: "https://www.librechat.ai/docs/configuration/pre_configured_ai",
         },
         {
           id: "ai-extended",
@@ -118,6 +123,7 @@ export function ConfigurationTabs({
             "hyperbolicApiKey", "klusterApiKey", "nanogptApiKey", "glhfApiKey", 
             "apipieApiKey", "unifyApiKey", "openrouterKey"
           ],
+          docUrl: "https://www.librechat.ai/docs/configuration/pre_configured_ai",
         },
         {
           id: "azure",
@@ -126,6 +132,7 @@ export function ConfigurationTabs({
           description: "Azure Configuration",
           color: "from-cyan-500 to-cyan-600",
           settings: ["azureApiKey", "azureOpenaiApiInstanceName", "azureOpenaiApiDeploymentName", "azureOpenaiApiVersion", "azureOpenaiModels"],
+          docUrl: "https://www.librechat.ai/docs/configuration/azure",
         },
         {
           id: "aws",
@@ -134,6 +141,7 @@ export function ConfigurationTabs({
           description: "AWS Configuration",
           color: "from-orange-500 to-orange-600",
           settings: ["awsAccessKeyId", "awsSecretAccessKey", "awsRegion", "awsBedrockRegion", "awsEndpointURL", "awsBucketName"],
+          docUrl: "https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock",
         },
       ]
     },
@@ -147,6 +155,7 @@ export function ConfigurationTabs({
           description: "Login & Registration",
           color: "from-yellow-500 to-yellow-600",
           settings: ["allowRegistration", "allowEmailLogin", "allowSocialLogin", "allowSocialRegistration", "allowPasswordReset", "registration.socialLogins", "registration.allowedDomains"],
+          docUrl: "https://www.librechat.ai/docs/configuration/authentication",
         },
         {
           id: "oauth",
@@ -155,6 +164,7 @@ export function ConfigurationTabs({
           description: "Social Login Configuration",
           color: "from-purple-500 to-purple-600",
           settings: ["oauthProviders"],
+          docUrl: "https://www.librechat.ai/docs/configuration/authentication/OAuth2-OIDC",
         },
         {
           id: "email",
@@ -163,6 +173,7 @@ export function ConfigurationTabs({
           description: "Email Configuration",
           color: "from-blue-400 to-blue-500",
           settings: ["emailComposite"],
+          docUrl: "https://www.librechat.ai/docs/configuration/authentication/email_setup",
         },
         {
           id: "file-storage",
@@ -171,6 +182,7 @@ export function ConfigurationTabs({
           description: "File Upload & Storage",
           color: "from-teal-500 to-teal-600",
           settings: ["fileStorage"],
+          docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/file_config",
         },
         {
           id: "search",
@@ -179,6 +191,7 @@ export function ConfigurationTabs({
           description: "Web Search & External APIs",
           color: "from-violet-500 to-violet-600",
           settings: ["webSearch", "openweatherApiKey", "librechatCodeApiKey"],
+          docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
         },
         {
           id: "meili",
@@ -187,6 +200,7 @@ export function ConfigurationTabs({
           description: "Search Engine Configuration",
           color: "from-gray-500 to-gray-600",
           settings: ["meilisearchIntegration"],
+          docUrl: "https://www.librechat.ai/docs/configuration/meilisearch",
         },
         {
           id: "rag",
@@ -195,6 +209,7 @@ export function ConfigurationTabs({
           description: "Retrieval Augmented Generation",
           color: "from-pink-500 to-pink-600",
           settings: ["ragApiURL", "ragOpenaiApiKey", "ragPort", "ragHost", "collectionName", "chunkSize", "chunkOverlap", "embeddingsProvider"],
+          docUrl: "https://www.librechat.ai/docs/configuration/rag_api",
         },
         {
           id: "caching",
@@ -203,6 +218,7 @@ export function ConfigurationTabs({
           description: "Performance caching configuration with 1-click presets",
           color: "from-slate-500 to-slate-600",
           settings: ["cachingIntegration"],
+          docUrl: "https://www.librechat.ai/docs/configuration/dotenv",
         },
       ]
     },
@@ -216,6 +232,7 @@ export function ConfigurationTabs({
           description: "Feature Toggles",
           color: "from-purple-500 to-purple-600",
           settings: ["allowSharedLinks", "allowSharedLinksPublic", "titleConvo", "summaryConvo", "interface.fileSearch", "interface.uploadAsText", "interface.privacyPolicy.externalUrl", "interface.privacyPolicy.openNewTab", "interface.termsOfService.externalUrl", "interface.termsOfService.openNewTab", "interface.termsOfService.modalAcceptance", "interface.termsOfService.modalTitle", "interface.termsOfService.modalContent", "interface.endpointsMenu", "interface.modelSelect", "interface.parameters", "interface.sidePanel", "interface.presets", "interface.prompts", "interface.bookmarks", "interface.multiConvo", "interface.agents", "interface.peoplePicker.users", "interface.peoplePicker.groups", "interface.peoplePicker.roles", "interface.marketplace.use", "interface.fileCitations"],
+          docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/interface",
         },
       ]
     },
@@ -237,6 +254,7 @@ export function ConfigurationTabs({
             "rateLimits.stt.ipMax", "rateLimits.stt.ipWindowInMinutes", "rateLimits.stt.userMax", "rateLimits.stt.userWindowInMinutes",
             "rateLimits.tts.ipMax", "rateLimits.tts.ipWindowInMinutes", "rateLimits.tts.userMax", "rateLimits.tts.userWindowInMinutes"
           ],
+          docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
         },
         {
           id: "ldap",
@@ -245,6 +263,7 @@ export function ConfigurationTabs({
           description: "LDAP Configuration",
           color: "from-yellow-600 to-yellow-700",
           settings: ["ldapURL", "ldapBindDN", "ldapBindCredentials", "ldapSearchBase", "ldapSearchFilter"],
+          docUrl: "https://www.librechat.ai/docs/configuration/authentication/ldap",
         },
         {
           id: "turnstile",
@@ -253,6 +272,7 @@ export function ConfigurationTabs({
           description: "Cloudflare Turnstile",
           color: "from-orange-400 to-orange-500",
           settings: ["turnstileSiteKey", "turnstileSecretKey"],
+          docUrl: "https://www.librechat.ai/docs/configuration/authentication/captcha",
         },
       ]
     },
@@ -266,6 +286,7 @@ export function ConfigurationTabs({
           description: "Model Context Protocol",
           color: "from-rose-500 to-rose-600",
           settings: ["mcpServers", "mcpOauthOnAuthError", "mcpOauthDetectionTimeout"],
+          docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/mcp_servers",
         },
         {
           id: "users",
@@ -274,6 +295,7 @@ export function ConfigurationTabs({
           description: "System User/Group IDs for Deployment Security",
           color: "from-green-400 to-green-500",
           settings: ["uid", "gid"],
+          docUrl: "https://www.librechat.ai/docs/configuration/dotenv",
         },
         {
           id: "debug",
@@ -282,6 +304,7 @@ export function ConfigurationTabs({
           description: "Logging & Debug",
           color: "from-amber-500 to-amber-600",
           settings: ["debugLogging", "debugConsole", "consoleJSON"],
+          docUrl: "https://www.librechat.ai/docs/configuration/dotenv",
         },
         {
           id: "misc",
@@ -290,6 +313,7 @@ export function ConfigurationTabs({
           description: "CDN & Additional Configuration",
           color: "from-gray-400 to-gray-500",
           settings: ["cdnProvider"],
+          docUrl: "https://www.librechat.ai/docs/configuration/cdn",
         },
       ]
     }
@@ -307,6 +331,7 @@ export function ConfigurationTabs({
       description: "Version, Cache, File Strategy",
       color: "from-indigo-400 to-indigo-500",
       settings: ["version", "cache", "fileStrategy", "secureImageLinks", "imageOutputType", "filteredTools", "includedTools", "temporaryChatRetention"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
     },
     {
       id: "ocr",
@@ -315,6 +340,7 @@ export function ConfigurationTabs({
       description: "Optical Character Recognition",
       color: "from-purple-400 to-purple-500",
       settings: ["ocr.apiKey", "ocr.baseURL", "ocr.strategy", "ocr.mistralModel"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/config",
     },
     {
       id: "stt",
@@ -323,6 +349,7 @@ export function ConfigurationTabs({
       description: "Speech Recognition",
       color: "from-green-400 to-green-500",
       settings: ["stt.provider", "stt.model", "stt.apiKey", "stt.baseURL", "stt.language", "stt.streaming", "stt.punctuation", "stt.profanityFilter"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/speech_to_text",
     },
     {
       id: "tts",
@@ -331,6 +358,7 @@ export function ConfigurationTabs({
       description: "Voice Synthesis",
       color: "from-blue-400 to-blue-500",
       settings: ["tts.provider", "tts.model", "tts.voice", "tts.apiKey", "tts.baseURL", "tts.speed", "tts.quality", "tts.streaming"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/text_to_speech",
     },
     {
       id: "assistants",
@@ -339,6 +367,7 @@ export function ConfigurationTabs({
       description: "AI Assistants Configuration",
       color: "from-cyan-400 to-cyan-500",
       settings: ["endpoints.assistants.disableBuilder", "endpoints.assistants.pollIntervalMs", "endpoints.assistants.timeoutMs", "endpoints.assistants.supportedIds", "endpoints.assistants.excludedIds", "endpoints.assistants.privateAssistants", "endpoints.assistants.retrievalModels", "endpoints.assistants.capabilities"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
     },
     {
       id: "agents",
@@ -347,6 +376,7 @@ export function ConfigurationTabs({
       description: "AI Agents Configuration",
       color: "from-emerald-400 to-emerald-500",
       settings: ["endpoints.agents.recursionLimit", "endpoints.agents.maxRecursionLimit", "endpoints.agents.disableBuilder", "endpoints.agents.maxCitations", "endpoints.agents.maxCitationsPerFile", "endpoints.agents.minRelevanceScore", "endpoints.agents.capabilities"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
     },
     {
       id: "actions",
@@ -355,6 +385,7 @@ export function ConfigurationTabs({
       description: "Actions Configuration",
       color: "from-yellow-400 to-yellow-500",
       settings: ["actions.allowedDomains"],
+      docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/endpoints",
     },
   ];
 
