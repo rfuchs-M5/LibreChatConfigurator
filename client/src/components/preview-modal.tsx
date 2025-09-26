@@ -463,7 +463,7 @@ interface:
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[80vh] p-0">
+      <DialogContent className="max-w-6xl max-h-[90vh] h-[90vh] p-0 flex flex-col">
         <DialogHeader className="p-6 pb-0">
           <div className="flex items-center justify-between">
             <div>
@@ -484,9 +484,9 @@ interface:
           </div>
         </DialogHeader>
         
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-hidden">
           <Tabs defaultValue="env" className="h-full flex flex-col">
-            <div className="px-6">
+            <div className="px-6 flex-shrink-0">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="env">Environment (.env)</TabsTrigger>
                 <TabsTrigger value="yaml">Configuration (librechat.yaml)</TabsTrigger>
@@ -494,8 +494,8 @@ interface:
               </TabsList>
             </div>
             
-            <div className="flex-1 px-6 pb-6">
-              <TabsContent value="env" className="h-full mt-4">
+            <div className="flex-1 min-h-0 px-6 pb-6">
+              <TabsContent value="env" className="h-full mt-4" style={{ height: 'calc(100% - 1rem)' }}>
                 <ScrollArea className="h-full rounded-md border">
                   <pre className="p-4 text-sm font-mono whitespace-pre-wrap">
                     {generateEnvPreview()}
@@ -503,7 +503,7 @@ interface:
                 </ScrollArea>
               </TabsContent>
               
-              <TabsContent value="yaml" className="h-full mt-4">
+              <TabsContent value="yaml" className="h-full mt-4" style={{ height: 'calc(100% - 1rem)' }}>
                 <ScrollArea className="h-full rounded-md border">
                   <pre className="p-4 text-sm font-mono whitespace-pre-wrap">
                     {generateYamlPreview()}
@@ -511,7 +511,7 @@ interface:
                 </ScrollArea>
               </TabsContent>
               
-              <TabsContent value="json" className="h-full mt-4">
+              <TabsContent value="json" className="h-full mt-4" style={{ height: 'calc(100% - 1rem)' }}>
                 <ScrollArea className="h-full rounded-md border">
                   <pre className="p-4 text-sm font-mono whitespace-pre-wrap">
                     {generateJsonPreview()}
