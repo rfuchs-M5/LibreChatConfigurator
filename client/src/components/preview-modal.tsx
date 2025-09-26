@@ -2,7 +2,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { type Configuration } from "@shared/schema";
+import { type Configuration, CONFIG_VERSION } from "@shared/schema";
+import { createVersionedConfiguration } from "@shared/version-utils";
 import { Download, X, Copy, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -493,7 +494,8 @@ interface:
   };
 
   const generateJsonPreview = () => {
-    return JSON.stringify(configuration, null, 2);
+    const configWithVersion = createVersionedConfiguration(configuration);
+    return JSON.stringify(configWithVersion, null, 2);
   };
 
   return (
@@ -613,7 +615,7 @@ interface:
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => downloadFile(generateJsonPreview(), "librechat-config.json", "application/json")}
+                        onClick={() => downloadFile(generateJsonPreview(), `librechat-config-v${CONFIG_VERSION}.json`, "application/json")}
                         data-testid="button-download-json"
                       >
                         <Download className="h-4 w-4 mr-1" />

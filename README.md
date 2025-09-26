@@ -156,6 +156,68 @@ This tool aims to support all LibreChat v0.8.0 configuration options. Here's wha
 - [Authentication Setup](https://www.librechat.ai/docs/configuration/authentication)
 - [RAG API](https://www.librechat.ai/docs/configuration/rag_api)
 
+## 🤝 Sharing Configurations with Others
+
+**The LibreChat Configuration Tool makes it easy to share complete configurations with other users.**
+
+### How to Share Your Configuration
+
+1. **Configure your LibreChat setup** using the tool interface
+2. **Go to "Package → Preview files..."** to review your settings
+3. **Click the "Download" button** on the **"LibreChat Configuration Settings (JSON)"** tab
+   - This downloads a file named `librechat-config-v0.8.0-rc4.json`
+   - The filename includes the tool version for compatibility tracking
+4. **Share the JSON file** with other users via:
+   - Direct file sharing
+   - GitHub Issues/PRs
+   - Community forums
+   - Team communication channels
+
+### How to Use Someone Else's Configuration
+
+**🚧 Import functionality is under development. For now, you can manually reference shared configurations:**
+
+1. **Download** the shared JSON configuration file (e.g., `librechat-config-v0.8.0-rc4.json`)
+2. **Open the file** to view the configuration structure
+3. **Manually apply settings** to your own LibreChat Configuration Tool:
+   - Copy relevant settings from the JSON to your tool
+   - Add your own API keys and credentials
+   - Adjust paths and server settings for your environment
+
+### 🔄 Version Compatibility (Foundation)
+
+**All shared configurations now include version metadata for future compatibility checking:**
+
+- Each exported JSON includes `configVersion` and `generatedDate` fields
+- Version format follows semantic versioning (e.g., `0.8.0-rc4`)
+- Foundation is in place for automatic import validation in future versions
+
+**When import functionality is added, the tool will automatically detect version mismatches and provide upgrade guidance.**
+
+### 💡 Best Practices for Sharing
+
+**✅ Do:**
+- Remove sensitive information (API keys, passwords) before sharing
+- Include descriptive comments about your setup
+- Test your configuration before sharing
+- Mention any custom requirements or dependencies
+
+**❌ Don't:**
+- Share configurations with real API keys or secrets
+- Assume others have the same file paths or domain setup
+- Share untested configurations
+
+### 🛡️ Security Note
+
+**Never share configurations containing:**
+- Real API keys (OpenAI, Anthropic, Google, etc.)
+- JWT secrets or encryption keys
+- Database connection strings with credentials  
+- OAuth client secrets
+- Email service passwords
+
+**Always sanitize sensitive data before sharing. Recipients should add their own credentials after importing.**
+
 ## Architecture
 
 This project follows a modern full-stack TypeScript architecture with clear separation of concerns:
