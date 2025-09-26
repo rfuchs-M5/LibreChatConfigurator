@@ -166,8 +166,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         packageFiles["README.md"] = generateReadmeFile(configuration);
       }
 
-      // Always include a profile file for easy re-import
-      packageFiles["profile.json"] = generateProfileFile(configuration);
+      // Always include a configuration settings file for easy re-import
+      packageFiles["LibreChatConfigSettings.json"] = generateProfileFile(configuration);
 
       res.json({ files: packageFiles });
     } catch (error) {

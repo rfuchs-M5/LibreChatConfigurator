@@ -39,19 +39,19 @@ export default function Home() {
 
       // Download as JSON file with Save As dialog
       const { downloadJSON } = await import("@/lib/download-utils");
-      const filename = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}-profile.json`;
+      const filename = `${configurationName.replace(/[^a-zA-Z0-9-_\s]/g, '-')}-LibreChatConfigSettings.json`;
       const success = await downloadJSON(profileData, filename);
 
       if (success) {
         toast({
-          title: "Profile Saved",
+          title: "Configuration Saved",
           description: `Configuration "${configurationName}" downloaded successfully.`,
         });
       }
     } catch (error) {
       toast({
         title: "Save Failed",
-        description: "Failed to save configuration profile.",
+        description: "Failed to save LibreChat configuration settings.",
         variant: "destructive",
       });
     }
@@ -239,12 +239,12 @@ export default function Home() {
           try {
             const profileData = JSON.parse(event.target?.result as string);
             
-            // Validate profile structure
+            // Validate configuration structure
             if (!profileData.configuration) {
-              throw new Error("Invalid profile format: missing configuration data");
+              throw new Error("Invalid configuration format: missing configuration data");
             }
 
-            console.log("📥 [PROFILE DEBUG] Loading profile:");
+            console.log("📥 [CONFIG DEBUG] Loading configuration:");
             console.log("   - Name:", profileData.name);
             console.log("   - Config keys:", profileData.configuration ? Object.keys(profileData.configuration) : 'NO CONFIG');
             console.log("   - MCP servers count:", profileData.configuration?.mcpServers?.length || 0);
@@ -252,12 +252,12 @@ export default function Home() {
             
             // Apply the configuration and name
             updateConfiguration(profileData.configuration);
-            // Always try to restore the profile name, with fallback
+            // Always try to restore the configuration name, with fallback
             const importedName = profileData.name || `Imported ${new Date().toLocaleDateString()}`;
             setConfigurationName(importedName);
             
             toast({
-              title: "Profile Imported", 
+              title: "Configuration Imported", 
               description: `Configuration "${importedName}" loaded successfully.`,
             });
           } catch (error) {
@@ -638,14 +638,14 @@ export default function Home() {
                 {/* Profile Name Input */}
                 <div className="flex items-center space-x-3">
                   <Label htmlFor="profile-name" className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                    Profile name:
+                    Configuration name:
                   </Label>
                   <Input
                     id="profile-name"
                     value={configurationName}
                     onChange={(e) => setConfigurationName(e.target.value)}
                     className="text-lg font-medium w-72 border-border"
-                    placeholder="Enter profile name..."
+                    placeholder="Enter configuration name..."
                     data-testid="input-config-name"
                   />
                 </div>
@@ -653,19 +653,19 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Profile Management Dropdown */}
+              {/* Configuration Management Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="secondary" data-testid="button-profile-menu">
                     <FolderOpen className="h-4 w-4 mr-2" />
-                    Profile
+                    Configuration
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuItem onClick={handleSaveProfile} data-testid="menu-save">
                     <Save className="h-4 w-4 mr-2" />
-                    Export profile (json)
+                    Export LibreChat Configuration Settings (json)
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleResetToDefaults} data-testid="menu-reset">
@@ -683,7 +683,7 @@ export default function Home() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleImportProfile} data-testid="menu-import-profile">
                     <Upload className="h-4 w-4 mr-2" />
-                    Import Profile (.json)
+                    Import LibreChat Configuration Settings (.json)
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleImportYaml} data-testid="menu-import-yaml">
                     <FileText className="h-4 w-4 mr-2" />
@@ -796,7 +796,7 @@ export default function Home() {
                 <li>• <span className="text-amber-600 font-medium">Potentially generate large test files</span></li>
               </ul>
               <br />
-              <strong className="text-red-600">WARNING:</strong> Your current configuration will be replaced with test data. Save your profile first if you want to keep your current settings.
+              <strong className="text-red-600">WARNING:</strong> Your current configuration will be replaced with test data. Save your configuration first if you want to keep your current settings.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
