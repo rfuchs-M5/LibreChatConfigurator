@@ -38,25 +38,17 @@ npm --version   # Should work without errors
 
 ## Quick Start
 
-### All Platforms (Universal)
-
 ```bash
 git clone https://github.com/Frits1/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install
-node scripts/dev-launcher.mjs
+npm run dev
 ```
 
 **Open in browser:**
 ```
 http://localhost:5000
 ```
-
-The launcher automatically handles:
-- ✅ Environment variables (NODE_ENV)
-- ✅ Platform differences (Windows/Mac/Linux)  
-- ✅ WSL detection and guidance
-- ✅ Process management and cleanup
 
 4. **Configure your settings**
    - Use the clean tabbed interface with progressive disclosure
@@ -221,13 +213,17 @@ Feel free to modify and improve! The codebase uses modern patterns and is design
 
 ## Troubleshooting
 
-**If the launcher detects WSL on Windows mount:**
-- Follow the automatic guidance to copy the project to WSL home directory
-- Or use PowerShell/Git Bash instead of WSL
+**WSL on Windows mount permission issues:**
+```bash
+# Copy to WSL home directory to avoid permission issues
+cp -r . ~/LibreChatConfigurator
+cd ~/LibreChatConfigurator
+npm run dev
+```
 
 **Still having issues?**
-1. Verify Node.js 20+ is installed: `node --version`  
-2. Check the automatic platform detection in the launcher output
+1. Verify Node.js 20+ is installed: `node --version`
+2. Try using PowerShell or Git Bash instead of WSL
 3. Open an issue on GitHub with your error message and platform details
 
 ## License
