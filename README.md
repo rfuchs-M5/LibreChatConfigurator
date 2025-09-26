@@ -12,7 +12,7 @@ A web-based interface to configure LibreChat v0.8.0 easily with progressive disc
 
 **[→ Launch LibreChat Configuration Tool](https://librechatconfigurator.netlify.app/)**
 
-No installation required! Configure your LibreChat settings, preview and download individual files, and get started right away.
+Configure your LibreChat settings instantly! Preview your configuration and download individual files without any installation.
 
 ### 📦 Package Downloads
 
