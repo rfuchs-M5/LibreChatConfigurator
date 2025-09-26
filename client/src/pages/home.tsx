@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { defaultConfiguration } from "@/lib/configuration-defaults";
 import { createResetConfiguration } from "@/lib/librechat-defaults";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap, Github, ExternalLink } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
@@ -653,6 +653,43 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* GitHub Repository Link */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                data-testid="link-github"
+              >
+                <a 
+                  href="https://github.com/Fritsl/LibreChatConfigurator" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2"
+                >
+                  <Github className="h-4 w-4" />
+                  <span className="text-sm">GitHub</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </Button>
+
+              {/* Personal Website Link */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                asChild
+                data-testid="link-personal-site"
+              >
+                <a 
+                  href="https://fritslyneborg.dk" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  <span className="text-sm">fritslyneborg.dk</span>
+                </a>
+              </Button>
+
               {/* Configuration Management Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
