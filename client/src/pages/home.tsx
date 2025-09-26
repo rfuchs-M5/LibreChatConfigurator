@@ -674,7 +674,7 @@ export default function Home() {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLoadDemoConfiguration} data-testid="menu-load-demo">
                     <Zap className="h-4 w-4 mr-2" />
-                    Load Demo Configuration (ALL 75+ Fields)
+                    Load Demo Configuration
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleRunSelfTest} data-testid="menu-self-test">
                     <TestTube className="h-4 w-4 mr-2" />
