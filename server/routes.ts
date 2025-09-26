@@ -911,6 +911,9 @@ ${config.searchProvider ? `webSearch:
   serperApiKey: "\${SERPER_API_KEY}"
   searxngApiKey: "\${SEARXNG_API_KEY}"
   searxngInstanceUrl: "\${SEARXNG_INSTANCE_URL}"
+  braveApiKey: "\${BRAVE_API_KEY}"
+  tavilyApiKey: "\${TAVILY_API_KEY}"
+  perplexityApiKey: "\${PERPLEXITY_API_KEY}"
   firecrawlApiKey: "\${FIRECRAWL_API_KEY}"
   jinaApiKey: "\${JINA_API_KEY}"
   cohereApiKey: "\${COHERE_API_KEY}"` : '# Web search is not configured'}

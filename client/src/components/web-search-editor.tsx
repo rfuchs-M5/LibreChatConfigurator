@@ -8,7 +8,7 @@ import { Search, Globe, Zap, Shield, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface WebSearchConfig {
-  searchProvider?: "serper" | "searxng" | "brave" | "tavily" | "google" | "bing";
+  searchProvider?: "serper" | "searxng" | "brave" | "tavily" | "perplexity" | "google" | "bing";
   scraperType?: "firecrawl" | "serper" | "brave";
   rerankerType?: "jina" | "cohere";
   serperApiKey?: string;
@@ -16,6 +16,7 @@ interface WebSearchConfig {
   searxngApiKey?: string;
   braveApiKey?: string;
   tavilyApiKey?: string;
+  perplexityApiKey?: string;
   googleSearchApiKey?: string;
   googleCSEId?: string;
   bingSearchApiKey?: string;
@@ -137,6 +138,25 @@ export function WebSearchEditor({ value, onChange, "data-testid": testId }: WebS
               placeholder="Enter your Tavily API key"
               className="font-mono"
               data-testid="input-tavily-api-key"
+            />
+          </div>
+        );
+
+      case "perplexity":
+        return (
+          <div>
+            <Label htmlFor="perplexity-api-key">
+              <Search className="h-3 w-3 inline mr-1" />
+              Perplexity API Key *
+            </Label>
+            <Input
+              id="perplexity-api-key"
+              type="password"
+              value={config.perplexityApiKey || ""}
+              onChange={(e) => updateConfig({ perplexityApiKey: e.target.value })}
+              placeholder="Enter your Perplexity API key (pplx-...)"
+              className="font-mono"
+              data-testid="input-perplexity-api-key"
             />
           </div>
         );
@@ -324,6 +344,7 @@ export function WebSearchEditor({ value, onChange, "data-testid": testId }: WebS
                 <SelectItem value="searxng">SearXNG (Self-hosted)</SelectItem>
                 <SelectItem value="brave">Brave Search</SelectItem>
                 <SelectItem value="tavily">Tavily Search</SelectItem>
+                <SelectItem value="perplexity">Perplexity Search</SelectItem>
               </SelectContent>
             </Select>
           </div>
