@@ -6,24 +6,42 @@
 
 A web-based interface to configure LibreChat v0.8.0 easily with progressive disclosure and comprehensive parameter coverage.
 
-## 🚀 Try It Now
+## 🚀 Two Ways to Use This Tool
 
-**Use the tool immediately without any setup:**
+### 🌐 Option 1: Online (Limited) - Quick Start
 
 **[→ Launch LibreChat Configuration Tool](https://librechatconfigurator.netlify.app/)**
 
-Configure your LibreChat settings instantly! Preview your configuration and download individual files without any installation.
+**✅ What Works:**
+- Configure all LibreChat settings
+- Preview configuration files
+- Download individual files (.env, librechat.yaml, JSON config)
 
-### 📦 Package Downloads
+**❌ What FAILS with "Generation Failed" Error:**
+- **"Generate & Download ZIP"** button - will show red error message
+- Complete installation packages 
+- Backend-dependent features
 
-**For individual files:** Use "Package → Preview files..." then click Download buttons for each file (`.env`, `librechat.yaml`, JSON config)
+**Why:** The online version is frontend-only (no server backend).
 
-**For complete ZIP packages:** Currently requires local installation due to backend dependencies. Run locally with:
+### 💻 Option 2: Local Installation (Full Features)
+
+**For complete functionality including ZIP package generation:**
+
 ```bash
 git clone https://github.com/Fritsl/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install && npm run dev
+# Open http://localhost:5000
 ```
+
+**✅ Everything Works:**
+- All configuration features
+- Individual file downloads  
+- Complete ZIP package generation
+- Full backend functionality
+
+**Choose based on your needs:** Online for quick configuration and individual files, Local for complete packages.
 
 ## Why This Exists
 
