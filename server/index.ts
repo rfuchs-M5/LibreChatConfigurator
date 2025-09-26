@@ -68,17 +68,36 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || '5000', 10);
   const isWindows = process.platform === 'win32';
   
-  const listenOptions: any = {
+  // Allow host to be configurable via HOST env var, default to 0.0.0.0 for broader compatibility
+  const preferredHost = process.env.HOST || "0.0.0.0";
+  
+  const createListenOptions = (host: string) => ({
     port,
-    host: "0.0.0.0",
+    host,
+    ...(isWindows ? {} : { reusePort: true })
+  });
+  
+  // Try preferred host first, fallback to 127.0.0.1 if ENOTSUP (macOS Sequoia issue)
+  const tryListen = (host: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const listenOptions = createListenOptions(host);
+      
+      server.listen(listenOptions, () => {
+        log(`serving on port ${port} (host: ${host})`);
+        resolve();
+      }).on('error', (err: any) => {
+        if (err.code === 'ENOTSUP' && host === '0.0.0.0') {
+          log(`Host ${host} not supported, trying 127.0.0.1...`);
+          tryListen('127.0.0.1').then(resolve).catch(reject);
+        } else {
+          reject(err);
+        }
+      });
+    });
   };
   
-  // reusePort is not supported on Windows
-  if (!isWindows) {
-    listenOptions.reusePort = true;
-  }
-  
-  server.listen(listenOptions, () => {
-    log(`serving on port ${port}`);
+  tryListen(preferredHost).catch((err) => {
+    log(`Failed to start server: ${err.message}`);
+    process.exit(1);
   });
 })();
