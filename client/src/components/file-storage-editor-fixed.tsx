@@ -46,17 +46,18 @@ export function FileStorageEditor({ configuration, onConfigChange, "data-testid"
     } else if (configuration.azureStorageConnectionString) {
       setSelectedStrategy("azure_blob");
     } else {
-      setSelectedStrategy("");
+      setSelectedStrategy("placeholder");
     }
   }, [configuration.fileStrategy, configuration.fileUploadPath, configuration.firebaseApiKey, configuration.azureStorageConnectionString]);
 
   const handleStrategyChange = (strategy: string) => {
+    if (strategy === "placeholder") return; // Don't allow selecting placeholder
     setSelectedStrategy(strategy);
     onConfigChange("fileStrategy", strategy);
   };
 
   const strategyOptions = [
-    { value: "", label: "Select Storage Strategy", disabled: true },
+    { value: "placeholder", label: "Select Storage Strategy", disabled: true },
     { value: "local", label: "Local File Storage", icon: HardDrive },
     { value: "firebase", label: "Firebase Storage", icon: Database },
     { value: "azure_blob", label: "Azure Blob Storage", icon: Cloud },
@@ -191,7 +192,7 @@ export function FileStorageEditor({ configuration, onConfigChange, "data-testid"
           </p>
         </div>
 
-        {selectedStrategy ? (
+        {selectedStrategy && selectedStrategy !== "placeholder" ? (
           renderStrategyConfig()
         ) : (
           <Card className="border-dashed">
