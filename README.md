@@ -6,6 +6,14 @@
 
 A web-based interface to configure LibreChat v0.8.0 easily with progressive disclosure and comprehensive parameter coverage.
 
+## 🚀 Try It Now
+
+**Use the tool immediately without any setup:**
+
+**[→ Launch LibreChat Configuration Tool](https://librechatconfigurator.netlify.app/)**
+
+No installation required! Configure your LibreChat settings, download your deployment files, and get started right away.
+
 ## Why This Exists
 
 **LibreChat is incredibly powerful, but configuring it shouldn't require a PhD in YAML.**
