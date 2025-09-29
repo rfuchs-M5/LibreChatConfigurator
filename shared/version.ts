@@ -22,7 +22,7 @@
  */
 
 // This Configuration Tool's Version (independent of LibreChat)
-export const TOOL_VERSION = "1.2.5";
+export const TOOL_VERSION = "1.2.6";
 
 // LibreChat Version This Tool Supports
 export const LIBRECHAT_TARGET_VERSION = "0.8.0-rc4";
@@ -31,7 +31,7 @@ export const VERSION_INFO = {
   toolVersion: TOOL_VERSION,
   librechatTarget: LIBRECHAT_TARGET_VERSION,
   lastUpdated: "2025-09-29",
-  changelog: "Added demo mode banner: Red banner appears when hosted without backend, directing users to GitHub repository for full functionality. Cleaned up Package dropdown text for better UX."
+  changelog: "Improved backend detection: Enhanced reliability with environment detection for static hosting platforms, multiple endpoint testing with timeouts, and robust error handling. Banner now correctly appears on Netlify/Vercel/GitHub Pages."
 } as const;
 
 // Helper function to get the tool's version string
