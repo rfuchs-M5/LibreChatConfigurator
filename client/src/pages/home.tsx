@@ -771,6 +771,30 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Demo Mode Banner */}
+      {isDemo && (
+        <div className="bg-red-50 dark:bg-red-950/20 border-b border-red-200 dark:border-red-800">
+          <div className="max-w-full mx-auto px-6 py-3">
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+              <span className="text-red-800 dark:text-red-200">
+                This is in Demo mode, running without backend, go to{" "}
+                <a 
+                  href="https://github.com/Fritsl/LibreChatConfigurator" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-red-700 dark:text-red-300 underline hover:text-red-900 dark:hover:text-red-100 font-medium"
+                  data-testid="link-demo-banner-github"
+                >
+                  github repository
+                </a>
+                {" "}to be able to create full one-click LibreChat installations
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex">
         {/* Main Content */}
         <main className="flex-1">
