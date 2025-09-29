@@ -651,6 +651,16 @@ export default function Home() {
                     >
                       About
                     </button>
+                    <span className="text-sm font-normal text-muted-foreground mx-2">•</span>
+                    <a 
+                      href="https://youtu.be/7NOCdZaukuM?si=lRFjX0mcHJpOT5Ey"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      data-testid="link-video-demo"
+                    >
+                      Video Demo
+                    </a>
                   </h1>
                   <p className="text-sm text-muted-foreground">Currently supporting: LibreChat v{getVersionInfo().librechatTarget}</p>
                 </div>

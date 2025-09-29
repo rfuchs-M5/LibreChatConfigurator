@@ -1,5 +1,11 @@
 # LibreChat Configuration Tool
 
+## 🎥 Video Demo
+
+[![LibreChat Configuration Tool Demo](https://img.youtube.com/vi/7NOCdZaukuM/maxresdefault.jpg)](https://youtu.be/7NOCdZaukuM?si=lRFjX0mcHJpOT5Ey)
+
+**[▶️ Watch the full demo video](https://youtu.be/7NOCdZaukuM?si=lRFjX0mcHJpOT5Ey)** - See the LibreChat Configuration Tool in action!
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
