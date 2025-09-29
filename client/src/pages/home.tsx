@@ -2,12 +2,13 @@ import { useState } from "react";
 import { ConfigurationTabs } from "@/components/configuration-tabs";
 import { PreviewModal } from "@/components/preview-modal";
 import { useConfiguration } from "@/hooks/use-configuration";
+import { useBackendAvailability } from "@/hooks/use-backend-availability";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { defaultConfiguration } from "@/lib/configuration-defaults";
 import { createResetConfiguration } from "@/lib/librechat-defaults";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap, AlertTriangle, ExternalLink } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
@@ -22,6 +23,7 @@ export default function Home() {
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const [showSelfTestConfirmation, setShowSelfTestConfirmation] = useState(false);
   const { configuration, updateConfiguration, saveProfile, generatePackage, loadDemoConfiguration, verifyConfiguration } = useConfiguration();
+  const { isBackendAvailable, isDemo } = useBackendAvailability();
   const { toast } = useToast();
 
   const handleSaveProfile = async () => {
@@ -710,7 +712,32 @@ export default function Home() {
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-80">
+                  {isDemo && (
+                    <>
+                      <div className="px-3 py-2 text-sm text-amber-600 bg-amber-50 dark:bg-amber-950/20 dark:text-amber-400 border-l-4 border-amber-400 mx-2 my-2 rounded-sm">
+                        <div className="flex items-center gap-2 mb-1">
+                          <AlertTriangle className="h-4 w-4" />
+                          <span className="font-medium">Online Hosted Demo</span>
+                        </div>
+                        <div className="text-xs text-amber-700 dark:text-amber-300 mb-2">
+                          Go to GitHub to self-host securely for full functionality:
+                        </div>
+                        <div className="flex items-center gap-1 text-xs">
+                          <ExternalLink className="h-3 w-3" />
+                          <a 
+                            href="https://github.com/Fritsl/LibreChatConfigurator" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 hover:underline break-all"
+                          >
+                            github.com/Fritsl/LibreChatConfigurator
+                          </a>
+                        </div>
+                      </div>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   <DropdownMenuItem onClick={() => setShowPreview(true)} data-testid="menu-preview">
                     <Eye className="h-4 w-4 mr-2" />
                     Individual files (Works when this app is hosted on Netlify)
