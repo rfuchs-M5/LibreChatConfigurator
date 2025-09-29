@@ -14,6 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
 import { Label } from "@/components/ui/label";
 import { ConfigurationHistory } from "@/components/ConfigurationHistory";
+import { getVersion, getVersionInfo } from "@shared/version";
 import yaml from "js-yaml";
 
 export default function Home() {
@@ -28,15 +29,20 @@ export default function Home() {
 
   const handleSaveProfile = async () => {
     try {
+      // ⚠️ REMINDER: Always update version in shared/version.ts when making changes!
       
       // Create profile data with configuration and name
+      const versionInfo = getVersionInfo();
       const profileData = {
         name: configurationName,
         description: `Configuration profile created on ${new Date().toLocaleDateString()}`,
         configuration: configuration,
-        version: "0.8.0-rc4", // Updated to RC4
+        version: versionInfo.version,
+        librechatTarget: versionInfo.librechatTarget,
         createdAt: new Date().toISOString(),
-        exportedFrom: "LibreChat Configuration Manager"
+        exportedFrom: `LibreChat Configuration Manager v${versionInfo.version}`,
+        lastUpdated: versionInfo.lastUpdated,
+        changelog: versionInfo.changelog
       };
 
       // Download as JSON file with Save As dialog
@@ -633,8 +639,11 @@ export default function Home() {
                   <i className="fas fa-cog text-white text-lg"></i>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-foreground">LibreChat Configuration Tool</h1>
-                  <p className="text-sm text-muted-foreground">Currently supporting: v0.8.0-RC4</p>
+                  <h1 className="text-xl font-bold text-foreground">
+                    LibreChat Configuration Tool 
+                    <span className="text-sm font-normal text-muted-foreground ml-2">v{getVersion()}</span>
+                  </h1>
+                  <p className="text-sm text-muted-foreground">Currently supporting: v{getVersionInfo().librechatTarget}</p>
                 </div>
                 
                 {/* Profile Name Input */}

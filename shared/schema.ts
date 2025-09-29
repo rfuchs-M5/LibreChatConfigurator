@@ -1,8 +1,12 @@
 import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
+import { getVersionInfo } from "./version";
 
-// LibreChat Configuration Tool Version
-export const CONFIG_VERSION = "0.8.0-rc4";
+// ⚠️ REMINDER: When adding new configuration fields or changing schema structure,
+// update version number in shared/version.ts!
+
+// LibreChat Configuration Tool Version (from central version file)
+export const CONFIG_VERSION = getVersionInfo().librechatTarget;
 
 // LibreChat v0.8.0-RC4 Configuration Schema
 // Pure RC4 implementation - no backwards compatibility

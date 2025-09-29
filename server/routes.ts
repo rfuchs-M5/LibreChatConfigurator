@@ -6,6 +6,9 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 import JSZip from "jszip";
 
+// ⚠️ REMINDER: When adding new API endpoints or changing route functionality,
+// update version number in shared/version.ts!
+
 export async function registerRoutes(app: Express): Promise<Server> {
   
   // Get default configuration
