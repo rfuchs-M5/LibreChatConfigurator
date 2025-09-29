@@ -772,7 +772,7 @@ export default function Home() {
       </header>
 
       {/* Demo Mode Banner */}
-      {(
+      {isDemo && (
         <div className="bg-red-50 dark:bg-red-950/20 border-b border-red-200 dark:border-red-800">
           <div className="max-w-full mx-auto px-6 py-3">
             <div className="flex items-center justify-center gap-2 text-sm">
