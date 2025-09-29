@@ -22,7 +22,7 @@
  */
 
 // This Configuration Tool's Version (independent of LibreChat)
-export const TOOL_VERSION = "1.2.4";
+export const TOOL_VERSION = "1.2.5";
 
 // LibreChat Version This Tool Supports
 export const LIBRECHAT_TARGET_VERSION = "0.8.0-rc4";
@@ -31,7 +31,7 @@ export const VERSION_INFO = {
   toolVersion: TOOL_VERSION,
   librechatTarget: LIBRECHAT_TARGET_VERSION,
   lastUpdated: "2025-09-29",
-  changelog: "Repository cleanup: Removed temporary and generated files, improved .gitignore patterns to prevent future clutter. Enhanced .gitignore to exclude runtime data, timestamped files, and user uploads while preserving core functionality."
+  changelog: "Added demo mode banner: Red banner appears when hosted without backend, directing users to GitHub repository for full functionality. Cleaned up Package dropdown text for better UX."
 } as const;
 
 // Helper function to get the tool's version string
