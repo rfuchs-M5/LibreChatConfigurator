@@ -22,7 +22,7 @@
  */
 
 // This Configuration Tool's Version (independent of LibreChat)
-export const TOOL_VERSION = "1.2.2";
+export const TOOL_VERSION = "1.2.3";
 
 // LibreChat Version This Tool Supports
 export const LIBRECHAT_TARGET_VERSION = "0.8.0-rc4";
@@ -31,7 +31,7 @@ export const VERSION_INFO = {
   toolVersion: TOOL_VERSION,
   librechatTarget: LIBRECHAT_TARGET_VERSION,
   lastUpdated: "2025-09-29",
-  changelog: "Added Perplexity search integration, backend detection system, centralized version management, and About dialog. Fixed version numbering system. Moved About to top left as blue link. Moved Configuration name field to top right."
+  changelog: "Added Perplexity search integration, backend detection system, centralized version management, and About dialog. Fixed version numbering system. Moved About to top left as blue link. Moved Configuration name field to top right. Fixed YAML generation for RC4 compatibility - Groq/Mistral now use correct custom endpoints format."
 } as const;
 
 // Helper function to get the tool's version string
