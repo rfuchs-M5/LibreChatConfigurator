@@ -19,13 +19,13 @@
  * - After integration updates
  */
 
-export const APP_VERSION = "0.8.0-rc4.1.0";
+export const APP_VERSION = "0.8.0-rc4.2.0";
 
 export const VERSION_INFO = {
   version: APP_VERSION,
   librechatTarget: "0.8.0-rc4",
   lastUpdated: "2025-09-29",
-  changelog: "Added Perplexity search integration and backend detection system"
+  changelog: "Added Perplexity search integration, backend detection system, centralized version management, and About dialog"
 } as const;
 
 // Helper function to get just the version string

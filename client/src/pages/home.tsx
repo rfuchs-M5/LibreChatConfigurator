@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { defaultConfiguration } from "@/lib/configuration-defaults";
 import { createResetConfiguration } from "@/lib/librechat-defaults";
-import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap, AlertTriangle, ExternalLink } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap, AlertTriangle, ExternalLink, Info } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
@@ -23,6 +23,7 @@ export default function Home() {
   const [configurationName, setConfigurationName] = useState("My LibreChat Configuration");
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const [showSelfTestConfirmation, setShowSelfTestConfirmation] = useState(false);
+  const [showAboutDialog, setShowAboutDialog] = useState(false);
   const { configuration, updateConfiguration, saveProfile, generatePackage, loadDemoConfiguration, verifyConfiguration } = useConfiguration();
   const { isBackendAvailable, isDemo } = useBackendAvailability();
   const { toast } = useToast();
@@ -712,6 +713,16 @@ export default function Home() {
               {/* Configuration History */}
               <ConfigurationHistory onConfigurationLoad={updateConfiguration} />
               
+              {/* About Button */}
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAboutDialog(true)}
+                data-testid="button-about"
+              >
+                <Info className="h-4 w-4 mr-2" />
+                About
+              </Button>
+              
               {/* Package Generation Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -847,6 +858,118 @@ export default function Home() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* About Dialog */}
+      <Dialog open={showAboutDialog} onOpenChange={setShowAboutDialog}>
+        <DialogContent className="max-w-2xl" data-testid="dialog-about">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Info className="h-5 w-5" />
+              About LibreChat Configuration Tool
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            {/* Author Info */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Created by</h3>
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  <strong>Frits Lyneborg</strong>
+                </p>
+                <div className="flex items-center gap-2 text-sm">
+                  <ExternalLink className="h-4 w-4" />
+                  <a 
+                    href="https://fritslyneborg.dk" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                    data-testid="link-author-website"
+                  >
+                    fritslyneborg.dk
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Repository Info */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Official Repository</h3>
+              <div className="flex items-center gap-2 text-sm">
+                <ExternalLink className="h-4 w-4" />
+                <a 
+                  href="https://github.com/Fritsl/LibreChatConfigurator" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline break-all"
+                  data-testid="link-github-repository"
+                >
+                  github.com/Fritsl/LibreChatConfigurator
+                </a>
+              </div>
+            </div>
+
+            {/* Usage Guidance */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Recommended Usage</h3>
+              <div className="space-y-4 text-sm text-muted-foreground">
+                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-amber-800 dark:text-amber-200 mb-2">
+                        Security Notice
+                      </p>
+                      <p className="text-amber-700 dark:text-amber-300">
+                        To avoid exposing API keys and sensitive configuration data, it's strongly recommended to build and run this tool locally rather than using the hosted version.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p><strong>Recommended:</strong> Local deployment</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Full functionality including ZIP package generation</li>
+                    <li>Secure handling of API keys and credentials</li>
+                    <li>No data sent to external servers</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-2">
+                  <p><strong>Alternative:</strong> Hosted version (Netlify)</p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Great for testing and exploring features</li>
+                    <li>Limited functionality (no ZIP package generation)</li>
+                    <li>Should not be used with real API keys</li>
+                  </ul>
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-blue-800 dark:text-blue-200 mb-2">
+                        Getting Started
+                      </p>
+                      <p className="text-blue-700 dark:text-blue-300">
+                        For local setup instructions, please see the Quick Start guide in the README file of the GitHub repository.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Version Info */}
+            <div className="pt-4 border-t border-border">
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span>Version {getVersion()}</span>
+                <span>Supporting LibreChat {getVersionInfo().librechatTarget}</span>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       
     </div>
   );
