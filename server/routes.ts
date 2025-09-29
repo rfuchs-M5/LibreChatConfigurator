@@ -797,23 +797,39 @@ endpoints:
       - "presence_penalty"
       - "stop"
     titleConvo: true
-    titleModel: "gemini-1.5-flash"` : ''}${config.groqApiKey ? `
-  groq:
-    title: "Groq"
-    apiKey: "\${GROQ_API_KEY}"
-    baseURL: "https://api.groq.com/openai/v1"
-    models:
-      fetch: true
-    titleConvo: true
-    titleModel: "llama-3.1-8b-instant"` : ''}${config.mistralApiKey ? `
-  mistral:
-    title: "Mistral AI"
-    apiKey: "\${MISTRAL_API_KEY}"
-    baseURL: "https://api.mistral.ai/v1"
-    models:
-      fetch: true
-    titleConvo: true
-    titleModel: "mistral-small-latest"` : ''}
+    titleModel: "gemini-1.5-flash"` : ''}${(config.groqApiKey || config.mistralApiKey) ? `
+  custom:${config.groqApiKey ? `
+    - name: 'groq'
+      apiKey: '\${GROQ_API_KEY}'
+      baseURL: 'https://api.groq.com/openai/v1/'
+      models:
+        fetch: false
+        default: [
+          "llama3-70b-8192",
+          "llama3-8b-8192", 
+          "llama2-70b-4096",
+          "mixtral-8x7b-32768",
+          "gemma-7b-it"
+        ]
+      titleConvo: true
+      titleModel: 'mixtral-8x7b-32768'
+      modelDisplayLabel: 'Groq'` : ''}${config.mistralApiKey ? `${config.groqApiKey ? `
+    - name: 'Mistral'` : `
+    - name: 'Mistral'`}
+      apiKey: '\${MISTRAL_API_KEY}'
+      baseURL: 'https://api.mistral.ai/v1'
+      models:
+        fetch: true
+        default: [
+          "mistral-tiny",
+          "mistral-small", 
+          "mistral-medium",
+          "mistral-large-latest"
+        ]
+      titleConvo: true
+      titleModel: 'mistral-tiny'
+      modelDisplayLabel: 'Mistral'
+      dropParams: ['stop', 'user', 'frequency_penalty', 'presence_penalty']` : ''}` : ''}
 
 # Interface Configuration
 interface:
