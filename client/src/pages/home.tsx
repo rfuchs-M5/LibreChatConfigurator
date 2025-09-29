@@ -867,6 +867,23 @@ export default function Home() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-6 py-4">
+            {/* Purpose */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Purpose</h3>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>
+                  This tool simplifies LibreChat setup by providing an intuitive interface for configuring all LibreChat settings. 
+                  Instead of manually editing complex configuration files, you can configure everything through a user-friendly interface 
+                  and generate complete installation packages with one click.
+                </p>
+                <p>
+                  The <strong>Package</strong> dropdown allows you to generate ready-to-deploy installation packages containing 
+                  all necessary configuration files, Docker setup, and installation scripts - making LibreChat deployment as simple as 
+                  downloading and running.
+                </p>
+              </div>
+            </div>
+
             {/* Author Info */}
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Created by</h3>
@@ -892,17 +909,31 @@ export default function Home() {
             {/* Repository Info */}
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Official Repository</h3>
-              <div className="flex items-center gap-2 text-sm">
-                <ExternalLink className="h-4 w-4" />
-                <a 
-                  href="https://github.com/Fritsl/LibreChatConfigurator" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline break-all"
-                  data-testid="link-github-repository"
-                >
-                  github.com/Fritsl/LibreChatConfigurator
-                </a>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <ExternalLink className="h-4 w-4" />
+                  <a 
+                    href="https://github.com/Fritsl/LibreChatConfigurator" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline break-all"
+                    data-testid="link-github-repository"
+                  >
+                    github.com/Fritsl/LibreChatConfigurator
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <ExternalLink className="h-4 w-4" />
+                  <a 
+                    href="https://github.com/Fritsl/LibreChatConfigurator/blob/main/README.md" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                    data-testid="link-github-readme"
+                  >
+                    View detailed documentation (README.md)
+                  </a>
+                </div>
               </div>
             </div>
 

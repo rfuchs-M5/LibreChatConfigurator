@@ -10,7 +10,7 @@
 
 Setting up LibreChat involves managing 100+ configuration options across environment variables, YAML files, OAuth providers, database connections, AI API keys, file storage backends, email services, and more. The official docs are comprehensive but scattered across dozens of pages, making it easy to miss critical settings or misconfigure complex integrations.
 
-**This tool solves that.** Instead of hunting through documentation and manually editing config files, you get:
+**This tool solves that.** Whether you're configuring LibreChat for your own use or creating installation packages to share with others, you get:
 
 - **Progressive disclosure** - Pick your providers first, then see only the relevant fields
 - **Real-time validation** - Catch configuration errors before deployment
@@ -23,20 +23,28 @@ Setting up LibreChat involves managing 100+ configuration options across environ
 
 ## How to Use
 
-**There are 2 ways to use this tool:**
+**This tool serves two main purposes:**
+
+1. **🔧 Configure LibreChat Settings** - Use the intuitive interface to set up all LibreChat configuration options
+2. **📦 Create One-Click Installation Packages** - Generate complete deployment packages that others can download and run immediately
+
+**There are 2 ways to access this tool:**
 
 **🌐 Direct Online** - **[Launch LibreChat Configuration Tool](https://librechatconfigurator.netlify.app/)**
-- Configure all LibreChat settings  
-- Download individual files (.env, librechat.yaml, JSON config)
-- ❌ **ZIP generation will fail** - no backend on Netlify
+- ✅ Configure all LibreChat settings  
+- ✅ Download individual files (.env, librechat.yaml, JSON config)
+- ❌ **ZIP package generation will fail** - no backend on Netlify
 
-**💻 Run Locally** - Full feature set including ZIP packages:
+**💻 Run Locally** - Full feature set including one-click installation packages:
 ```bash
 git clone https://github.com/Fritsl/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install && npm run dev
 # Open http://localhost:5000
 ```
+- ✅ Configure all LibreChat settings
+- ✅ Generate complete installation ZIP packages with Docker setup and scripts
+- ✅ Share ready-to-deploy packages with others
 
 ## Prerequisites
 
@@ -70,10 +78,10 @@ http://localhost:5000
    - Configure only the providers you need (OAuth, Email, File Storage, etc.)
    - Set your AI API keys, database settings, and features
 
-5. **Download your config files**
-   - Get your `.env` file with environment variables
-   - Get your `librechat.yaml` configuration file
-   - Get complete deployment package with Docker setup
+5. **Generate installation packages**
+   - **Individual files**: Download `.env`, `librechat.yaml`, or JSON configuration files
+   - **Complete packages**: Use "Package → Generate & Download ZIP" to create one-click installation packages
+   - **Share with others**: Generated ZIP packages contain everything needed for deployment including Docker setup and installation scripts
 
 ## Production Build
 
@@ -89,11 +97,12 @@ The app will build and serve on port 5000 in production mode.
 ## Features
 
 - **Progressive Disclosure**: Choose providers first, then see only relevant configuration fields
-- **Comprehensive Coverage**: I have tried to catch all LibreChat v0.8.0 settings - see mapping below
+- **Comprehensive Coverage**: Supports all LibreChat v0.8.0 settings - see mapping below
 - **Clean Interface**: Organized into logical tabs with search functionality
 - **Real-time Validation**: Immediate feedback on configuration issues
 - **Profile Management**: Save and load different configuration profiles
-- **Complete Package Generation**: Ready-to-deploy files including Docker setup
+- **One-Click Installation Packages**: Generate complete deployment packages that others can download and run immediately
+- **Dual Purpose**: Use for personal configuration setup OR create shareable installation packages
 
 ## Supported Configuration Settings
 
