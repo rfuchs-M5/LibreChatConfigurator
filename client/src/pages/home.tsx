@@ -762,7 +762,7 @@ export default function Home() {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleGeneratePackage} data-testid="menu-generate">
                     <Download className="h-4 w-4 mr-2" />
-                    Generate & Download ZIP (Does not work when hosted via Netlify, see About)
+                    Generate & Download ZIP
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
