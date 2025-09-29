@@ -654,25 +654,25 @@ export default function Home() {
                   </h1>
                   <p className="text-sm text-muted-foreground">Currently supporting: LibreChat v{getVersionInfo().librechatTarget}</p>
                 </div>
-                
-                {/* Profile Name Input */}
-                <div className="flex items-center space-x-3">
-                  <Label htmlFor="profile-name" className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                    Configuration name:
-                  </Label>
-                  <Input
-                    id="profile-name"
-                    value={configurationName}
-                    onChange={(e) => setConfigurationName(e.target.value)}
-                    className="text-lg font-medium w-72 border-border"
-                    placeholder="Enter configuration name..."
-                    data-testid="input-config-name"
-                  />
-                </div>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Configuration Name Input */}
+              <div className="flex items-center space-x-3">
+                <Label htmlFor="profile-name" className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                  Configuration name:
+                </Label>
+                <Input
+                  id="profile-name"
+                  value={configurationName}
+                  onChange={(e) => setConfigurationName(e.target.value)}
+                  className="text-lg font-medium w-72 border-border"
+                  placeholder="Enter configuration name..."
+                  data-testid="input-config-name"
+                />
+              </div>
+              
               {/* Configuration Management Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
