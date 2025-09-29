@@ -22,7 +22,7 @@
  */
 
 // This Configuration Tool's Version (independent of LibreChat)
-export const TOOL_VERSION = "1.2.6";
+export const TOOL_VERSION = "1.2.7";
 
 // LibreChat Version This Tool Supports
 export const LIBRECHAT_TARGET_VERSION = "0.8.0-rc4";
@@ -31,7 +31,7 @@ export const VERSION_INFO = {
   toolVersion: TOOL_VERSION,
   librechatTarget: LIBRECHAT_TARGET_VERSION,
   lastUpdated: "2025-09-29",
-  changelog: "Improved backend detection: Enhanced reliability with environment detection for static hosting platforms, multiple endpoint testing with timeouts, and robust error handling. Banner now correctly appears on Netlify/Vercel/GitHub Pages."
+  changelog: "FIXED: Backend detection now works properly! Red demo banner will appear on Netlify/Vercel/GitHub Pages when no backend is available. Enhanced with environment detection and multi-endpoint testing."
 } as const;
 
 // Helper function to get the tool's version string
