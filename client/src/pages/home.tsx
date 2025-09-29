@@ -14,7 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
 import { Label } from "@/components/ui/label";
 import { ConfigurationHistory } from "@/components/ConfigurationHistory";
-import { getVersion, getVersionInfo } from "@shared/version";
+import { getToolVersion, getVersionInfo } from "@shared/version";
 import yaml from "js-yaml";
 
 export default function Home() {
@@ -38,10 +38,10 @@ export default function Home() {
         name: configurationName,
         description: `Configuration profile created on ${new Date().toLocaleDateString()}`,
         configuration: configuration,
-        version: versionInfo.version,
+        toolVersion: versionInfo.toolVersion,
         librechatTarget: versionInfo.librechatTarget,
         createdAt: new Date().toISOString(),
-        exportedFrom: `LibreChat Configuration Manager v${versionInfo.version}`,
+        exportedFrom: `LibreChat Configuration Manager v${versionInfo.toolVersion}`,
         lastUpdated: versionInfo.lastUpdated,
         changelog: versionInfo.changelog
       };
@@ -642,9 +642,9 @@ export default function Home() {
                 <div>
                   <h1 className="text-xl font-bold text-foreground">
                     LibreChat Configuration Tool 
-                    <span className="text-sm font-normal text-muted-foreground ml-2">v{getVersion()}</span>
+                    <span className="text-sm font-normal text-muted-foreground ml-2">v{getToolVersion()}</span>
                   </h1>
-                  <p className="text-sm text-muted-foreground">Currently supporting: v{getVersionInfo().librechatTarget}</p>
+                  <p className="text-sm text-muted-foreground">Currently supporting: LibreChat v{getVersionInfo().librechatTarget}</p>
                 </div>
                 
                 {/* Profile Name Input */}
@@ -963,8 +963,8 @@ export default function Home() {
             {/* Version Info */}
             <div className="pt-4 border-t border-border">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Version {getVersion()}</span>
-                <span>Supporting LibreChat {getVersionInfo().librechatTarget}</span>
+                <span>Configuration Tool v{getToolVersion()}</span>
+                <span>Supporting LibreChat v{getVersionInfo().librechatTarget}</span>
               </div>
             </div>
           </div>
