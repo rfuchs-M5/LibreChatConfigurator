@@ -28,6 +28,28 @@ vite.config.ts.*
 secrets.json
 api-keys.json
 
+# Runtime data (directories needed, but contents are generated)
+/data/profiles/
+/data/deployments/
+/data/config-history.json
+
+# Generated packages and temporary files
+/attached_assets/
+*.zip
+*.tar.gz
+
+# Generated files with timestamps
+*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].*
+Pasted-*
+INTEGRITY_TEST_*
+
+# User uploaded content
+image_*.png
+image_*.jpg
+image_*.jpeg
+*.env.*
+docker-compose_*.yml
+
 # Logs
 logs
 *.log
