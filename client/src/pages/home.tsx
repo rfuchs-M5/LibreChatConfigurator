@@ -758,11 +758,11 @@ export default function Home() {
                   )}
                   <DropdownMenuItem onClick={() => setShowPreview(true)} data-testid="menu-preview">
                     <Eye className="h-4 w-4 mr-2" />
-                    Individual files (Works when this app is hosted on Netlify)
+                    Individual files
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleGeneratePackage} data-testid="menu-generate">
                     <Download className="h-4 w-4 mr-2" />
-                    Generate & Download ZIP
+                    Generate & Download ZIP (Does not work when hosted via Netlify, see About)
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
