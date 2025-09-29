@@ -14,7 +14,7 @@ export const essentialDefaults: Partial<Configuration> = {
   cache: true, // Enable caching by default
   
   // Basic server settings from .env.example
-  host: "localhost",
+  host: "0.0.0.0",
   port: 3080,
   debugLogging: true, // Enabled in .env.example
   debugConsole: false, // Disabled by default

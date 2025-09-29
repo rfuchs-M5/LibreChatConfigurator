@@ -1001,7 +1001,7 @@ services:
       REDIS_URI: redis://redis:6379
       
       # Application Configuration
-      HOST: ${config.host}
+      HOST: ${config.host || '0.0.0.0'}
       PORT: 3080
       NODE_ENV: production
       
