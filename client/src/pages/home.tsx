@@ -643,6 +643,14 @@ export default function Home() {
                   <h1 className="text-xl font-bold text-foreground">
                     LibreChat Configuration Tool 
                     <span className="text-sm font-normal text-muted-foreground ml-2">v{getToolVersion()}</span>
+                    <span className="text-sm font-normal text-muted-foreground mx-2">•</span>
+                    <button 
+                      onClick={() => setShowAboutDialog(true)}
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      data-testid="link-about"
+                    >
+                      About
+                    </button>
                   </h1>
                   <p className="text-sm text-muted-foreground">Currently supporting: LibreChat v{getVersionInfo().librechatTarget}</p>
                 </div>
@@ -712,16 +720,6 @@ export default function Home() {
               
               {/* Configuration History */}
               <ConfigurationHistory onConfigurationLoad={updateConfiguration} />
-              
-              {/* About Button */}
-              <Button 
-                variant="outline" 
-                onClick={() => setShowAboutDialog(true)}
-                data-testid="button-about"
-              >
-                <Info className="h-4 w-4 mr-2" />
-                About
-              </Button>
               
               {/* Package Generation Dropdown */}
               <DropdownMenu>
