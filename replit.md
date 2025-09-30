@@ -48,6 +48,7 @@ Preferred communication style: Simple, everyday language.
 ## Key Features
 - **Tabbed Interface**: 17 categorized tabs with icons and progress indicators
 - **Input Controls**: Specialized inputs for different data types (text, number, boolean, select, arrays)
+- **Custom Endpoints**: Create multiple OpenAI-compatible endpoints with individual API keys and friendly names for organizing usage by project/team (e.g., "OpenAI - Work", "OpenAI - Personal")
 - **Preview System**: Live preview of generated configuration files
 - **Package Generation**: Complete deployment package creation with multiple file formats
 - **Search Functionality**: Global search across all configuration settings

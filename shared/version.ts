@@ -22,7 +22,7 @@
  */
 
 // This Configuration Tool's Version (independent of LibreChat)
-export const TOOL_VERSION = "1.2.8";
+export const TOOL_VERSION = "1.3.0";
 
 // LibreChat Version This Tool Supports
 export const LIBRECHAT_TARGET_VERSION = "0.8.0-rc4";
@@ -30,8 +30,8 @@ export const LIBRECHAT_TARGET_VERSION = "0.8.0-rc4";
 export const VERSION_INFO = {
   toolVersion: TOOL_VERSION,
   librechatTarget: LIBRECHAT_TARGET_VERSION,
-  lastUpdated: "2025-09-29",
-  changelog: "Added Video Demo: YouTube demo video now prominently featured at top of README.md and as 'Video Demo' link in app header next to 'About' for easy access."
+  lastUpdated: "2025-09-30",
+  changelog: "Added Custom Endpoints feature: Create multiple OpenAI-compatible endpoints with individual API keys and friendly names (e.g., 'OpenAI - Work', 'OpenAI - Personal'). Perfect for organizing API usage by project, team, or billing. Each endpoint supports custom models, headers, and can be assigned to specific agents."
 } as const;
 
 // Helper function to get the tool's version string
