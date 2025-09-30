@@ -44,14 +44,54 @@ Setting up LibreChat involves managing 100+ configuration options across environ
 
 ### 💻 Run Locally (Full Features)
 
-**Prerequisites:** Node.js 20+ ([download here](https://nodejs.org/))
+**Prerequisites:** Node.js 20+ is required
 
-**Quick Start:**
+<details>
+<summary><strong>📦 Install Node.js (click to expand)</strong></summary>
+
+**Windows:**
+```powershell
+# Download and run installer from nodejs.org
+# Or use winget:
+winget install OpenJS.NodeJS
+```
+
+**macOS:**
 ```bash
+# Using Homebrew (recommended):
+brew install node
+
+# Or download installer from nodejs.org
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+# Install Node.js 20:
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+**Verify installation (all platforms):**
+```bash
+node --version   # Should show v20.x.x or higher
+npm --version    # Should show npm version
+```
+</details>
+
+**Quick Start (works on all platforms):**
+```bash
+# Clone the repository
 git clone https://github.com/Fritsl/LibreChatConfigurator.git
+
+# Navigate to folder
 cd LibreChatConfigurator
+
+# Install dependencies
 npm install
+
+# Start the development server
 npm run dev
+
 # Open http://localhost:5000 in your browser
 ```
 
