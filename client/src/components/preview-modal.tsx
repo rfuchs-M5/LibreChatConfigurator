@@ -338,22 +338,24 @@ endpoints:
     timeoutMs: 180000
     supportedIds: ["asst_"]
     
-  custom:
-    # Example custom endpoint - customize as needed
-    - name: "Custom AI Provider"
-      apiKey: "\${CUSTOM_API_KEY}"
-      baseURL: "https://api.example.com/v1"
+  ${(configuration.endpoints as any)?.custom && Array.isArray((configuration.endpoints as any).custom) && (configuration.endpoints as any).custom.length > 0 ? `custom:` : ''}${(configuration.endpoints as any)?.custom && Array.isArray((configuration.endpoints as any).custom) ? (configuration.endpoints as any).custom.map((endpoint: any) => `
+    - name: "${endpoint.name || 'Custom Endpoint'}"${endpoint.apiKey ? `
+      apiKey: "${endpoint.apiKey}"` : ''}
+      baseURL: "${endpoint.baseURL || 'https://api.openai.com/v1'}"
       models:
-        default: [
-          "custom-model-1",
-          "custom-model-2"
-        ]
-      titleConvo: true
-      titleModel: "current_model"
-      summarize: false
-      summaryModel: "current_model"
-      forcePrompt: false
-      modelDisplayLabel: "Custom Provider"
+        default: [${endpoint.models?.default?.map((model: string) => `
+          "${model}"`).join(',') || ''}
+        ]${endpoint.models?.fetch !== undefined ? `
+        fetch: ${endpoint.models.fetch}` : ''}${endpoint.titleConvo !== undefined ? `
+      titleConvo: ${endpoint.titleConvo}` : ''}${endpoint.titleModel ? `
+      titleModel: "${endpoint.titleModel}"` : ''}${endpoint.titleMethod ? `
+      titleMethod: "${endpoint.titleMethod}"` : ''}${endpoint.summarize !== undefined ? `
+      summarize: ${endpoint.summarize}` : ''}${endpoint.summaryModel ? `
+      summaryModel: "${endpoint.summaryModel}"` : ''}${endpoint.forcePrompt !== undefined ? `
+      forcePrompt: ${endpoint.forcePrompt}` : ''}${endpoint.modelDisplayLabel ? `
+      modelDisplayLabel: "${endpoint.modelDisplayLabel}"` : ''}${endpoint.headers && Object.keys(endpoint.headers).length > 0 ? `
+      headers:${Object.entries(endpoint.headers).map(([key, value]) => `
+        ${key}: "${value}"`).join('')}` : ''}`).join('') : ''}
 
 # =============================================================================
 # Model Configuration  

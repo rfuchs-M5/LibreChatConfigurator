@@ -143,6 +143,15 @@ export function ConfigurationTabs({
           settings: ["awsAccessKeyId", "awsSecretAccessKey", "awsRegion", "awsBedrockRegion", "awsEndpointURL", "awsBucketName"],
           docUrl: "https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock",
         },
+        {
+          id: "custom-endpoints",
+          label: "Custom Endpoints",
+          icon: Network,
+          description: "Custom OpenAI-compatible endpoints",
+          color: "from-pink-500 to-pink-600",
+          settings: ["endpoints.custom"],
+          docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/custom_endpoint",
+        },
       ]
     },
     {
@@ -449,7 +458,7 @@ export function ConfigurationTabs({
   // Helper function to get field type and description
   const getFieldInfo = (fieldName: string) => {
     const fieldMap: Record<string, { 
-      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration" | "file-storage"; 
+      type: "text" | "number" | "password" | "boolean" | "select" | "textarea" | "array" | "object" | "mcp-servers" | "custom-endpoints" | "web-search" | "oauth-providers" | "meilisearch-integration" | "caching-integration" | "file-storage" | "email-composite"; 
       description: string; 
       label: string;
       docUrl?: string;
@@ -892,6 +901,15 @@ export function ConfigurationTabs({
         label: "MCP Servers",
         docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/mcp",
         docSection: "MCP Configuration"
+      },
+
+      // Custom Endpoints
+      "endpoints.custom": {
+        type: "custom-endpoints",
+        description: "Create multiple OpenAI-compatible endpoints with individual API keys and friendly names (e.g., 'OpenAI - Work', 'OpenAI - Personal'). Perfect for organizing API usage by project, team, or billing account. Each endpoint can be assigned to specific agents for isolated usage tracking.",
+        label: "Custom Endpoints",
+        docUrl: "https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/custom_endpoint",
+        docSection: "Custom Endpoints Configuration"
       },
 
       // OCR Configuration
