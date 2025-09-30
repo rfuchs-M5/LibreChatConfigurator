@@ -78,7 +78,10 @@ npm --version    # Should show npm version
 ```
 </details>
 
-**Quick Start (works on all platforms):**
+<a id="quick-start"></a>
+
+### Quick Start
+
 ```bash
 # Clone the repository
 git clone https://github.com/Fritsl/LibreChatConfigurator.git
