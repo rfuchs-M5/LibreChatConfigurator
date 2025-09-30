@@ -37,25 +37,114 @@ export function FileValidator({ open, onOpenChange }: FileValidatorProps) {
     const results: ValidationResult[] = [];
 
     try {
-      let config: any = {};
+      // If no files provided
+      if (!envFile && !yamlFile) {
+        results.push({
+          field: "No files",
+          status: "warning",
+          message: "Please select at least one file to validate"
+        });
+        setValidationResults(results);
+        setIsValidating(false);
+        return;
+      }
 
-      // Parse .env file
+      // Parse and validate YAML file with STRICT schema validation
+      if (yamlFile) {
+        const yamlContent = await yamlFile.text();
+        try {
+          const yamlData = parseYamlFile(yamlContent);
+          
+          // STRICT validation - reject any unknown fields
+          const strictSchema = configurationSchema.strict();
+          const result = strictSchema.safeParse(yamlData);
+          
+          if (result.success) {
+            results.push({
+              field: "librechat.yaml",
+              status: "valid",
+              message: "✓ Valid LibreChat configuration file"
+            });
+            
+            // Show version if present
+            if (yamlData.version) {
+              results.push({
+                field: "version",
+                status: "valid",
+                message: `LibreChat version: ${yamlData.version}`
+              });
+            }
+            
+            // Count endpoints if present
+            if (yamlData.endpoints) {
+              const endpointCount = Object.keys(yamlData.endpoints).filter(k => k !== 'custom').length;
+              const customCount = yamlData.endpoints.custom?.length || 0;
+              results.push({
+                field: "endpoints",
+                status: "valid",
+                message: `${endpointCount} standard endpoints, ${customCount} custom endpoints`
+              });
+            }
+          } else {
+            // Failed strict validation - file contains non-LibreChat fields
+            results.push({
+              field: "librechat.yaml",
+              status: "invalid",
+              message: "✗ Not a valid LibreChat configuration file"
+            });
+            
+            // Show specific validation errors
+            result.error.issues.forEach((issue) => {
+              const fieldPath = issue.path.join('.') || "root";
+              results.push({
+                field: fieldPath,
+                status: "invalid",
+                message: issue.message
+              });
+            });
+          }
+          
+        } catch (error) {
+          results.push({
+            field: "librechat.yaml",
+            status: "invalid",
+            message: error instanceof Error ? error.message : "Failed to parse YAML file"
+          });
+        }
+      }
+
+      // Parse .env file (basic validation)
       if (envFile) {
         const envContent = await envFile.text();
         try {
           const envVars = parseEnvFile(envContent);
-          results.push({
-            field: ".env file",
-            status: "valid",
-            message: `Successfully parsed ${Object.keys(envVars).length} environment variables`
-          });
+          const varCount = Object.keys(envVars).length;
           
-          // Basic env validation
-          if (envVars.MONGO_URI || envVars.MONGO_ROOT_USERNAME) {
-            config.mongoUri = envVars.MONGO_URI || '';
+          if (varCount === 0) {
+            results.push({
+              field: ".env file",
+              status: "warning",
+              message: "File is empty or contains no valid environment variables"
+            });
+          } else {
+            results.push({
+              field: ".env file",
+              status: "valid",
+              message: `✓ Parsed ${varCount} environment variables`
+            });
+            
+            // Check for common LibreChat env vars
+            const commonVars = ['MONGO_URI', 'OPENAI_API_KEY', 'ANTHROPIC_API_KEY', 'GOOGLE_KEY', 'HOST', 'PORT'];
+            const foundVars = commonVars.filter(v => envVars[v]);
+            
+            if (foundVars.length > 0) {
+              results.push({
+                field: "environment variables",
+                status: "valid",
+                message: `Found: ${foundVars.join(', ')}`
+              });
+            }
           }
-          if (envVars.OPENAI_API_KEY) config.openaiApiKey = envVars.OPENAI_API_KEY;
-          if (envVars.ANTHROPIC_API_KEY) config.anthropicApiKey = envVars.ANTHROPIC_API_KEY;
           
         } catch (error) {
           results.push({
@@ -64,112 +153,6 @@ export function FileValidator({ open, onOpenChange }: FileValidatorProps) {
             message: error instanceof Error ? error.message : "Failed to parse .env file"
           });
         }
-      }
-
-      // Parse YAML file
-      if (yamlFile) {
-        const yamlContent = await yamlFile.text();
-        try {
-          const yamlData = parseYamlFile(yamlContent);
-          results.push({
-            field: "librechat.yaml file",
-            status: "valid",
-            message: "Successfully parsed YAML structure"
-          });
-
-          // Validate YAML structure
-          if (yamlData.version) {
-            config.version = yamlData.version;
-            results.push({
-              field: "version",
-              status: "valid",
-              message: `Version: ${yamlData.version}`
-            });
-          } else {
-            results.push({
-              field: "version",
-              status: "warning",
-              message: "No version specified in YAML"
-            });
-          }
-
-          if (yamlData.cache !== undefined) {
-            config.cache = yamlData.cache;
-          }
-
-          // Check for common configuration sections
-          if (yamlData.endpoints) {
-            results.push({
-              field: "endpoints",
-              status: "valid",
-              message: `Found ${Object.keys(yamlData.endpoints).length} endpoint configuration(s)`
-            });
-          }
-
-          if (yamlData.mcpServers) {
-            const serverCount = Array.isArray(yamlData.mcpServers) 
-              ? yamlData.mcpServers.length 
-              : Object.keys(yamlData.mcpServers).length;
-            results.push({
-              field: "mcpServers",
-              status: "valid",
-              message: `Configured ${serverCount} MCP server(s)`
-            });
-          }
-
-          if (yamlData.rateLimits) {
-            results.push({
-              field: "rateLimits",
-              status: "valid",
-              message: "Rate limiting configuration found"
-            });
-          }
-
-        } catch (error) {
-          results.push({
-            field: "librechat.yaml file",
-            status: "invalid",
-            message: error instanceof Error ? error.message : "Failed to parse YAML file"
-          });
-        }
-      }
-
-      // Validate against schema if we have config data
-      if (Object.keys(config).length > 0) {
-        try {
-          const result = configurationSchema.safeParse(config);
-          if (result.success) {
-            results.push({
-              field: "Schema Validation",
-              status: "valid",
-              message: "Configuration matches LibreChat schema"
-            });
-          } else {
-            // Add specific validation errors
-            result.error.issues.forEach((issue: { path: (string | number)[]; message: string }) => {
-              results.push({
-                field: issue.path.join('.') || "configuration",
-                status: "invalid",
-                message: issue.message
-              });
-            });
-          }
-        } catch (error) {
-          results.push({
-            field: "Schema Validation",
-            status: "warning",
-            message: "Unable to fully validate configuration schema"
-          });
-        }
-      }
-
-      // If no files provided
-      if (!envFile && !yamlFile) {
-        results.push({
-          field: "No files",
-          status: "warning",
-          message: "Please select at least one file to validate"
-        });
       }
 
     } catch (error) {
