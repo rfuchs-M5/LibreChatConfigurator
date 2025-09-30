@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ConfigurationTabs } from "@/components/configuration-tabs";
 import { PreviewModal } from "@/components/preview-modal";
-import { FileValidator } from "@/components/file-validator";
 import { useConfiguration } from "@/hooks/use-configuration";
 import { useBackendAvailability } from "@/hooks/use-backend-availability";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { defaultConfiguration } from "@/lib/configuration-defaults";
 import { createResetConfiguration } from "@/lib/librechat-defaults";
-import { Search, Download, Save, Upload, CheckCircle, CheckCircle2, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap, AlertTriangle, ExternalLink, Info } from "lucide-react";
+import { Search, Download, Save, Upload, CheckCircle, Eye, Rocket, ChevronDown, FolderOpen, FileText, Settings, TestTube, Zap, AlertTriangle, ExternalLink, Info } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"; 
@@ -25,7 +24,6 @@ export default function Home() {
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const [showSelfTestConfirmation, setShowSelfTestConfirmation] = useState(false);
   const [showAboutDialog, setShowAboutDialog] = useState(false);
-  const [showFileValidator, setShowFileValidator] = useState(false);
   const { configuration, updateConfiguration, saveProfile, generatePackage, loadDemoConfiguration, verifyConfiguration } = useConfiguration();
   const { isBackendAvailable, isDemo } = useBackendAvailability();
   const { toast } = useToast();
@@ -772,10 +770,6 @@ export default function Home() {
                     <Eye className="h-4 w-4 mr-2" />
                     Individual files
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setShowFileValidator(true)} data-testid="menu-validate">
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    Validate Files
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleGeneratePackage} data-testid="menu-generate">
                     <Download className="h-4 w-4 mr-2" />
                     Generate & Download ZIP
@@ -832,12 +826,6 @@ export default function Home() {
           onGenerate={handleGeneratePackage}
         />
       )}
-
-      {/* File Validator */}
-      <FileValidator
-        open={showFileValidator}
-        onOpenChange={setShowFileValidator}
-      />
 
       {/* Reset Confirmation Dialog */}
       <AlertDialog open={showResetConfirmation} onOpenChange={setShowResetConfirmation}>
