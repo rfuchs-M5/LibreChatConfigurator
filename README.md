@@ -34,60 +34,32 @@ Setting up LibreChat involves managing 100+ configuration options across environ
 1. **🔧 Configure LibreChat Settings** - Use the intuitive interface to set up all LibreChat configuration options
 2. **📦 Create One-Click Installation Packages** - Generate complete deployment packages that others can download and run immediately
 
-**There are 2 ways to access this tool:**
+### 🌐 Use Online (Limited Features)
 
-**🌐 Direct Online** - **[Launch LibreChat Configuration Tool](https://librechatconfigurator.netlify.app/)**
+**[Launch LibreChat Configuration Tool](https://librechatconfigurator.netlify.app/)**
+
 - ✅ Configure all LibreChat settings  
 - ✅ Download individual files (.env, librechat.yaml, JSON config)
 - ❌ **ZIP package generation will fail** - no backend on Netlify
 
-**💻 Run Locally** - Full feature set including one-click installation packages:
-```bash
-git clone https://github.com/Fritsl/LibreChatConfigurator.git
-cd LibreChatConfigurator
-npm install && npm run dev
-# Open http://localhost:5000
-```
-- ✅ Configure all LibreChat settings
-- ✅ Generate complete installation ZIP packages with Docker setup and scripts
-- ✅ Share ready-to-deploy packages with others
+### 💻 Run Locally (Full Features)
 
-## Prerequisites
+**Prerequisites:** Node.js 20+ ([download here](https://nodejs.org/))
 
-- **Node.js 20+** (required)
-  - **Windows**: Download from [nodejs.org](https://nodejs.org/) and install
-  - **Mac**: `brew install node` or download from [nodejs.org](https://nodejs.org/)
-  - **Linux**: Use your package manager or download from [nodejs.org](https://nodejs.org/)
-
-**Verify installation:**
-```bash
-node --version  # Should show v20.x.x or higher
-npm --version   # Should work without errors
-```
-
-## Quick Start
-
+**Quick Start:**
 ```bash
 git clone https://github.com/Fritsl/LibreChatConfigurator.git
 cd LibreChatConfigurator
 npm install
 npm run dev
+# Open http://localhost:5000 in your browser
 ```
 
-**Open in browser:**
-```
-http://localhost:5000
-```
-
-4. **Configure your settings**
-   - Use the clean tabbed interface with progressive disclosure
-   - Configure only the providers you need (OAuth, Email, File Storage, etc.)
-   - Set your AI API keys, database settings, and features
-
-5. **Generate installation packages**
-   - **Individual files**: Download `.env`, `librechat.yaml`, or JSON configuration files
-   - **Complete packages**: Use "Package → Generate & Download ZIP" to create one-click installation packages
-   - **Share with others**: Generated ZIP packages contain everything needed for deployment including Docker setup and installation scripts
+**What you get locally:**
+- ✅ Configure all LibreChat settings with the clean tabbed interface
+- ✅ Download individual files (.env, librechat.yaml, JSON config)
+- ✅ Generate complete installation ZIP packages with Docker setup and scripts
+- ✅ Share ready-to-deploy packages with others
 
 ## Production Build
 
@@ -107,8 +79,6 @@ The app will build and serve on port 5000 in production mode.
 - **Clean Interface**: Organized into logical tabs with search functionality
 - **Real-time Validation**: Immediate feedback on configuration issues
 - **Profile Management**: Save and load different configuration profiles
-- **One-Click Installation Packages**: Generate complete deployment packages that others can download and run immediately
-- **Dual Purpose**: Use for personal configuration setup OR create shareable installation packages
 
 ## Supported Configuration Settings
 
